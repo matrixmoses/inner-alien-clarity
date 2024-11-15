@@ -2,12 +2,18 @@ import { BookOpen, Award, ChartLine } from "lucide-react";
 import { EmailForm } from "@/components/EmailForm";
 import { Feature } from "@/components/Feature";
 import { GradientBackground } from "@/components/GradientBackground";
+import { Logo } from "@/components/Logo";
 
 const Index = () => {
   return (
     <div className="relative min-h-screen">
       <GradientBackground />
       
+      {/* Header */}
+      <header className="container mx-auto px-4 py-6">
+        <Logo />
+      </header>
+
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-20 text-center">
         <h1 className="animate-fade-in text-4xl font-bold leading-tight tracking-tight text-gray-900 sm:text-5xl md:text-6xl">
