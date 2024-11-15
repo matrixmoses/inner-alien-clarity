@@ -3,6 +3,12 @@ import { EmailForm } from "@/components/EmailForm";
 import { Feature } from "@/components/Feature";
 import { GradientBackground } from "@/components/GradientBackground";
 import { Logo } from "@/components/Logo";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 const Index = () => {
   return (
@@ -52,6 +58,49 @@ const Index = () => {
               description="Visualize your growth in real time with detailed analytics."
             />
           </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="container mx-auto px-4 py-20">
+        <h2 className="mb-12 text-center text-3xl font-bold">Got Questions? We've Got Answers!</h2>
+        <div className="mx-auto max-w-3xl">
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="item-1">
+              <AccordionTrigger>What is TheInnerAlien.co?</AccordionTrigger>
+              <AccordionContent>
+                A productivity and wellness platform designed to help high achievers manage anxiety, procrastination, and time effectively.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-2">
+              <AccordionTrigger>Who is this platform for?</AccordionTrigger>
+              <AccordionContent>
+                It's for individuals who feel overwhelmed by time and want personalized tools to enhance productivity and focus.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-3">
+              <AccordionTrigger>Is the platform confidential?</AccordionTrigger>
+              <AccordionContent>
+                Absolutely. We prioritize your privacy and provide a secure space for your growth.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-4">
+              <AccordionTrigger>How much does it cost?</AccordionTrigger>
+              <AccordionContent>
+                Early adopters gain free access to premium features during beta. After that, tiered plans will be available to suit your needs.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-5">
+              <AccordionTrigger>How do I get started?</AccordionTrigger>
+              <AccordionContent>
+                Join the waitlist by entering your email above. You'll receive exclusive updates and early access to the platform.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </div>
       </section>
 
