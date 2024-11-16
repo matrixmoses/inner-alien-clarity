@@ -55,45 +55,32 @@ const Index = () => {
             Learn More
           </Button>
         </div>
+        
+        {/* Feature Cards */}
+        <div className="grid gap-8 md:grid-cols-3 mt-12">
+          <Feature
+            icon={BookOpen}
+            title="The Win Journal"
+            description="Celebrate your daily wins to stay motivated and build momentum."
+            imageSrc="/win-journal-preview.png"
+          />
+          <Feature
+            icon={Award}
+            title="Guided Routines"
+            description="Personalized routines to eliminate procrastination and boost productivity."
+            imageSrc="/guided-routine-preview.png"
+          />
+          <Feature
+            icon={ChartLine}
+            title="Progress Tracker"
+            description="Visualize your growth in real time with detailed analytics."
+            imageSrc="/progress-tracker-preview.png"
+          />
+        </div>
       </section>
 
       {/* Infographic Section */}
       <Infographic />
-
-      {/* Features Section */}
-      <section className="bg-primary-light/20 py-20">
-        <div className="container mx-auto px-4">
-          <h2 className="mb-12 text-center text-3xl font-bold text-gray-900">What You'll Get</h2>
-          <div className="grid gap-8 md:grid-cols-3">
-            <Feature
-              icon={BookOpen}
-              title="The Win Journal"
-              description="Celebrate your daily wins to stay motivated and build momentum."
-              imageSrc="/win-journal-preview.png"
-            />
-            <Feature
-              icon={Award}
-              title="Guided Routines"
-              description="Personalized routines to eliminate procrastination and boost productivity."
-              imageSrc="/guided-routine-preview.png"
-            />
-            <Feature
-              icon={ChartLine}
-              title="Progress Tracker"
-              description="Visualize your growth in real time with detailed analytics."
-              imageSrc="/progress-tracker-preview.png"
-            />
-          </div>
-          <div className="mt-12 text-center">
-            <Button 
-              onClick={scrollToEmailForm}
-              className="bg-primary hover:bg-primary-dark text-white transition-all"
-            >
-              Start Your Journey
-            </Button>
-          </div>
-        </div>
-      </section>
 
       {/* FAQ Section */}
       <section className="container mx-auto px-4 py-20">
