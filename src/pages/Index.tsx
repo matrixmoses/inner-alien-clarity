@@ -46,7 +46,7 @@ const Index = () => {
               icon={BookOpen}
               title="The Win Journal"
               description="Celebrate your daily wins to stay motivated and build momentum."
-              imageSrc="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d"
+              imageSrc="/win-journal-preview.png"
             />
             <Feature
               icon={Award}
