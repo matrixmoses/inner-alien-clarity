@@ -46,16 +46,19 @@ const Index = () => {
               icon={BookOpen}
               title="The Win Journal"
               description="Celebrate your daily wins to stay motivated and build momentum."
+              imageSrc="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d"
             />
             <Feature
               icon={Award}
               title="Guided Routines"
               description="Personalized routines to eliminate procrastination and boost productivity."
+              imageSrc="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
             />
             <Feature
               icon={ChartLine}
               title="Progress Tracker"
               description="Visualize your growth in real time with detailed analytics."
+              imageSrc="https://images.unsplash.com/photo-1461749280684-dccba630e2f6"
             />
           </div>
         </div>
