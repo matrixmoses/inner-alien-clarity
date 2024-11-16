@@ -3,7 +3,7 @@ import { EmailForm } from "@/components/EmailForm";
 import { Feature } from "@/components/Feature";
 import { GradientBackground } from "@/components/GradientBackground";
 import { Logo } from "@/components/Logo";
-import { WinJournal } from "@/components/WinJournal";
+import WinJournal from "@/components/WinJournal";
 import {
   Accordion,
   AccordionContent,
