@@ -1,8 +1,24 @@
 <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path d="M24 4C14 4 8 12 8 20C8 28 14 32 24 32C34 32 40 28 40 20C40 12 34 4 24 4Z" fill="#6EC4A8"/>
-  <circle cx="16" cy="18" r="4" fill="white"/>
-  <circle cx="32" cy="18" r="4" fill="white"/>
-  <path d="M12 12L18 16M30 16L36 12" stroke="white" stroke-width="2" stroke-linecap="round"/>
-  <path d="M20 24C20 26 22 28 24 28C26 28 28 26 28 24" stroke="white" stroke-width="2" stroke-linecap="round"/>
-  <path d="M8 20C8 20 4 32 24 44C44 32 40 20 40 20" fill="#6EC4A8"/>
+  <!-- Background circle -->
+  <circle cx="24" cy="22" r="18" fill="#4ADE80"/>
+  
+  <!-- Eyes -->
+  <path d="M16 18C16 18 18 22 20 22C22 22 24 18 24 18" fill="#1E293B"/>
+  <path d="M24 18C24 18 26 22 28 22C30 22 32 18 32 18" fill="#1E293B"/>
+  
+  <!-- Smile -->
+  <path d="M20 24C20 26 22 28 24 28C26 28 28 26 28 24" stroke="#1E293B" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Neck -->
+  <path d="M20 36L24 40L28 36" fill="#1E293B"/>
+  
+  <!-- Stars -->
+  <circle cx="8" cy="12" r="1" fill="#67E8F9"/>
+  <circle cx="40" cy="12" r="1" fill="#67E8F9"/>
+  <circle cx="12" cy="36" r="1" fill="#67E8F9"/>
+  <circle cx="36" cy="36" r="1" fill="#67E8F9"/>
+  
+  <!-- Rings -->
+  <path d="M8 22C8 22 4 26 24 32C44 26 40 22 40 22" fill="#67E8F9" fill-opacity="0.3"/>
+  <path d="M10 20C10 20 6 24 24 30C42 24 38 20 38 20" fill="#67E8F9" fill-opacity="0.5"/>
 </svg>
