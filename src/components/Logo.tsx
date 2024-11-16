@@ -6,13 +6,13 @@ interface LogoProps {
 
 export const Logo = ({ className }: LogoProps) => {
   return (
-    <div className={cn("flex items-center gap-2", className)}>
+    <div className={cn("flex items-center gap-3", className)}>
       <img
         src="/logo.svg"
         alt="TheInnerAlien.co Logo"
-        className="h-12 w-12 animate-float"
+        className="h-16 w-16 animate-float"
       />
-      <span className="text-xl font-bold text-gray-900">TheInnerAlien.co</span>
+      <span className="text-2xl font-bold text-gray-900">TheInnerAlien.co</span>
     </div>
   );
 };
