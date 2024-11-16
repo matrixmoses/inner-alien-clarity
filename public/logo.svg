@@ -3,6 +3,6 @@
   <circle cx="16" cy="18" r="4" fill="white"/>
   <circle cx="32" cy="18" r="4" fill="white"/>
   <path d="M12 12L18 16M30 16L36 12" stroke="white" stroke-width="2" stroke-linecap="round"/>
-  <path d="M20 24C20 24 22 26 24 26C26 26 28 24 28 24" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <path d="M20 24C20 24 22 22 24 22C26 22 28 24 28 24C28 24 26 28 24 28C22 28 20 24 20 24" stroke="white" stroke-width="2" stroke-linecap="round"/>
   <path d="M8 20C8 20 4 32 24 44C44 32 40 20 40 20" fill="#6EC4A8"/>
 </svg>
