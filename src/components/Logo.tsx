@@ -8,7 +8,7 @@ export const Logo = ({ className }: LogoProps) => {
   return (
     <div className={cn("flex items-center gap-3", className)}>
       <img
-        src="/logo.svg"
+        src="/logo.png"
         alt="TheInnerAlien.co Logo"
         className="h-16 w-16 animate-float"
       />
