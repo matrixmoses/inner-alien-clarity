@@ -19,7 +19,7 @@ export const Feature = ({ icon: Icon, title, description, imageSrc }: FeaturePro
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
-        <div className="group cursor-pointer rounded-lg border border-primary/20 bg-white p-6 text-center transition-all hover:border-primary hover:shadow-lg">
+        <div className="group relative cursor-pointer rounded-lg border border-primary/20 bg-white p-6 text-center transition-all hover:border-primary hover:shadow-lg">
           <div className="mb-4 inline-flex rounded-full bg-primary/10 p-3 text-primary transition-all group-hover:bg-primary group-hover:text-white">
             <Icon size={24} />
           </div>
@@ -29,11 +29,11 @@ export const Feature = ({ icon: Icon, title, description, imageSrc }: FeaturePro
       </HoverCardTrigger>
       {imageSrc && !imageError && (
         <HoverCardContent className="w-80">
-          <div className="relative w-full aspect-video">
+          <div className="relative aspect-video w-full overflow-hidden rounded-lg">
             <img 
               src={imageSrc} 
-              alt={title} 
-              className="w-full h-full object-contain rounded-lg"
+              alt={title}
+              className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
               onError={() => setImageError(true)}
             />
           </div>
