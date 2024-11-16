@@ -3,7 +3,6 @@ import { EmailForm } from "@/components/EmailForm";
 import { Feature } from "@/components/Feature";
 import { GradientBackground } from "@/components/GradientBackground";
 import { Logo } from "@/components/Logo";
-import ProgressTracker from "@/components/ProgressTracker";
 import {
   Accordion,
   AccordionContent,
@@ -35,13 +34,6 @@ const Index = () => {
         </p>
         <div className="mt-10 flex justify-center">
           <EmailForm />
-        </div>
-      </section>
-
-      {/* Progress Tracker Section */}
-      <section className="bg-neutral py-20">
-        <div className="container mx-auto px-4">
-          <ProgressTracker />
         </div>
       </section>
 
