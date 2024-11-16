@@ -29,7 +29,11 @@ export const EmailForm = () => {
         required
         className="bg-white/90"
       />
-      <Button type="submit" disabled={isLoading}>
+      <Button 
+        type="submit" 
+        disabled={isLoading}
+        className="bg-primary hover:bg-primary-dark transition-colors"
+      >
         {isLoading ? "Joining..." : "Join Now"}
       </Button>
     </form>

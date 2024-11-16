@@ -12,7 +12,7 @@ import {
 
 const Index = () => {
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen bg-neutral-white">
       <GradientBackground />
       
       {/* Header */}
@@ -29,8 +29,8 @@ const Index = () => {
           <span className="text-primary">Unlock</span> Your Full Potential
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-600">
-          Join a personalized, science-backed platform trusted by high achievers to conquer
-          procrastination, master productivity, and live with clarity.
+          Join a personalized, science-backed platform trusted by high achievers to master
+          productivity and live with clarity.
         </p>
         <div className="mt-10 flex justify-center">
           <EmailForm />
@@ -38,9 +38,9 @@ const Index = () => {
       </section>
 
       {/* Features Section */}
-      <section className="bg-gray-50 py-20">
+      <section className="bg-primary-light/20 py-20">
         <div className="container mx-auto px-4">
-          <h2 className="mb-12 text-center text-3xl font-bold">What You'll Get</h2>
+          <h2 className="mb-12 text-center text-3xl font-bold text-gray-900">What You'll Get</h2>
           <div className="grid gap-8 md:grid-cols-3">
             <Feature
               icon={BookOpen}
@@ -63,9 +63,9 @@ const Index = () => {
 
       {/* FAQ Section */}
       <section className="container mx-auto px-4 py-20">
-        <h2 className="mb-12 text-center text-3xl font-bold">Got Questions? We've Got Answers!</h2>
+        <h2 className="mb-12 text-center text-3xl font-bold text-gray-900">Got Questions? We've Got Answers!</h2>
         <div className="mx-auto max-w-3xl">
-          <Accordion type="single" collapsible className="w-full">
+          <Accordion type="single" collapsible className="w-full divide-y divide-primary/20">
             <AccordionItem value="item-1">
               <AccordionTrigger>What is TheInnerAlien.co?</AccordionTrigger>
               <AccordionContent>
@@ -106,7 +106,7 @@ const Index = () => {
 
       {/* CTA Section */}
       <section className="container mx-auto px-4 py-20 text-center">
-        <h2 className="mb-6 text-3xl font-bold">Don't Miss Out on Transforming Your Life</h2>
+        <h2 className="mb-6 text-3xl font-bold text-gray-900">Don't Miss Out on Transforming Your Life</h2>
         <p className="mx-auto mb-10 max-w-2xl text-gray-600">
           Join our waitlist today and get exclusive early access to premium features, priority
           updates, and special community events.
@@ -117,7 +117,7 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-gray-200 py-8">
+      <footer className="bg-primary-light/30 py-8">
         <div className="container mx-auto px-4 text-center text-gray-600">
           <p className="mb-4">TheInnerAlien.co: Empowering High Achievers to Thrive</p>
           <nav className="space-x-4">

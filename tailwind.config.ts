@@ -25,15 +25,19 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#9C8ADE",
+          DEFAULT: "#6EC4A8",
           light: "#D8D0F6",
-          dark: "#7B6AC5",
+          dark: "#2E7D32",
         },
         accent: {
           DEFAULT: "#6EC4A8",
           light: "#8ED3BF",
-          dark: "#5BA88D",
+          dark: "#2E7D32",
         },
+        neutral: {
+          DEFAULT: "#F5F5F5",
+          white: "#FFFFFF",
+        }
       },
       keyframes: {
         "accordion-down": {
