@@ -1,9 +1,10 @@
-import { BookOpen, Award, ChartLine, Mail, Phone } from "lucide-react";
+import { BookOpen, Award, ChartLine, Mail } from "lucide-react";
 import { EmailForm } from "@/components/EmailForm";
 import { Feature } from "@/components/Feature";
 import { GradientBackground } from "@/components/GradientBackground";
 import { Logo } from "@/components/Logo";
 import { Button } from "@/components/ui/button";
+import { Infographic } from "@/components/Infographic";
 import {
   Accordion,
   AccordionContent,
@@ -55,6 +56,9 @@ const Index = () => {
           </Button>
         </div>
       </section>
+
+      {/* Infographic Section */}
+      <Infographic />
 
       {/* Features Section */}
       <section className="bg-primary-light/20 py-20">
