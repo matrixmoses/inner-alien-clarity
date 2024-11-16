@@ -3,7 +3,6 @@ import { EmailForm } from "@/components/EmailForm";
 import { Feature } from "@/components/Feature";
 import { GradientBackground } from "@/components/GradientBackground";
 import { Logo } from "@/components/Logo";
-import WinJournal from "@/components/WinJournal";
 import {
   Accordion,
   AccordionContent,
@@ -35,14 +34,6 @@ const Index = () => {
         </p>
         <div className="mt-10 flex justify-center">
           <EmailForm />
-        </div>
-      </section>
-
-      {/* Win Journal Preview Section */}
-      <section className="py-20 bg-primary/5">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">Track Your Daily Wins</h2>
-          <WinJournal />
         </div>
       </section>
 
