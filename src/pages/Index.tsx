@@ -3,6 +3,7 @@ import { EmailForm } from "@/components/EmailForm";
 import { Feature } from "@/components/Feature";
 import { GradientBackground } from "@/components/GradientBackground";
 import { Logo } from "@/components/Logo";
+import GuidedRoutine from "@/components/GuidedRoutine";
 import {
   Accordion,
   AccordionContent,
@@ -34,6 +35,14 @@ const Index = () => {
         </p>
         <div className="mt-10 flex justify-center">
           <EmailForm />
+        </div>
+      </section>
+
+      {/* Guided Routine Section */}
+      <section className="py-20 bg-primary-light/20">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-12">Personalized Routines That Work</h2>
+          <GuidedRoutine />
         </div>
       </section>
 
