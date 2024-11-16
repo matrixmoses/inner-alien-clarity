@@ -29,12 +29,14 @@ export const Feature = ({ icon: Icon, title, description, imageSrc }: FeaturePro
       </HoverCardTrigger>
       {imageSrc && !imageError && (
         <HoverCardContent className="w-80">
-          <img 
-            src={imageSrc} 
-            alt={title} 
-            className="w-full h-48 object-cover rounded-lg"
-            onError={() => setImageError(true)}
-          />
+          <div className="relative w-full aspect-video">
+            <img 
+              src={imageSrc} 
+              alt={title} 
+              className="w-full h-full object-contain rounded-lg"
+              onError={() => setImageError(true)}
+            />
+          </div>
         </HoverCardContent>
       )}
     </HoverCard>
