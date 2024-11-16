@@ -1,4 +1,4 @@
-import { BookOpen, Award, ChartLine } from "lucide-react";
+import { BookOpen, Award, ChartLine, Mail, Phone } from "lucide-react";
 import { EmailForm } from "@/components/EmailForm";
 import { Feature } from "@/components/Feature";
 import { GradientBackground } from "@/components/GradientBackground";
@@ -155,13 +155,34 @@ const Index = () => {
 
       {/* Footer */}
       <footer className="bg-primary-light/30 py-8">
-        <div className="container mx-auto px-4 text-center text-gray-600">
-          <p className="mb-4">TheInnerAlien.co: Empowering High Achievers to Thrive</p>
-          <nav className="space-x-4">
-            <a href="#" className="hover:text-primary">About</a>
-            <a href="#" className="hover:text-primary">Privacy Policy</a>
-            <a href="#" className="hover:text-primary">Contact Us</a>
-          </nav>
+        <div className="container mx-auto px-4">
+          <div className="grid gap-8 md:grid-cols-3">
+            <div>
+              <h3 className="mb-4 font-semibold text-gray-900">About</h3>
+              <p className="text-gray-600">TheInnerAlien.co: Empowering High Achievers to Thrive</p>
+            </div>
+            <div>
+              <h3 className="mb-4 font-semibold text-gray-900">Contact Us</h3>
+              <div className="space-y-2 text-gray-600">
+                <div className="flex items-center gap-2">
+                  <Mail className="h-4 w-4" />
+                  <a href="mailto:theinneralien1@gmail.com" className="hover:text-primary">
+                    theinneralien1@gmail.com
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h3 className="mb-4 font-semibold text-gray-900">Legal</h3>
+              <nav className="space-y-2">
+                <a href="#" className="block hover:text-primary">Privacy Policy</a>
+                <a href="#" className="block hover:text-primary">Terms of Service</a>
+              </nav>
+            </div>
+          </div>
+          <div className="mt-8 border-t border-gray-200 pt-8 text-center text-sm text-gray-600">
+            © {new Date().getFullYear()} TheInnerAlien.co. All rights reserved.
+          </div>
         </div>
       </footer>
     </div>
