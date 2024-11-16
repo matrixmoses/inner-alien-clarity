@@ -4,12 +4,17 @@ import { GradientBackground } from "@/components/GradientBackground";
 import { Logo } from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import Infographic from "@/components/Infographic";
+import { MobileNav } from "@/components/MobileNav";
+import { CookieConsent } from "@/components/CookieConsent";
+import { ScrollToTop } from "@/components/ScrollToTop";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Suspense } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Index = () => {
   const scrollToEmailForm = () => {
@@ -24,12 +29,15 @@ const Index = () => {
       {/* Header */}
       <header className="container mx-auto flex items-center justify-between px-4 py-6">
         <Logo />
-        <Button 
-          onClick={scrollToEmailForm}
-          className="bg-[#9C8ADE] hover:bg-[#6EC4A8] text-white transition-all"
-        >
-          Get Started
-        </Button>
+        <div className="flex items-center gap-4">
+          <Button 
+            onClick={scrollToEmailForm}
+            className="hidden md:inline-flex bg-[#9C8ADE] hover:bg-[#6EC4A8] text-white transition-all"
+          >
+            Get Started
+          </Button>
+          <MobileNav />
+        </div>
       </header>
 
       {/* Hero Section */}
@@ -57,7 +65,9 @@ const Index = () => {
       </section>
 
       {/* Infographic Section */}
-      <Infographic />
+      <Suspense fallback={<Skeleton className="h-[400px] w-full" />}>
+        <Infographic />
+      </Suspense>
 
       {/* FAQ Section */}
       <section className="container mx-auto px-4 py-20">
@@ -153,6 +163,10 @@ const Index = () => {
           </div>
         </div>
       </footer>
+
+      {/* UI Elements */}
+      <ScrollToTop />
+      <CookieConsent />
     </div>
   );
 };
