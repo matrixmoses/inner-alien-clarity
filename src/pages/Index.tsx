@@ -3,6 +3,7 @@ import { EmailForm } from "@/components/EmailForm";
 import { Feature } from "@/components/Feature";
 import { GradientBackground } from "@/components/GradientBackground";
 import { Logo } from "@/components/Logo";
+import { Button } from "@/components/ui/button";
 import {
   Accordion,
   AccordionContent,
@@ -11,13 +12,24 @@ import {
 } from "@/components/ui/accordion";
 
 const Index = () => {
+  const scrollToEmailForm = () => {
+    const element = document.getElementById('email-form-bottom');
+    element?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className="relative min-h-screen bg-neutral-white">
       <GradientBackground />
       
       {/* Header */}
-      <header className="container mx-auto px-4 py-6">
+      <header className="container mx-auto flex items-center justify-between px-4 py-6">
         <Logo />
+        <Button 
+          onClick={scrollToEmailForm}
+          className="bg-primary hover:bg-primary-dark text-white transition-all"
+        >
+          Get Started
+        </Button>
       </header>
 
       {/* Hero Section */}
@@ -32,8 +44,15 @@ const Index = () => {
           Join a personalized, science-backed platform trusted by high achievers to master
           productivity and live with clarity.
         </p>
-        <div className="mt-10 flex justify-center">
+        <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
           <EmailForm />
+          <Button 
+            onClick={scrollToEmailForm}
+            variant="outline"
+            className="w-full border-primary text-primary hover:bg-primary hover:text-white sm:w-auto"
+          >
+            Learn More
+          </Button>
         </div>
       </section>
 
@@ -60,6 +79,14 @@ const Index = () => {
               description="Visualize your growth in real time with detailed analytics."
               imageSrc="/progress-tracker-preview.png"
             />
+          </div>
+          <div className="mt-12 text-center">
+            <Button 
+              onClick={scrollToEmailForm}
+              className="bg-primary hover:bg-primary-dark text-white transition-all"
+            >
+              Start Your Journey
+            </Button>
           </div>
         </div>
       </section>
@@ -114,8 +141,15 @@ const Index = () => {
           Join our waitlist today and get exclusive early access to premium features, priority
           updates, and special community events.
         </p>
-        <div className="flex justify-center">
+        <div id="email-form-bottom" className="flex flex-col items-center gap-4">
           <EmailForm />
+          <Button 
+            variant="outline"
+            className="w-full border-primary text-primary hover:bg-primary hover:text-white sm:w-auto"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          >
+            Back to Top
+          </Button>
         </div>
       </section>
 
