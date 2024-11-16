@@ -1,6 +1,5 @@
-import { BookOpen, Award, ChartLine, Mail } from "lucide-react";
+import { Mail } from "lucide-react";
 import { EmailForm } from "@/components/EmailForm";
-import { Feature } from "@/components/Feature";
 import { GradientBackground } from "@/components/GradientBackground";
 import { Logo } from "@/components/Logo";
 import { Button } from "@/components/ui/button";
@@ -54,28 +53,6 @@ const Index = () => {
           >
             Learn More
           </Button>
-        </div>
-        
-        {/* Feature Cards */}
-        <div className="grid gap-8 md:grid-cols-3 mt-12">
-          <Feature
-            icon={BookOpen}
-            title="The Win Journal"
-            description="Celebrate your daily wins to stay motivated and build momentum."
-            imageSrc="/win-journal-preview.png"
-          />
-          <Feature
-            icon={Award}
-            title="Guided Routines"
-            description="Personalized routines to eliminate procrastination and boost productivity."
-            imageSrc="/guided-routine-preview.png"
-          />
-          <Feature
-            icon={ChartLine}
-            title="Progress Tracker"
-            description="Visualize your growth in real time with detailed analytics."
-            imageSrc="/progress-tracker-preview.png"
-          />
         </div>
       </section>
 
