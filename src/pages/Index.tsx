@@ -18,7 +18,7 @@ const Index = () => {
   };
 
   return (
-    <div className="relative min-h-screen bg-neutral-white">
+    <div className="relative min-h-screen bg-gradient-to-br from-[#9C8ADE]/10 to-[#6EC4A8]/10">
       <GradientBackground />
       
       {/* Header */}
@@ -26,7 +26,7 @@ const Index = () => {
         <Logo />
         <Button 
           onClick={scrollToEmailForm}
-          className="bg-primary hover:bg-primary-dark text-white transition-all"
+          className="bg-[#9C8ADE] hover:bg-[#6EC4A8] text-white transition-all"
         >
           Get Started
         </Button>
@@ -36,9 +36,9 @@ const Index = () => {
       <section className="container mx-auto px-4 py-20 text-center">
         <h1 className="animate-fade-in text-4xl font-bold leading-tight tracking-tight text-gray-900 sm:text-5xl md:text-6xl">
           Transform Anxiety into Action
-          <span className="text-primary">.</span>
+          <span className="text-[#9C8ADE]">.</span>
           <br />
-          <span className="text-primary">Unlock</span> Your Full Potential
+          <span className="text-[#6EC4A8]">Unlock</span> Your Full Potential
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-600">
           Join a personalized, science-backed platform trusted by high achievers to master
@@ -49,7 +49,7 @@ const Index = () => {
           <Button 
             onClick={scrollToEmailForm}
             variant="outline"
-            className="w-full border-primary text-primary hover:bg-primary hover:text-white sm:w-auto"
+            className="w-full border-[#9C8ADE] text-[#9C8ADE] hover:bg-[#9C8ADE] hover:text-white sm:w-auto"
           >
             Learn More
           </Button>
@@ -63,7 +63,7 @@ const Index = () => {
       <section className="container mx-auto px-4 py-20">
         <h2 className="mb-12 text-center text-3xl font-bold text-gray-900">Got Questions? We've Got Answers!</h2>
         <div className="mx-auto max-w-3xl">
-          <Accordion type="single" collapsible className="w-full divide-y divide-primary/20">
+          <Accordion type="single" collapsible className="w-full divide-y divide-[#9C8ADE]/20">
             <AccordionItem value="item-1">
               <AccordionTrigger>What is TheInnerAlien.co?</AccordionTrigger>
               <AccordionContent>
@@ -113,7 +113,7 @@ const Index = () => {
           <EmailForm />
           <Button 
             variant="outline"
-            className="w-full border-primary text-primary hover:bg-primary hover:text-white sm:w-auto"
+            className="w-full border-[#9C8ADE] text-[#9C8ADE] hover:bg-[#9C8ADE] hover:text-white sm:w-auto"
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           >
             Back to Top
@@ -122,7 +122,7 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-primary-light/30 py-8">
+      <footer className="bg-[#9C8ADE]/10 py-8">
         <div className="container mx-auto px-4">
           <div className="grid gap-8 md:grid-cols-3">
             <div>
@@ -134,7 +134,7 @@ const Index = () => {
               <div className="space-y-2 text-gray-600">
                 <div className="flex items-center gap-2">
                   <Mail className="h-4 w-4" />
-                  <a href="mailto:theinneralien1@gmail.com" className="hover:text-primary">
+                  <a href="mailto:theinneralien1@gmail.com" className="hover:text-[#9C8ADE]">
                     theinneralien1@gmail.com
                   </a>
                 </div>
@@ -143,8 +143,8 @@ const Index = () => {
             <div>
               <h3 className="mb-4 font-semibold text-gray-900">Legal</h3>
               <nav className="space-y-2">
-                <a href="#" className="block hover:text-primary">Privacy Policy</a>
-                <a href="#" className="block hover:text-primary">Terms of Service</a>
+                <a href="#" className="block hover:text-[#9C8ADE]">Privacy Policy</a>
+                <a href="#" className="block hover:text-[#9C8ADE]">Terms of Service</a>
               </nav>
             </div>
           </div>
