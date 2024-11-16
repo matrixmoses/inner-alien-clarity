@@ -4,6 +4,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
+import { useState } from "react";
 
 interface FeatureProps {
   icon: LucideIcon;
@@ -13,6 +14,8 @@ interface FeatureProps {
 }
 
 export const Feature = ({ icon: Icon, title, description, imageSrc }: FeatureProps) => {
+  const [imageError, setImageError] = useState(false);
+
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
@@ -24,12 +27,13 @@ export const Feature = ({ icon: Icon, title, description, imageSrc }: FeaturePro
           <p className="text-gray-600">{description}</p>
         </div>
       </HoverCardTrigger>
-      {imageSrc && (
+      {imageSrc && !imageError && (
         <HoverCardContent className="w-80">
           <img 
             src={imageSrc} 
             alt={title} 
             className="w-full h-48 object-cover rounded-lg"
+            onError={() => setImageError(true)}
           />
         </HoverCardContent>
       )}
