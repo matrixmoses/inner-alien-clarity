@@ -3,6 +3,7 @@ import { EmailForm } from "@/components/EmailForm";
 import { Feature } from "@/components/Feature";
 import { GradientBackground } from "@/components/GradientBackground";
 import { Logo } from "@/components/Logo";
+import { Infographic } from "@/components/Infographic";
 import { Button } from "@/components/ui/button";
 import {
   Accordion,
@@ -55,6 +56,9 @@ const Index = () => {
           </Button>
         </div>
       </section>
+
+      {/* Infographic Section */}
+      <Infographic />
 
       {/* Features Section */}
       <section className="bg-primary-light/20 py-20">
