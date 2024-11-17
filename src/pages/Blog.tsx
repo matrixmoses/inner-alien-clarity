@@ -57,46 +57,59 @@ const Blog = () => {
       {/* Blog Content */}
       <main className="container mx-auto px-4 py-12">
         <article className="prose prose-lg mx-auto max-w-4xl">
-          <h1 className="mb-8 text-4xl font-bold">Managing Anxiety and Procrastination: A Comprehensive Guide</h1>
+          <h1 className="mb-8 text-4xl font-bold">5 Ways to Overcome Procrastination</h1>
           <div className="mb-4 flex items-center gap-4 text-sm text-gray-600">
             <span>Published: November 16, 2024</span>
             <span>By: The Inner Alien Team</span>
           </div>
           
-          <img 
-            src="/placeholder.svg" 
-            alt="Managing Anxiety and Procrastination" 
-            className="mb-8 w-full rounded-lg object-cover"
-          />
+          <p className="lead">
+            Procrastination is something we all experience at some point. It's that nagging feeling that keeps us from starting or finishing tasks, even when we know they're important. While it can feel overwhelming, overcoming procrastination is possible with the right strategies.
+          </p>
 
-          <div className="space-y-6">
-            <p>
-              Anxiety and procrastination often go hand in hand, creating a cycle that can be difficult to break. 
-              In this comprehensive guide, we'll explore the connection between these two challenges and provide 
-              practical strategies to overcome them.
-            </p>
+          <h2 className="text-2xl font-bold mt-8">1. Break Tasks into Smaller Steps</h2>
+          <p>
+            One of the main reasons we procrastinate is feeling overwhelmed by the size of a task. Breaking it into smaller, manageable steps makes it less daunting and helps you build momentum.
+          </p>
+          <h3 className="text-xl font-semibold mt-4">How to Do It:</h3>
+          <ul className="list-disc pl-6">
+            <li>Identify the smallest actionable step you can take.</li>
+            <li>Focus on completing that step instead of the whole task.</li>
+            <li>Celebrate each small win to stay motivated.</li>
+          </ul>
 
-            <h2 className="text-2xl font-bold">Understanding the Connection</h2>
-            <p>
-              When we feel anxious about a task, our natural response might be to avoid it. This avoidance 
-              provides temporary relief but ultimately leads to more anxiety as deadlines approach. Understanding 
-              this connection is the first step toward breaking the cycle.
-            </p>
+          <h2 className="text-2xl font-bold mt-8">2. Use the "2-Minute Rule"</h2>
+          <p>
+            The 2-minute rule states that if a task takes two minutes or less, do it immediately. For larger tasks, spend just two minutes getting started. This approach overcomes the inertia of starting and often leads to working longer.
+          </p>
 
-            <h2 className="text-2xl font-bold">Practical Strategies</h2>
-            <ul className="list-disc pl-6">
-              <li>Break tasks into smaller, manageable pieces</li>
-              <li>Use the 5-minute rule: commit to working on something for just 5 minutes</li>
-              <li>Practice mindfulness to stay present and focused</li>
-              <li>Create a structured routine and stick to it</li>
-              <li>Celebrate small wins along the way</li>
-            </ul>
-          </div>
+          <h2 className="text-2xl font-bold mt-8">3. Eliminate Distractions</h2>
+          <p>
+            Distractions are procrastination's best friend. Whether it's social media, notifications, or a noisy environment, minimizing distractions can help you focus better.
+          </p>
+
+          <h2 className="text-2xl font-bold mt-8">4. Set Realistic Goals and Deadlines</h2>
+          <p>
+            Unrealistic goals can make tasks seem impossible, leading to procrastination. Setting achievable objectives with clear deadlines helps you stay on track.
+          </p>
+
+          <h2 className="text-2xl font-bold mt-8">5. Build Accountability</h2>
+          <p>
+            Having someone to hold you accountable can significantly reduce procrastination. When you know someone is checking on your progress, you're more likely to follow through.
+          </p>
+
+          <h2 className="text-2xl font-bold mt-8">Final Thoughts</h2>
+          <p>
+            Procrastination doesn't mean you're lazy or incapable; it's often a sign of being overwhelmed or afraid of failure. By applying these strategies, you can build momentum, regain focus, and take meaningful steps toward your goals.
+          </p>
+          <p className="font-semibold mt-4">
+            Start small, experiment with different methods, and remember: progress is better than perfection.
+          </p>
         </article>
 
         {/* Comments Section */}
         <section className="mx-auto mt-16 max-w-4xl">
-          <h2 className="mb-8 text-2xl font-bold">Comments</h2>
+          <h2 className="mb-8 text-2xl font-bold">What's your favorite method for overcoming procrastination? Let us know in the comments!</h2>
           
           {/* Comment Form */}
           <form onSubmit={handleCommentSubmit} className="mb-8">
