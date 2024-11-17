@@ -4,8 +4,8 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import emailjs from '@emailjs/browser';
 
-// Initialize EmailJS with your public key
-emailjs.init("Z1WoteF4NnvjYepnt");
+// Initialize EmailJS with the new public key
+emailjs.init("jO5u_zrG7xAXfj0PO");
 
 export const EmailForm = () => {
   const [name, setName] = useState("");
@@ -25,15 +25,15 @@ export const EmailForm = () => {
         from_email: email,
         message: `New waitlist signup request from ${name} (${email})`,
         email: email,
-        user_email: email, // Added explicit user_email parameter
+        user_email: email,
         user_name: name,
         reply_to: email,
       };
       
-      // Send the email using EmailJS
+      // Send the email using EmailJS with new service and template IDs
       const response = await emailjs.send(
-        'service_7a9af58',
-        'template_upclq98',
+        'service_yi00p3n',
+        'template_1cuovtb',
         templateParams
       );
 
