@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import emailjs from '@emailjs/browser';
 
 export const EmailForm = () => {
   const [email, setEmail] = useState("");
@@ -11,12 +12,26 @@ export const EmailForm = () => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    toast.success("Thanks for joining! We'll be in touch soon.");
-    setEmail("");
-    setIsLoading(false);
+    try {
+      await emailjs.send(
+        'YOUR_SERVICE_ID', // Replace with your EmailJS service ID
+        'YOUR_TEMPLATE_ID', // Replace with your EmailJS template ID
+        {
+          to_email: 'theinneralien1@gmail.com',
+          from_email: email,
+          message: `New waitlist signup from ${email}`,
+        },
+        'YOUR_PUBLIC_KEY' // Replace with your EmailJS public key
+      );
+      
+      toast.success("Thanks for joining! We'll be in touch soon.");
+      setEmail("");
+    } catch (error) {
+      toast.error("Something went wrong. Please try again later.");
+      console.error('Error sending email:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
