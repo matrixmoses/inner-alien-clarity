@@ -62,6 +62,16 @@ const Blog = () => {
             <span>Published: November 16, 2024</span>
             <span>By: The Inner Alien Team</span>
           </div>
+
+          {/* Added Featured Image */}
+          <div className="mb-8 overflow-hidden rounded-lg">
+            <img
+              src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b"
+              alt="A laptop on a desk representing work and productivity"
+              className="w-full object-cover"
+              style={{ maxHeight: "400px" }}
+            />
+          </div>
           
           <p className="lead">
             Procrastination is something we all experience at some point. It's that nagging feeling that keeps us from starting or finishing tasks, even when we know they're important. While it can feel overwhelming, overcoming procrastination is possible with the right strategies.
