@@ -6,6 +6,7 @@ import emailjs from '@emailjs/browser';
 
 export const EmailForm = () => {
   const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -14,18 +15,20 @@ export const EmailForm = () => {
     
     try {
       await emailjs.send(
-        'theinneralien1@gmail.com', // Your EmailJS service ID
-        'template_klspyeo', // Your EmailJS template ID
+        'theinneralien1@gmail.com',
+        'template_klspyeo',
         {
           to_email: 'theinneralien1@gmail.com',
           from_email: email,
-          message: `New waitlist signup from ${email}`,
+          from_name: name,
+          message: `New waitlist signup from ${name} (${email})`,
         },
-        'slKf6_uMZllB1T5Mg' // Your EmailJS public key
+        'slKf6_uMZllB1T5Mg'
       );
       
       toast.success("Thanks for joining! We'll be in touch soon.");
       setEmail("");
+      setName("");
     } catch (error) {
       toast.error("Something went wrong. Please try again later.");
       console.error('Error sending email:', error);
@@ -35,7 +38,15 @@ export const EmailForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex w-full max-w-sm gap-2">
+    <form onSubmit={handleSubmit} className="flex w-full max-w-sm flex-col gap-2">
+      <Input
+        type="text"
+        placeholder="Enter your name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        required
+        className="bg-white/90"
+      />
       <Input
         type="email"
         placeholder="Enter your email"
