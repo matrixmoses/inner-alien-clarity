@@ -63,11 +63,11 @@ const Blog = () => {
             <span>By: The Inner Alien Team</span>
           </div>
 
-          {/* Added Featured Image */}
+          {/* Updated Featured Image */}
           <div className="mb-8 overflow-hidden rounded-lg">
             <img
-              src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b"
-              alt="A laptop on a desk representing work and productivity"
+              src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158"
+              alt="Woman working on laptop, focused and productive"
               className="w-full object-cover"
               style={{ maxHeight: "400px" }}
             />
