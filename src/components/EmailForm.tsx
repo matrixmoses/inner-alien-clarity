@@ -19,6 +19,7 @@ export const EmailForm = () => {
       console.log('Starting email submission process...');
       console.log('Email being submitted:', email);
       
+      // Create the template parameters
       const templateParams = {
         to_email: 'theinneralien1@gmail.com',
         from_email: email,
@@ -29,11 +30,11 @@ export const EmailForm = () => {
       
       console.log('Template parameters:', templateParams);
       
+      // Send the email using EmailJS
       const response = await emailjs.send(
         'service_yvr0ixk',
         'template_klspyeo',
-        templateParams,
-        'slKf6_uMZllB1T5Mg'
+        templateParams
       );
 
       console.log('EmailJS Response:', response);
