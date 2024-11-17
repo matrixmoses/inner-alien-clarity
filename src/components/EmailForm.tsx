@@ -18,9 +18,11 @@ export const EmailForm = () => {
     try {
       // Create the template parameters
       const templateParams = {
+        to_name: 'Admin', // Added recipient name
+        from_name: email, // Added sender name
         to_email: 'theinneralien1@gmail.com',
         from_email: email,
-        message: `New waitlist signup from ${email}`,
+        message: `New waitlist signup request from ${email}`,
         email: email,
         reply_to: email,
       };
