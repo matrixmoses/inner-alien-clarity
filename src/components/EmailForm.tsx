@@ -8,6 +8,7 @@ import emailjs from '@emailjs/browser';
 emailjs.init("Z1WoteF4NnvjYepnt");
 
 export const EmailForm = () => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -18,12 +19,13 @@ export const EmailForm = () => {
     try {
       // Create the template parameters
       const templateParams = {
-        to_name: 'Admin', // Added recipient name
-        from_name: email, // Added sender name
+        to_name: 'Admin',
+        from_name: name,
         to_email: 'theinneralien1@gmail.com',
         from_email: email,
-        message: `New waitlist signup request from ${email}`,
+        message: `New waitlist signup request from ${name} (${email})`,
         email: email,
+        user_name: name,
         reply_to: email,
       };
       
@@ -36,6 +38,7 @@ export const EmailForm = () => {
 
       if (response.status === 200) {
         toast.success("Thanks for joining! We'll be in touch soon.");
+        setName("");
         setEmail("");
       } else {
         throw new Error(`Failed to send email: ${response.text}`);
@@ -50,6 +53,14 @@ export const EmailForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className="flex w-full max-w-sm flex-col gap-2">
+      <Input
+        type="text"
+        placeholder="Enter your name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        required
+        className="bg-white/90"
+      />
       <Input
         type="email"
         placeholder="Enter your email"
