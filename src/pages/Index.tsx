@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/accordion";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Link } from "react-router-dom";
 
 const Index = () => {
   const scrollToEmailForm = () => {
@@ -159,7 +160,7 @@ const Index = () => {
             <div>
               <h3 className="mb-4 font-semibold text-gray-900">Legal</h3>
               <nav className="space-y-2">
-                <a href="#" className="block hover:text-[#9C8ADE]">Privacy Policy</a>
+                <Link to="/privacy-policy" className="block hover:text-[#9C8ADE]">Privacy Policy</Link>
                 <a href="#" className="block hover:text-[#9C8ADE]">Terms of Service</a>
               </nav>
             </div>
