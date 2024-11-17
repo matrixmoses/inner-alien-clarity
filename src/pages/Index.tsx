@@ -7,6 +7,8 @@ import Infographic from "@/components/Infographic";
 import { MobileNav } from "@/components/MobileNav";
 import { CookieConsent } from "@/components/CookieConsent";
 import { ScrollToTop } from "@/components/ScrollToTop";
+import KeyFeatures from "@/components/KeyFeatures";
+import HowItWorks from "@/components/HowItWorks";
 import {
   Accordion,
   AccordionContent,
@@ -64,6 +66,12 @@ const Index = () => {
           </Button>
         </div>
       </section>
+
+      {/* Key Features Section */}
+      <KeyFeatures />
+
+      {/* How It Works Section */}
+      <HowItWorks />
 
       {/* Infographic Section */}
       <Suspense fallback={<Skeleton className="h-[400px] w-full" />}>
