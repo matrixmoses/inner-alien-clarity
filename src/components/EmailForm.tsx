@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import emailjs from '@emailjs/browser';
 
 // Initialize EmailJS with your public key
-emailjs.init("JF-A0VRXJ_cH9ed4M");
+emailjs.init("Z1WoteF4NnvjYepnt");
 
 export const EmailForm = () => {
   const [email, setEmail] = useState("");
@@ -29,8 +29,8 @@ export const EmailForm = () => {
       
       // Send the email using EmailJS
       const response = await emailjs.send(
-        'service_8nldrqo',
-        'template_01m56q1',
+        'service_h2aon66',
+        'template_upclq98',
         templateParams
       );
 
