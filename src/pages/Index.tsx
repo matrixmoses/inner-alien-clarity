@@ -161,7 +161,7 @@ const Index = () => {
               <h3 className="mb-4 font-semibold text-gray-900">Legal</h3>
               <nav className="space-y-2">
                 <Link to="/privacy-policy" className="block hover:text-[#9C8ADE]">Privacy Policy</Link>
-                <a href="#" className="block hover:text-[#9C8ADE]">Terms of Service</a>
+                <Link to="/terms-of-service" className="block hover:text-[#9C8ADE]">Terms of Service</Link>
               </nav>
             </div>
           </div>
