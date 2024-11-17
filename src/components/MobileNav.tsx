@@ -2,6 +2,7 @@ import { Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Link } from "react-router-dom";
 
 export const MobileNav = () => {
   const scrollToEmailForm = () => {
@@ -20,6 +21,14 @@ export const MobileNav = () => {
       <SheetContent side="right" className="w-[300px] sm:w-[400px]">
         <ScrollArea className="my-4 h-[calc(100vh-8rem)] pb-10">
           <div className="flex flex-col space-y-4">
+            <Link to="/blog">
+              <Button
+                variant="ghost"
+                className="w-full justify-start"
+              >
+                Blog
+              </Button>
+            </Link>
             <Button
               variant="ghost"
               onClick={scrollToEmailForm}
