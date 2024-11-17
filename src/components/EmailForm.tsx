@@ -16,18 +16,24 @@ export const EmailForm = () => {
     setIsLoading(true);
     
     try {
-      console.log('Attempting to send email...');
+      console.log('Starting email submission process...');
+      console.log('Email being submitted:', email);
+      
+      const templateParams = {
+        to_email: 'theinneralien1@gmail.com',
+        from_email: email,
+        message: `New waitlist signup from ${email}`,
+        email: email,
+        reply_to: email,
+      };
+      
+      console.log('Template parameters:', templateParams);
+      
       const response = await emailjs.send(
         'service_yvr0ixk',
         'template_klspyeo',
-        {
-          to_email: 'theinneralien1@gmail.com',
-          from_email: email,
-          message: `New waitlist signup from ${email}`,
-          email: email,
-          reply_to: email,
-        },
-        'slKf6_uMZllB1T5Mg'  // Added the public key here
+        templateParams,
+        'slKf6_uMZllB1T5Mg'
       );
 
       console.log('EmailJS Response:', response);
@@ -39,7 +45,7 @@ export const EmailForm = () => {
         throw new Error(`Failed to send email: ${response.text}`);
       }
     } catch (error) {
-      console.error('Error sending email:', error);
+      console.error('Detailed error:', error);
       toast.error("Something went wrong. Please try again later.");
     } finally {
       setIsLoading(false);
