@@ -16,9 +16,6 @@ export const EmailForm = () => {
     setIsLoading(true);
     
     try {
-      console.log('Starting email submission process...');
-      console.log('Email being submitted:', email);
-      
       // Create the template parameters
       const templateParams = {
         to_email: 'theinneralien1@gmail.com',
@@ -28,16 +25,12 @@ export const EmailForm = () => {
         reply_to: email,
       };
       
-      console.log('Template parameters:', templateParams);
-      
-      // Send the email using EmailJS with new service and template IDs
+      // Send the email using EmailJS
       const response = await emailjs.send(
         'service_far17ng',
         'template_vn6ipgc',
         templateParams
       );
-
-      console.log('EmailJS Response:', response);
 
       if (response.status === 200) {
         toast.success("Thanks for joining! We'll be in touch soon.");
@@ -46,7 +39,7 @@ export const EmailForm = () => {
         throw new Error(`Failed to send email: ${response.text}`);
       }
     } catch (error) {
-      console.error('Detailed error:', error);
+      console.error('Error:', error);
       toast.error("Something went wrong. Please try again later.");
     } finally {
       setIsLoading(false);
