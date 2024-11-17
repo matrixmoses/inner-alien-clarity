@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import emailjs from '@emailjs/browser';
 
-// Initialize EmailJS
+// Initialize EmailJS with your public key
 emailjs.init("slKf6_uMZllB1T5Mg");
 
 export const EmailForm = () => {
@@ -16,6 +16,7 @@ export const EmailForm = () => {
     setIsLoading(true);
     
     try {
+      // Send email using EmailJS
       await emailjs.send(
         'service_yvr0ixk',
         'template_klspyeo',
@@ -23,6 +24,9 @@ export const EmailForm = () => {
           to_email: 'theinneralien1@gmail.com',
           from_email: email,
           message: `New waitlist signup from ${email}`,
+          // Make sure these match your EmailJS template variables
+          email: email,
+          reply_to: email,
         },
         'slKf6_uMZllB1T5Mg'
       );
@@ -30,8 +34,8 @@ export const EmailForm = () => {
       toast.success("Thanks for joining! We'll be in touch soon.");
       setEmail("");
     } catch (error) {
-      toast.error("Something went wrong. Please try again later.");
       console.error('Error sending email:', error);
+      toast.error("Something went wrong. Please try again later.");
     } finally {
       setIsLoading(false);
     }
