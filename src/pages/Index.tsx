@@ -9,6 +9,7 @@ import { CookieConsent } from "@/components/CookieConsent";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import KeyFeatures from "@/components/KeyFeatures";
 import HowItWorks from "@/components/HowItWorks";
+import { Link } from "react-router-dom";
 import {
   Accordion,
   AccordionContent,
@@ -17,7 +18,6 @@ import {
 } from "@/components/ui/accordion";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Link } from "react-router-dom";
 
 const Index = () => {
   const scrollToEmailForm = () => {
@@ -33,6 +33,11 @@ const Index = () => {
       <header className="container mx-auto flex items-center justify-between px-4 py-6">
         <Logo />
         <div className="flex items-center gap-4">
+          <Link to="/blog">
+            <Button variant="outline" className="hidden md:inline-flex">
+              Blog
+            </Button>
+          </Link>
           <Button 
             onClick={scrollToEmailForm}
             className="hidden md:inline-flex bg-[#9C8ADE] hover:bg-[#6EC4A8] text-white transition-all"
