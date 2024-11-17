@@ -14,14 +14,14 @@ export const EmailForm = () => {
     
     try {
       await emailjs.send(
-        'YOUR_SERVICE_ID', // Replace with your EmailJS service ID
-        'YOUR_TEMPLATE_ID', // Replace with your EmailJS template ID
+        'theinneralien1@gmail.com', // Your EmailJS service ID
+        'template_klspyeo', // Your EmailJS template ID
         {
           to_email: 'theinneralien1@gmail.com',
           from_email: email,
           message: `New waitlist signup from ${email}`,
         },
-        'YOUR_PUBLIC_KEY' // Replace with your EmailJS public key
+        'slKf6_uMZllB1T5Mg' // Your EmailJS public key
       );
       
       toast.success("Thanks for joining! We'll be in touch soon.");
