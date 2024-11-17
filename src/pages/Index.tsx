@@ -1,4 +1,4 @@
-import { Mail } from "lucide-react";
+import { Mail, X } from "lucide-react";
 import { EmailForm } from "@/components/EmailForm";
 import { GradientBackground } from "@/components/GradientBackground";
 import { Logo } from "@/components/Logo";
@@ -146,6 +146,12 @@ const Index = () => {
                   <Mail className="h-4 w-4" />
                   <a href="mailto:theinneralien1@gmail.com" className="hover:text-[#9C8ADE]">
                     theinneralien1@gmail.com
+                  </a>
+                </div>
+                <div className="flex items-center gap-2">
+                  <X className="h-4 w-4" />
+                  <a href="https://x.com/MyInnerAlien" target="_blank" rel="noopener noreferrer" className="hover:text-[#9C8ADE]">
+                    @MyInnerAlien
                   </a>
                 </div>
               </div>
