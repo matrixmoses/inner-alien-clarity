@@ -4,6 +4,9 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import emailjs from '@emailjs/browser';
 
+// Initialize EmailJS
+emailjs.init("slKf6_uMZllB1T5Mg");
+
 export const EmailForm = () => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -15,7 +18,7 @@ export const EmailForm = () => {
     
     try {
       await emailjs.send(
-        'theinneralien1@gmail.com',
+        'service_yvr0ixk', // Updated service ID
         'template_klspyeo',
         {
           to_email: 'theinneralien1@gmail.com',
