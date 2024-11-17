@@ -32,7 +32,7 @@ export const EmailForm = () => {
       
       // Send the email using EmailJS
       const response = await emailjs.send(
-        'service_yvr0ixk',
+        'service_15ex9rf',
         'template_klspyeo',
         templateParams
       );
