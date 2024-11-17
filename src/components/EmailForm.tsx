@@ -16,17 +16,16 @@ export const EmailForm = () => {
     setIsLoading(true);
     
     try {
-      // Send email using EmailJS
+      // Send email using EmailJS with template parameters matching exactly
       await emailjs.send(
         'service_yvr0ixk',
         'template_klspyeo',
         {
-          to_email: 'theinneralien1@gmail.com',
-          from_email: email,
+          to_name: 'Admin',
+          from_name: email,
           message: `New waitlist signup from ${email}`,
-          // Make sure these match your EmailJS template variables
-          email: email,
-          reply_to: email,
+          user_email: email,
+          to_email: 'theinneralien1@gmail.com',
         },
         'slKf6_uMZllB1T5Mg'
       );
