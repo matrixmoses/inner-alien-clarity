@@ -17,7 +17,6 @@ export const EmailForm = () => {
     
     try {
       console.log('Attempting to send email...');
-      // Send email using EmailJS
       const response = await emailjs.send(
         'service_yvr0ixk',
         'template_klspyeo',
@@ -27,7 +26,8 @@ export const EmailForm = () => {
           message: `New waitlist signup from ${email}`,
           email: email,
           reply_to: email,
-        }
+        },
+        'slKf6_uMZllB1T5Mg'  // Added the public key here
       );
 
       console.log('EmailJS Response:', response);
