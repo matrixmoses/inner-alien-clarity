@@ -68,7 +68,7 @@ export const EmailForm = () => {
         disabled={isLoading}
         className="bg-primary hover:bg-primary-dark transition-colors"
       >
-        {isLoading ? "Joining..." : "Join Now"}
+        {isLoading ? "Joining Waitlist..." : "Join Waitlist"}
       </Button>
     </form>
   );
