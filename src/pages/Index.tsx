@@ -2,12 +2,12 @@ import { Logo } from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import { EmailForm } from "@/components/EmailForm";
 import { GradientBackground } from "@/components/GradientBackground";
-import { MobileNav } from "@/components/MobileNav";
 import { CookieConsent } from "@/components/CookieConsent";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import KeyFeatures from "@/components/KeyFeatures";
 import HowItWorks from "@/components/HowItWorks";
 import { Link } from "react-router-dom";
+import { Navigation } from "@/components/Navigation";
 import {
   Accordion,
   AccordionContent,
@@ -29,27 +29,13 @@ const Index = () => {
     <div className="relative min-h-screen bg-gradient-to-br from-[#9C8ADE]/10 to-[#6EC4A8]/10">
       <GradientBackground />
       
-      {/* Header */}
-      <header className="container mx-auto flex items-center justify-between px-4 py-6">
-        <Logo />
-        <div className="flex items-center gap-4">
-          <Link to="/blog">
-            <Button variant="outline" className="hidden md:inline-flex">
-              Blog
-            </Button>
-          </Link>
-          <Button 
-            onClick={scrollToEmailForm}
-            className="hidden md:inline-flex bg-[#9C8ADE] hover:bg-[#6EC4A8] text-white transition-all"
-          >
-            Get Started
-          </Button>
-          <MobileNav />
-        </div>
-      </header>
-
-      {/* Hero Section */}
-      <section className="container mx-auto px-4 py-20 text-center">
+      {/* Navigation */}
+      <Navigation />
+      
+      {/* Main Content with adjusted padding for fixed navigation */}
+      <main className="pt-20">
+        {/* Hero Section */}
+        <section className="container mx-auto px-4 py-20 text-center">
         <h1 className="animate-fade-in text-4xl font-bold leading-tight tracking-tight text-gray-900 sm:text-5xl md:text-6xl">
           Transform Anxiety into Action
           <span className="text-[#9C8ADE]">.</span>
@@ -70,21 +56,21 @@ const Index = () => {
             Learn More
           </Button>
         </div>
-      </section>
+        </section>
 
-      {/* Key Features Section */}
-      <KeyFeatures />
+        {/* Key Features Section */}
+        <KeyFeatures />
 
-      {/* How It Works Section */}
-      <HowItWorks />
+        {/* How It Works Section */}
+        <HowItWorks />
 
-      {/* Infographic Section */}
-      <Suspense fallback={<Skeleton className="h-[400px] w-full" />}>
-        <Infographic />
-      </Suspense>
+        {/* Infographic Section */}
+        <Suspense fallback={<Skeleton className="h-[400px] w-full" />}>
+          <Infographic />
+        </Suspense>
 
-      {/* FAQ Section */}
-      <section className="container mx-auto px-4 py-20">
+        {/* FAQ Section */}
+        <section className="container mx-auto px-4 py-20">
         <h2 className="mb-12 text-center text-3xl font-bold text-gray-900">Got Questions? We've Got Answers!</h2>
         <div className="mx-auto max-w-3xl">
           <Accordion type="single" collapsible className="w-full divide-y divide-[#9C8ADE]/20">
@@ -124,10 +110,10 @@ const Index = () => {
             </AccordionItem>
           </Accordion>
         </div>
-      </section>
+        </section>
 
-      {/* CTA Section */}
-      <section className="container mx-auto px-4 py-20 text-center">
+        {/* CTA Section */}
+        <section className="container mx-auto px-4 py-20 text-center">
         <h2 className="mb-6 text-3xl font-bold text-gray-900">Don't Miss Out on Transforming Your Life</h2>
         <p className="mx-auto mb-10 max-w-2xl text-gray-600">
           Join our waitlist today and get exclusive early access to premium features, priority
@@ -143,10 +129,11 @@ const Index = () => {
             Back to Top
           </Button>
         </div>
-      </section>
+        </section>
 
-      {/* Footer */}
-      <Footer />
+        {/* Footer */}
+        <Footer />
+      </main>
 
       {/* UI Elements */}
       <ScrollToTop />
