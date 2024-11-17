@@ -16,7 +16,8 @@ export const EmailForm = () => {
     setIsLoading(true);
     
     try {
-      // Send email using EmailJS with template parameters exactly matching the template
+      console.log('Attempting to send email...');
+      // Send email using EmailJS
       const response = await emailjs.send(
         'service_yvr0ixk',
         'template_klspyeo',
@@ -26,15 +27,16 @@ export const EmailForm = () => {
           message: `New waitlist signup from ${email}`,
           email: email,
           reply_to: email,
-        },
-        'slKf6_uMZllB1T5Mg'
+        }
       );
+
+      console.log('EmailJS Response:', response);
 
       if (response.status === 200) {
         toast.success("Thanks for joining! We'll be in touch soon.");
         setEmail("");
       } else {
-        throw new Error('Failed to send email');
+        throw new Error(`Failed to send email: ${response.text}`);
       }
     } catch (error) {
       console.error('Error sending email:', error);
