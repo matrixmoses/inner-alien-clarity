@@ -14,7 +14,28 @@ interface Comment {
 }
 
 const Blog = () => {
-  const [comments, setComments] = useState<Comment[]>([]);
+  const initialComments: Comment[] = [
+    {
+      id: 1,
+      author: "Sarah Johnson",
+      content: "Breaking tasks into smaller steps has been a game-changer for me! I used to feel overwhelmed by big projects, but now I just focus on one small task at a time.",
+      date: "March 15, 2024"
+    },
+    {
+      id: 2,
+      author: "Michael Chen",
+      content: "The 2-minute rule really works! I've been using it for a month now and my productivity has improved significantly.",
+      date: "March 14, 2024"
+    },
+    {
+      id: 3,
+      author: "Emma Williams",
+      content: "I love the accountability tip! Having a study buddy has helped me stay on track with my goals.",
+      date: "March 13, 2024"
+    }
+  ];
+
+  const [comments, setComments] = useState<Comment[]>(initialComments);
   const [newComment, setNewComment] = useState("");
   const { toast } = useToast();
 
@@ -72,7 +93,7 @@ const Blog = () => {
               style={{ maxHeight: "400px" }}
             />
           </div>
-          
+
           <p className="lead">
             Procrastination is something we all experience at some point. It's that nagging feeling that keeps us from starting or finishing tasks, even when we know they're important. While it can feel overwhelming, overcoming procrastination is possible with the right strategies.
           </p>
