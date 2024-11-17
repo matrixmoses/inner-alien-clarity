@@ -25,6 +25,7 @@ export const EmailForm = () => {
         from_email: email,
         message: `New waitlist signup request from ${name} (${email})`,
         email: email,
+        user_email: email, // Added explicit user_email parameter
         user_name: name,
         reply_to: email,
       };
