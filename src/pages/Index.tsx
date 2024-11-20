@@ -48,17 +48,11 @@ const Index = () => {
               Discord Community
             </Button>
           </a>
-          <Button 
-            onClick={scrollToEmailForm}
-            className="hidden md:inline-flex bg-[#9C8ADE] hover:bg-[#6EC4A8] text-white transition-all"
-          >
-            Get Started
-          </Button>
           <MobileNav />
         </div>
       </header>
 
-      {/* Hero Section */}
+      {/* Rest of the components */}
       <section className="container mx-auto px-4 py-20 text-center">
         <h1 className="animate-fade-in text-4xl font-bold leading-tight tracking-tight text-gray-900 sm:text-5xl md:text-6xl">
           Transform Anxiety into Action
