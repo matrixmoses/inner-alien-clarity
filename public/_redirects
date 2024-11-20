@@ -1,3 +1,4 @@
 /* https://www.theinneralien.co 301!
 /* https://www.theinneralien.com/:splat 308
 /api/* https://www.theinneralien.com/api/:splat 200
+/index.html 200
