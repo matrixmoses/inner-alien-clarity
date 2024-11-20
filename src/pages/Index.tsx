@@ -38,6 +38,16 @@ const Index = () => {
               Blog
             </Button>
           </Link>
+          <a 
+            href="https://discord.gg/shfZkcHx" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="hidden md:inline-flex"
+          >
+            <Button variant="outline">
+              Discord Community
+            </Button>
+          </a>
           <Button 
             onClick={scrollToEmailForm}
             className="hidden md:inline-flex bg-[#9C8ADE] hover:bg-[#6EC4A8] text-white transition-all"

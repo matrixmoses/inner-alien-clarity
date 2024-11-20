@@ -29,6 +29,18 @@ export const MobileNav = () => {
                 Blog
               </Button>
             </Link>
+            <a 
+              href="https://discord.gg/shfZkcHx" 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
+              <Button
+                variant="ghost"
+                className="w-full justify-start"
+              >
+                Discord Community
+              </Button>
+            </a>
             <Button
               variant="ghost"
               onClick={scrollToEmailForm}
