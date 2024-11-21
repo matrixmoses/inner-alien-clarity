@@ -1,6 +1,13 @@
 import { BookOpen, CheckSquare, LineChart } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Card } from "@/components/ui/card";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 const Infographic = () => {
   return (
@@ -63,6 +70,49 @@ const Infographic = () => {
               </p>
             </div>
           </Card>
+        </div>
+
+        {/* Image Gallery */}
+        <div className="mx-auto w-full max-w-4xl px-8">
+          <Carousel className="w-full">
+            <CarouselContent>
+              <CarouselItem className="md:basis-1/2">
+                <div className="p-1">
+                  <Card className="overflow-hidden">
+                    <img
+                      src="/win-journal-preview.png"
+                      alt="Win Journal Preview"
+                      className="aspect-video w-full object-cover transition-transform duration-300 hover:scale-105"
+                    />
+                  </Card>
+                </div>
+              </CarouselItem>
+              <CarouselItem className="md:basis-1/2">
+                <div className="p-1">
+                  <Card className="overflow-hidden">
+                    <img
+                      src="/guided-routine-preview.png"
+                      alt="Guided Routine Preview"
+                      className="aspect-video w-full object-cover transition-transform duration-300 hover:scale-105"
+                    />
+                  </Card>
+                </div>
+              </CarouselItem>
+              <CarouselItem className="md:basis-1/2">
+                <div className="p-1">
+                  <Card className="overflow-hidden">
+                    <img
+                      src="/progress-tracker-preview.png"
+                      alt="Progress Tracker Preview"
+                      className="aspect-video w-full object-cover transition-transform duration-300 hover:scale-105"
+                    />
+                  </Card>
+                </div>
+              </CarouselItem>
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+          </Carousel>
         </div>
 
         {/* CTA Button */}
