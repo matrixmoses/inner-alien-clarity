@@ -37,7 +37,9 @@ export const EmailForm = () => {
       );
 
       if (response.status === 200) {
-        toast.success("Thanks for joining! We'll be in touch soon.");
+        toast.success(`Thanks for joining! We've sent a confirmation to ${email}. We'll be in touch soon.`, {
+          duration: 5000,
+        });
         setName("");
         setEmail("");
       } else {
