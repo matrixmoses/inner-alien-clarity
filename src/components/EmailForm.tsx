@@ -19,20 +19,18 @@ export const EmailForm = () => {
     try {
       // Create the template parameters
       const templateParams = {
-        to_name: 'Admin',
+        to_name: name,
         from_name: name,
         from_email: email,
-        message: `New waitlist signup request from ${name} (${email})`,
+        message: `New waitlist signup from ${name}`,
         email: email,
-        user_email: email,
-        user_name: name,
         reply_to: email,
       };
       
       // Send the email using EmailJS
       const response = await emailjs.send(
-        'service_esp8czk',  // Updated EmailJS service ID
-        'template_o01ox2y', // Updated EmailJS template ID
+        'service_esp8czk',
+        'template_o01ox2y',
         templateParams
       );
 
