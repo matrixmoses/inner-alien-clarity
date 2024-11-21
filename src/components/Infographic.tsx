@@ -68,11 +68,11 @@ const Infographic = () => {
         {/* Image Gallery */}
         <div className="mx-auto w-full max-w-4xl space-y-8">
           <Card className="group relative overflow-hidden">
-            <div className="aspect-[16/9] w-full">
+            <div className="w-full">
               <img
                 src="/win-journal-preview.png"
                 alt="Win Journal Preview"
-                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                className="h-auto w-full object-contain transition-transform duration-300 group-hover:scale-105"
               />
             </div>
           </Card>
@@ -88,11 +88,11 @@ const Infographic = () => {
           </Card>
 
           <Card className="group relative overflow-hidden">
-            <div className="aspect-[16/9] w-full">
+            <div className="w-full">
               <img
                 src="/progress-tracker-preview.png"
                 alt="Progress Tracker Preview"
-                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                className="h-auto w-full object-contain transition-transform duration-300 group-hover:scale-105"
               />
             </div>
           </Card>
