@@ -12,25 +12,21 @@ const KeyFeatures = () => {
           icon={Award}
           title="Personalized Tools"
           description="AI-based systems for managing anxiety and procrastination"
-          imageSrc="/personalized-tools.png"
         />
         <Feature
           icon={Users}
           title="Community Support"
           description="A confidential peer-support group to connect with like-minded individuals"
-          imageSrc="/community-support.png"
         />
         <Feature
           icon={BookOpen}
           title="Evidence-Based Strategies"
           description="Techniques like CBT, mindfulness, and productivity methods"
-          imageSrc="/evidence-based.png"
         />
         <Feature
           icon={Gamepad}
           title="Gamification"
           description="Progress tracking and rewards to keep users motivated"
-          imageSrc="/gamification.png"
         />
       </div>
     </section>
