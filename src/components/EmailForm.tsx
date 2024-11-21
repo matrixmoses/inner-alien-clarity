@@ -27,6 +27,7 @@ export const EmailForm = () => {
         user_name: name,
         user_email: email,
         user_message: `New waitlist signup from ${name}`,
+        reply_to: email
       };
       
       // Send the email using EmailJS
