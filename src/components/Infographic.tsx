@@ -78,34 +78,40 @@ const Infographic = () => {
             <CarouselContent>
               <CarouselItem className="md:basis-1/2">
                 <div className="p-1">
-                  <Card className="overflow-hidden">
-                    <img
-                      src="/win-journal-preview.png"
-                      alt="Win Journal Preview"
-                      className="aspect-video w-full object-cover transition-transform duration-300 hover:scale-105"
-                    />
+                  <Card className="group relative overflow-hidden">
+                    <div className="aspect-[16/9] w-full">
+                      <img
+                        src="/win-journal-preview.png"
+                        alt="Win Journal Preview"
+                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                    </div>
                   </Card>
                 </div>
               </CarouselItem>
               <CarouselItem className="md:basis-1/2">
                 <div className="p-1">
-                  <Card className="overflow-hidden">
-                    <img
-                      src="/guided-routine-preview.png"
-                      alt="Guided Routine Preview"
-                      className="aspect-video w-full object-cover transition-transform duration-300 hover:scale-105"
-                    />
+                  <Card className="group relative overflow-hidden">
+                    <div className="aspect-[16/9] w-full">
+                      <img
+                        src="/guided-routine-preview.png"
+                        alt="Guided Routine Preview"
+                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                    </div>
                   </Card>
                 </div>
               </CarouselItem>
               <CarouselItem className="md:basis-1/2">
                 <div className="p-1">
-                  <Card className="overflow-hidden">
-                    <img
-                      src="/progress-tracker-preview.png"
-                      alt="Progress Tracker Preview"
-                      className="aspect-video w-full object-cover transition-transform duration-300 hover:scale-105"
-                    />
+                  <Card className="group relative overflow-hidden">
+                    <div className="aspect-[16/9] w-full">
+                      <img
+                        src="/progress-tracker-preview.png"
+                        alt="Progress Tracker Preview"
+                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                    </div>
                   </Card>
                 </div>
               </CarouselItem>
