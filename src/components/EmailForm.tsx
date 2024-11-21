@@ -22,14 +22,11 @@ export const EmailForm = () => {
     setIsLoading(true);
     
     try {
-      // Create the template parameters
+      // Create the template parameters with the correct variable names
       const templateParams = {
-        to_name: name,
-        from_name: name,
-        from_email: email,
-        message: `New waitlist signup from ${name}`,
-        email: email,
-        reply_to: email,
+        user_name: name,
+        user_email: email,
+        user_message: `New waitlist signup from ${name}`,
       };
       
       // Send the email using EmailJS
