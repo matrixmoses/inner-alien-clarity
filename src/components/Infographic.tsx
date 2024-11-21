@@ -1,11 +1,6 @@
 import { BookOpen, CheckSquare, LineChart } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Card } from "@/components/ui/card";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
 
 const Infographic = () => {
   return (
@@ -27,80 +22,74 @@ const Infographic = () => {
         {/* Feature Cards */}
         <div className="grid gap-8 md:grid-cols-3">
           {/* Win Journal Card */}
-          <HoverCard>
-            <HoverCardTrigger>
-              <Card className="group relative overflow-hidden border-[#9C8ADE]/20 bg-white/80 p-6 backdrop-blur-sm transition-all hover:border-[#9C8ADE] hover:shadow-lg hover:shadow-[#9C8ADE]/10">
-                <div className="absolute -right-16 -top-16 h-32 w-32 rounded-full bg-[#9C8ADE]/10 transition-transform group-hover:scale-150" />
-                <div className="relative">
-                  <div className="mb-4 inline-flex rounded-full bg-[#9C8ADE]/10 p-3 text-[#9C8ADE]">
-                    <BookOpen size={24} />
-                  </div>
-                  <h3 className="mb-2 text-xl font-semibold">The Win Journal</h3>
-                  <p className="text-gray-600">
-                    Track your daily wins and build momentum with our intuitive journaling system.
-                  </p>
+          <div className="space-y-4">
+            <Card className="group relative overflow-hidden border-[#9C8ADE]/20 bg-white/80 p-6 backdrop-blur-sm transition-all hover:border-[#9C8ADE] hover:shadow-lg hover:shadow-[#9C8ADE]/10">
+              <div className="absolute -right-16 -top-16 h-32 w-32 rounded-full bg-[#9C8ADE]/10 transition-transform group-hover:scale-150" />
+              <div className="relative">
+                <div className="mb-4 inline-flex rounded-full bg-[#9C8ADE]/10 p-3 text-[#9C8ADE]">
+                  <BookOpen size={24} />
                 </div>
-              </Card>
-            </HoverCardTrigger>
-            <HoverCardContent className="w-80">
+                <h3 className="mb-2 text-xl font-semibold">The Win Journal</h3>
+                <p className="text-gray-600">
+                  Track your daily wins and build momentum with our intuitive journaling system.
+                </p>
+              </div>
+            </Card>
+            <div className="overflow-hidden rounded-lg shadow-lg">
               <img 
                 src="/win-journal-preview.png" 
                 alt="Win Journal Preview" 
-                className="h-full w-full rounded-lg object-cover"
+                className="h-48 w-full object-cover transition-transform duration-300 hover:scale-105"
               />
-            </HoverCardContent>
-          </HoverCard>
+            </div>
+          </div>
 
           {/* Guided Routines Card */}
-          <HoverCard>
-            <HoverCardTrigger>
-              <Card className="group relative overflow-hidden border-[#6EC4A8]/20 bg-white/80 p-6 backdrop-blur-sm transition-all hover:border-[#6EC4A8] hover:shadow-lg hover:shadow-[#6EC4A8]/10">
-                <div className="absolute -right-16 -top-16 h-32 w-32 rounded-full bg-[#6EC4A8]/10 transition-transform group-hover:scale-150" />
-                <div className="relative">
-                  <div className="mb-4 inline-flex rounded-full bg-[#6EC4A8]/10 p-3 text-[#6EC4A8]">
-                    <CheckSquare size={24} />
-                  </div>
-                  <h3 className="mb-2 text-xl font-semibold">Guided Routines</h3>
-                  <p className="text-gray-600">
-                    Follow personalized routines designed to boost your productivity and focus.
-                  </p>
+          <div className="space-y-4">
+            <Card className="group relative overflow-hidden border-[#6EC4A8]/20 bg-white/80 p-6 backdrop-blur-sm transition-all hover:border-[#6EC4A8] hover:shadow-lg hover:shadow-[#6EC4A8]/10">
+              <div className="absolute -right-16 -top-16 h-32 w-32 rounded-full bg-[#6EC4A8]/10 transition-transform group-hover:scale-150" />
+              <div className="relative">
+                <div className="mb-4 inline-flex rounded-full bg-[#6EC4A8]/10 p-3 text-[#6EC4A8]">
+                  <CheckSquare size={24} />
                 </div>
-              </Card>
-            </HoverCardTrigger>
-            <HoverCardContent className="w-80">
+                <h3 className="mb-2 text-xl font-semibold">Guided Routines</h3>
+                <p className="text-gray-600">
+                  Follow personalized routines designed to boost your productivity and focus.
+                </p>
+              </div>
+            </Card>
+            <div className="overflow-hidden rounded-lg shadow-lg">
               <img 
-                src="/guided-routine-preview.png" 
+                src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158" 
                 alt="Guided Routines Preview" 
-                className="h-full w-full rounded-lg object-cover"
+                className="h-48 w-full object-cover transition-transform duration-300 hover:scale-105"
               />
-            </HoverCardContent>
-          </HoverCard>
+            </div>
+          </div>
 
           {/* Progress Tracker Card */}
-          <HoverCard>
-            <HoverCardTrigger>
-              <Card className="group relative overflow-hidden border-[#9C8ADE]/20 bg-white/80 p-6 backdrop-blur-sm transition-all hover:border-[#9C8ADE] hover:shadow-lg hover:shadow-[#9C8ADE]/10">
-                <div className="absolute -right-16 -top-16 h-32 w-32 rounded-full bg-[#9C8ADE]/10 transition-transform group-hover:scale-150" />
-                <div className="relative">
-                  <div className="mb-4 inline-flex rounded-full bg-[#9C8ADE]/10 p-3 text-[#9C8ADE]">
-                    <LineChart size={24} />
-                  </div>
-                  <h3 className="mb-2 text-xl font-semibold">Progress Tracker</h3>
-                  <Progress value={75} className="mb-2" />
-                  <p className="text-gray-600">
-                    Visualize your growth with detailed analytics and progress tracking.
-                  </p>
+          <div className="space-y-4">
+            <Card className="group relative overflow-hidden border-[#9C8ADE]/20 bg-white/80 p-6 backdrop-blur-sm transition-all hover:border-[#9C8ADE] hover:shadow-lg hover:shadow-[#9C8ADE]/10">
+              <div className="absolute -right-16 -top-16 h-32 w-32 rounded-full bg-[#9C8ADE]/10 transition-transform group-hover:scale-150" />
+              <div className="relative">
+                <div className="mb-4 inline-flex rounded-full bg-[#9C8ADE]/10 p-3 text-[#9C8ADE]">
+                  <LineChart size={24} />
                 </div>
-              </Card>
-            </HoverCardTrigger>
-            <HoverCardContent className="w-80">
+                <h3 className="mb-2 text-xl font-semibold">Progress Tracker</h3>
+                <Progress value={75} className="mb-2" />
+                <p className="text-gray-600">
+                  Visualize your growth with detailed analytics and progress tracking.
+                </p>
+              </div>
+            </Card>
+            <div className="overflow-hidden rounded-lg shadow-lg">
               <img 
-                src="/progress-tracker-preview.png" 
+                src="https://images.unsplash.com/photo-1460925895917-afdab827c52f" 
                 alt="Progress Tracker Preview" 
-                className="h-full w-full rounded-lg object-cover"
+                className="h-48 w-full object-cover transition-transform duration-300 hover:scale-105"
               />
-            </HoverCardContent>
-          </HoverCard>
+            </div>
+          </div>
         </div>
 
         {/* CTA Button */}
