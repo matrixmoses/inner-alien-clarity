@@ -12,6 +12,11 @@ export const EmailForm = () => {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const resetForm = () => {
+    setName("");
+    setEmail("");
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -35,17 +40,16 @@ export const EmailForm = () => {
       );
 
       if (response.status === 200) {
-        toast.success(`Thanks for joining! We've sent a confirmation to ${email}. We'll be in touch soon.`, {
-          duration: 5000,
+        toast.success("Thanks for joining! We'll be in touch soon.", {
+          duration: 3000,
         });
-        setName("");
-        setEmail("");
+        resetForm();
       } else {
-        throw new Error(`Failed to send email: ${response.text}`);
+        toast.error("Something went wrong. Please try again.");
       }
     } catch (error) {
       console.error('Error:', error);
-      toast.error("Something went wrong. Please try again later.");
+      toast.error("Something went wrong. Please try again.");
     } finally {
       setIsLoading(false);
     }
