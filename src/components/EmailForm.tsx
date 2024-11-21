@@ -31,8 +31,8 @@ export const EmailForm = () => {
       
       // Send the email using EmailJS
       const response = await emailjs.send(
-        'service_yi00p3n',  // Your EmailJS service ID
-        'template_1cuovtb', // Your EmailJS template ID
+        'service_esp8czk',  // Updated EmailJS service ID
+        'template_o01ox2y', // Updated EmailJS template ID
         templateParams
       );
 
