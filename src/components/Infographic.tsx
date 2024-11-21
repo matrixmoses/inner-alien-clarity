@@ -1,13 +1,6 @@
 import { BookOpen, CheckSquare, LineChart } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Card } from "@/components/ui/card";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 
 const Infographic = () => {
   return (
@@ -73,52 +66,36 @@ const Infographic = () => {
         </div>
 
         {/* Image Gallery */}
-        <div className="mx-auto w-full max-w-4xl px-8">
-          <Carousel className="w-full">
-            <CarouselContent>
-              <CarouselItem className="md:basis-1/2">
-                <div className="p-1">
-                  <Card className="group relative overflow-hidden">
-                    <div className="aspect-[16/9] w-full">
-                      <img
-                        src="/win-journal-preview.png"
-                        alt="Win Journal Preview"
-                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                      />
-                    </div>
-                  </Card>
-                </div>
-              </CarouselItem>
-              <CarouselItem className="md:basis-1/2">
-                <div className="p-1">
-                  <Card className="group relative overflow-hidden">
-                    <div className="aspect-[16/9] w-full">
-                      <img
-                        src="/guided-routine-preview.png"
-                        alt="Guided Routine Preview"
-                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                      />
-                    </div>
-                  </Card>
-                </div>
-              </CarouselItem>
-              <CarouselItem className="md:basis-1/2">
-                <div className="p-1">
-                  <Card className="group relative overflow-hidden">
-                    <div className="aspect-[16/9] w-full">
-                      <img
-                        src="/progress-tracker-preview.png"
-                        alt="Progress Tracker Preview"
-                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                      />
-                    </div>
-                  </Card>
-                </div>
-              </CarouselItem>
-            </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
-          </Carousel>
+        <div className="mx-auto w-full max-w-4xl space-y-8">
+          <Card className="group relative overflow-hidden">
+            <div className="aspect-[16/9] w-full">
+              <img
+                src="/win-journal-preview.png"
+                alt="Win Journal Preview"
+                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+              />
+            </div>
+          </Card>
+
+          <Card className="group relative overflow-hidden">
+            <div className="aspect-[16/9] w-full">
+              <img
+                src="/guided-routine-preview.png"
+                alt="Guided Routine Preview"
+                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+              />
+            </div>
+          </Card>
+
+          <Card className="group relative overflow-hidden">
+            <div className="aspect-[16/9] w-full">
+              <img
+                src="/progress-tracker-preview.png"
+                alt="Progress Tracker Preview"
+                className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+              />
+            </div>
+          </Card>
         </div>
 
         {/* CTA Button */}
