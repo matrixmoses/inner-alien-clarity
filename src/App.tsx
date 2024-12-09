@@ -17,6 +17,8 @@ function App() {
         <Route path="/blog" element={<Blog />} />
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/journal" element={<Index />} />
+        <Route path="/timebox" element={<Dashboard />} />
       </Routes>
       <Toaster />
     </Router>

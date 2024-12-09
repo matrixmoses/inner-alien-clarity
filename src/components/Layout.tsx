@@ -16,8 +16,14 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             TheInnerAlien.co
           </Link>
           <nav className="flex items-center gap-4">
-            <Link to="/blog">
-              <Button variant="ghost">Blog</Button>
+            <Link to="/journal">
+              <Button variant="ghost">Journal</Button>
+            </Link>
+            <Link to="/timebox">
+              <Button variant="ghost">Timebox</Button>
+            </Link>
+            <Link to="/dashboard">
+              <Button variant="ghost">Dashboard</Button>
             </Link>
             <Link to="/login">
               <Button variant="ghost" className="flex items-center gap-2">
