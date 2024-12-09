@@ -22,22 +22,44 @@ export default {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        background: "#F4F5F9",
+        foreground: "#333333",
         primary: {
           DEFAULT: "#9C8ADE",
-          light: "#B8A9E1",
-          dark: "#6EC4A8",
+          foreground: "#FFFFFF",
+          hover: "#7A71C3",
+        },
+        secondary: {
+          DEFAULT: "#6EC4A8",
+          foreground: "#FFFFFF",
+          hover: "#5BA88F",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        muted: {
+          DEFAULT: "#E0E0E0",
+          foreground: "#666666",
         },
         accent: {
           DEFAULT: "#6EC4A8",
-          light: "#8ED3BC",
-          dark: "#4B9C82",
+          foreground: "#FFFFFF",
         },
-        neutral: {
-          DEFAULT: "#F5F5F5",
-          white: "#FFFFFF",
-        }
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        card: {
+          DEFAULT: "#FFFFFF",
+          foreground: "#333333",
+        },
+      },
+      fontFamily: {
+        sans: ["Poppins", "sans-serif"],
+      },
+      boxShadow: {
+        'custom': '0 4px 6px rgba(0, 0, 0, 0.1)',
       },
       keyframes: {
         "accordion-down": {
@@ -52,16 +74,11 @@ export default {
           "0%": { opacity: "0", transform: "translateY(10px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
-        float: {
-          "0%, 100%": { transform: "translateY(0)" },
-          "50%": { transform: "translateY(-10px)" },
-        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "fade-in": "fade-in 0.6s ease-out",
-        float: "float 3s ease-in-out infinite",
+        "fade-in": "fade-in 0.3s ease-out",
       },
     },
   },
