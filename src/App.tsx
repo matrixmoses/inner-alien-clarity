@@ -4,6 +4,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import Blog from "./pages/Blog";
 import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
 import { Toaster } from "./components/ui/toaster";
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
         <Route path="/terms-of-service" element={<TermsOfService />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
       <Toaster />
     </Router>
