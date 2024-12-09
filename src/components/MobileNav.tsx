@@ -29,6 +29,14 @@ export const MobileNav = () => {
                 Blog
               </Button>
             </Link>
+            <Link to="/login">
+              <Button
+                variant="ghost"
+                className="w-full justify-start"
+              >
+                Login
+              </Button>
+            </Link>
             <a 
               href="https://discord.gg/shfZkcHx" 
               target="_blank" 
