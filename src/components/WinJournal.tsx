@@ -10,7 +10,7 @@ interface Win {
   category: "achievement" | "milestone" | "gratitude";
 }
 
-const WinJournal = () => {
+export const WinJournal = () => {
   const wins: Win[] = [
     {
       id: "1",
@@ -83,5 +83,3 @@ const WinJournal = () => {
     </div>
   );
 };
-
-export default WinJournal;
