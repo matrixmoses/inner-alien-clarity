@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Sun, Moon } from "lucide-react";
+import { Sun, Moon, Loader2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { supabase } from "@/integrations/supabase/client";
 
 interface JournalEntry {
+  id: string;
   date: string;
   type: "morning" | "evening";
   content: string;
@@ -14,21 +16,88 @@ interface JournalEntry {
 export const Journal = () => {
   const [morningEntry, setMorningEntry] = useState("");
   const [eveningEntry, setEveningEntry] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  const handleSave = (type: "morning" | "evening", content: string) => {
-    const entries = JSON.parse(localStorage.getItem("journalEntries") || "[]");
-    const date = new Date().toISOString().split('T')[0];
-    const newEntry: JournalEntry = { date, type, content };
-    entries.push(newEntry);
-    localStorage.setItem("journalEntries", JSON.stringify(entries));
-    toast({ 
-      title: "Entry saved!", 
-      description: `Your ${type} entry has been saved.`,
-      className: "bg-primary text-primary-foreground"
-    });
-    if (type === "morning") setMorningEntry("");
-    else setEveningEntry("");
+  useEffect(() => {
+    const loadTodayEntries = async () => {
+      try {
+        const today = new Date().toISOString().split('T')[0];
+        const { data: entries, error } = await supabase
+          .from('journal_entries')
+          .select('*')
+          .eq('date', today);
+
+        if (error) throw error;
+
+        if (entries) {
+          const morning = entries.find(entry => entry.type === 'morning');
+          const evening = entries.find(entry => entry.type === 'evening');
+          if (morning) setMorningEntry(morning.content);
+          if (evening) setEveningEntry(evening.content);
+        }
+      } catch (error) {
+        console.error('Error loading entries:', error);
+        toast({
+          title: "Error loading entries",
+          description: "Could not load your journal entries.",
+          variant: "destructive"
+        });
+      }
+    };
+
+    loadTodayEntries();
+  }, [toast]);
+
+  const handleSave = async (type: "morning" | "evening", content: string) => {
+    setIsLoading(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("No user found");
+
+      const date = new Date().toISOString().split('T')[0];
+      
+      // Check if entry exists for today
+      const { data: existingEntries } = await supabase
+        .from('journal_entries')
+        .select('*')
+        .eq('date', date)
+        .eq('type', type)
+        .single();
+
+      let result;
+      if (existingEntries) {
+        // Update existing entry
+        result = await supabase
+          .from('journal_entries')
+          .update({ content })
+          .eq('id', existingEntries.id);
+      } else {
+        // Insert new entry
+        result = await supabase
+          .from('journal_entries')
+          .insert([
+            { user_id: user.id, type, content, date }
+          ]);
+      }
+
+      if (result.error) throw result.error;
+
+      toast({ 
+        title: "Entry saved!", 
+        description: `Your ${type} entry has been saved.`,
+        className: "bg-primary text-primary-foreground"
+      });
+    } catch (error) {
+      console.error('Error saving entry:', error);
+      toast({
+        title: "Error saving entry",
+        description: "Could not save your journal entry.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -48,7 +117,11 @@ export const Journal = () => {
         <Button 
           onClick={() => handleSave("morning", morningEntry)} 
           className="w-full bg-primary hover:bg-primary-hover text-white transition-colors duration-200"
+          disabled={isLoading}
         >
+          {isLoading ? (
+            <Loader2 className="h-4 w-4 animate-spin mr-2" />
+          ) : null}
           Save Morning Entry
         </Button>
       </Card>
@@ -68,7 +141,11 @@ export const Journal = () => {
         <Button 
           onClick={() => handleSave("evening", eveningEntry)} 
           className="w-full bg-primary hover:bg-primary-hover text-white transition-colors duration-200"
+          disabled={isLoading}
         >
+          {isLoading ? (
+            <Loader2 className="h-4 w-4 animate-spin mr-2" />
+          ) : null}
           Save Evening Entry
         </Button>
       </Card>
