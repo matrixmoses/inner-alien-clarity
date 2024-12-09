@@ -9,6 +9,33 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      journal_entries: {
+        Row: {
+          content: string
+          created_at: string
+          date: string
+          id: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          date?: string
+          id?: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          date?: string
+          id?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       milestones: {
         Row: {
           created_at: string
@@ -163,6 +190,30 @@ export type Database = {
           id?: string
           pomodoros_completed?: number | null
           tasks_completed?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      wins: {
+        Row: {
+          content: string
+          created_at: string
+          date: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          date?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          date?: string
+          id?: string
           user_id?: string
         }
         Relationships: []
