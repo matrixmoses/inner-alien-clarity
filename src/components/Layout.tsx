@@ -28,7 +28,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
           </nav>
         </div>
       </header>
-      <main className="container mx-auto px-4 py-6">
+      <main className="container mx-auto px-4 py-6 animate-fade-in">
         {children}
       </main>
     </div>
