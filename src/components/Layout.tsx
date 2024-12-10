@@ -40,10 +40,10 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex">
+    <div className="min-h-screen bg-[#F4F5F9] flex">
       {isAuthenticated && <Navigation />}
       <div className="flex-1">
-        <header className="border-b">
+        <header className="border-b bg-white">
           <div className="container mx-auto px-4 py-4 flex justify-between items-center">
             <Link to="/" className="text-xl font-semibold">
               TheInnerAlien.co
