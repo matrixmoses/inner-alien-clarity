@@ -141,6 +141,7 @@ export type Database = {
         Row: {
           activity: string
           category: string | null
+          completed: boolean | null
           created_at: string
           description: string | null
           end_time: string
@@ -148,11 +149,13 @@ export type Database = {
           is_completed: boolean | null
           is_editing: boolean | null
           start_time: string
+          task_date: string | null
           user_id: string
         }
         Insert: {
           activity: string
           category?: string | null
+          completed?: boolean | null
           created_at?: string
           description?: string | null
           end_time: string
@@ -160,11 +163,13 @@ export type Database = {
           is_completed?: boolean | null
           is_editing?: boolean | null
           start_time: string
+          task_date?: string | null
           user_id: string
         }
         Update: {
           activity?: string
           category?: string | null
+          completed?: boolean | null
           created_at?: string
           description?: string | null
           end_time?: string
@@ -172,6 +177,7 @@ export type Database = {
           is_completed?: boolean | null
           is_editing?: boolean | null
           start_time?: string
+          task_date?: string | null
           user_id?: string
         }
         Relationships: []
@@ -232,7 +238,13 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      calculate_daily_task_completion: {
+        Args: {
+          user_id_param: string
+          date_param: string
+        }
+        Returns: number
+      }
     }
     Enums: {
       [_ in never]: never
