@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { Sun, Moon } from "lucide-react";
 
 interface JournalEntry {
   type: "morning" | "evening";
@@ -37,12 +38,14 @@ export const JournalDisplay = () => {
 
   if (entries.length === 0) {
     return (
-      <div className="text-xl text-gray-600 italic">
-        No journal entries for today. Visit the{" "}
-        <Link to="/journal" className="text-primary hover:underline">
-          Journal page
-        </Link>{" "}
-        to add your reflections.
+      <div className="text-center p-8 bg-secondary/10 rounded-lg">
+        <p className="text-lg text-gray-600">
+          No journal entries for today. Visit the{" "}
+          <Link to="/journal" className="text-primary hover:underline">
+            Journal page
+          </Link>{" "}
+          to add your reflections.
+        </p>
       </div>
     );
   }
@@ -50,11 +53,23 @@ export const JournalDisplay = () => {
   return (
     <div className="space-y-6">
       {entries.map((entry) => (
-        <div key={entry.type} className="bg-white/50 p-4 rounded-lg">
-          <h2 className="text-lg font-semibold mb-2 capitalize">
-            {entry.type} Reflection
-          </h2>
-          <p className="text-gray-700">{entry.content}</p>
+        <div key={entry.type} className="bg-secondary/10 p-6 rounded-lg">
+          <div className="flex items-center gap-3 mb-4">
+            {entry.type === 'morning' ? (
+              <Sun className="h-5 w-5 text-primary" />
+            ) : (
+              <Moon className="h-5 w-5 text-primary" />
+            )}
+            <h3 className="text-xl font-semibold capitalize">
+              {entry.type} Reflection
+            </h3>
+          </div>
+          <p className="text-sm italic text-gray-600 mb-3">
+            {entry.type === 'morning' 
+              ? "What good shall I do today?" 
+              : "What good have I done today?"}
+          </p>
+          <p className="text-gray-700 whitespace-pre-wrap">{entry.content}</p>
         </div>
       ))}
     </div>

@@ -46,8 +46,8 @@ export const TaskList = ({ tasks, onTaskUpdate }: {
 
   if (!tasks.length) {
     return (
-      <div className="text-gray-500 italic text-center mt-4">
-        No tasks scheduled yet
+      <div className="text-center p-8 bg-secondary/10 rounded-lg">
+        <p className="text-gray-600">No tasks scheduled yet</p>
       </div>
     );
   }
@@ -60,7 +60,7 @@ export const TaskList = ({ tasks, onTaskUpdate }: {
           className="bg-secondary/10 p-4 rounded-lg flex items-center justify-between"
         >
           <div>
-            <h3 className="font-medium">{task.activity}</h3>
+            <h3 className="font-medium text-foreground">{task.activity}</h3>
             <p className="text-sm text-gray-600">
               {task.start_time} - {task.end_time}
             </p>
