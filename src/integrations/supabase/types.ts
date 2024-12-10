@@ -9,6 +9,66 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      achievements: {
+        Row: {
+          created_at: string
+          description: string
+          icon: string
+          id: string
+          name: string
+          unlocked_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          icon: string
+          id?: string
+          name: string
+          unlocked_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          icon?: string
+          id?: string
+          name?: string
+          unlocked_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      badges: {
+        Row: {
+          badge_type: string
+          created_at: string
+          description: string
+          icon: string
+          id: string
+          name: string
+          required_value: number
+        }
+        Insert: {
+          badge_type: string
+          created_at?: string
+          description: string
+          icon: string
+          id?: string
+          name: string
+          required_value: number
+        }
+        Update: {
+          badge_type?: string
+          created_at?: string
+          description?: string
+          icon?: string
+          id?: string
+          name?: string
+          required_value?: number
+        }
+        Relationships: []
+      }
       journal_entries: {
         Row: {
           content: string
@@ -257,6 +317,12 @@ export type Database = {
           p_date: string
         }
         Returns: number
+      }
+      check_and_award_achievements: {
+        Args: {
+          user_id_param: string
+        }
+        Returns: undefined
       }
     }
     Enums: {
