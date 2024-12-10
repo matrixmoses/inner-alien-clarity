@@ -51,9 +51,6 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <Link to="/journal">
                   <Button variant="ghost">Journal</Button>
                 </Link>
-                <Link to="/timebox">
-                  <Button variant="ghost">Timebox</Button>
-                </Link>
                 <Link to="/dashboard">
                   <Button variant="ghost">Dashboard</Button>
                 </Link>
