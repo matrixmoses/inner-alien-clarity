@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
-import { LogIn, LogOut } from "lucide-react";
+import { LogIn, LogOut, Clock, BookOpen, LayoutDashboard } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "./ui/use-toast";
 
@@ -49,10 +49,22 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             {isAuthenticated ? (
               <>
                 <Link to="/journal">
-                  <Button variant="ghost">Journal</Button>
+                  <Button variant="ghost" className="flex items-center gap-2">
+                    <BookOpen className="h-4 w-4" />
+                    Journal
+                  </Button>
+                </Link>
+                <Link to="/timebox">
+                  <Button variant="ghost" className="flex items-center gap-2">
+                    <Clock className="h-4 w-4" />
+                    TimeBox
+                  </Button>
                 </Link>
                 <Link to="/dashboard">
-                  <Button variant="ghost">Dashboard</Button>
+                  <Button variant="ghost" className="flex items-center gap-2">
+                    <LayoutDashboard className="h-4 w-4" />
+                    Dashboard
+                  </Button>
                 </Link>
                 <Button 
                   variant="ghost" 
