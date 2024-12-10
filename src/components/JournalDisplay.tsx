@@ -38,10 +38,10 @@ export const JournalDisplay = () => {
 
   if (entries.length === 0) {
     return (
-      <div className="text-center p-8 bg-secondary/10 rounded-lg">
+      <div className="text-center p-8 bg-[#6EC4A8]/10 rounded-lg">
         <p className="text-lg text-gray-600">
           No journal entries for today. Visit the{" "}
-          <Link to="/journal" className="text-primary hover:underline">
+          <Link to="/journal" className="text-[#9C8ADE] hover:underline">
             Journal page
           </Link>{" "}
           to add your reflections.
@@ -53,12 +53,12 @@ export const JournalDisplay = () => {
   return (
     <div className="space-y-6">
       {entries.map((entry) => (
-        <div key={entry.type} className="bg-secondary/10 p-6 rounded-lg">
+        <div key={entry.type} className="bg-[#6EC4A8]/10 p-6 rounded-lg">
           <div className="flex items-center gap-3 mb-4">
             {entry.type === 'morning' ? (
-              <Sun className="h-5 w-5 text-primary" />
+              <Sun className="h-5 w-5 text-[#9C8ADE]" />
             ) : (
-              <Moon className="h-5 w-5 text-primary" />
+              <Moon className="h-5 w-5 text-[#9C8ADE]" />
             )}
             <h3 className="text-xl font-semibold capitalize">
               {entry.type} Reflection

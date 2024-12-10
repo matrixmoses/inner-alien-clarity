@@ -22,6 +22,7 @@ export const TimeBoxForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [tasks, setTasks] = useState<TimeBoxTask[]>([]);
   const { toast } = useToast();
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [task, setTask] = useState<Omit<TimeBoxTask, 'id' | 'is_completed' | 'created_at' | 'user_id'>>({
     start_time: "",
     end_time: "",
@@ -35,7 +36,7 @@ export const TimeBoxForm = () => {
       const { data, error } = await supabase
         .from('tasks')
         .select('*')
-        .eq('date', new Date().toISOString().split('T')[0])
+        .eq('date', selectedDate)
         .order('start_time', { ascending: true });
 
       if (error) throw error;
@@ -52,10 +53,23 @@ export const TimeBoxForm = () => {
 
   useEffect(() => {
     loadTasks();
-  }, []);
+  }, [selectedDate]);
+
+  const validateForm = () => {
+    if (!task.activity || !task.start_time || !task.end_time) {
+      toast({
+        title: "Validation Error",
+        description: "Please fill out all fields before adding a task.",
+        variant: "destructive",
+      });
+      return false;
+    }
+    return true;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validateForm()) return;
     setIsLoading(true);
 
     try {
@@ -70,7 +84,7 @@ export const TimeBoxForm = () => {
             start_time: task.start_time,
             end_time: task.end_time,
             activity: task.activity,
-            date: new Date().toISOString().split('T')[0],
+            date: selectedDate,
             category: 'timebox'
           }
         ]);
@@ -112,7 +126,15 @@ export const TimeBoxForm = () => {
             placeholder="Task name"
             value={task.activity}
             onChange={(e) => setTask({ ...task, activity: e.target.value })}
-            className="w-full bg-secondary/20 border-none h-12 text-lg"
+            className="w-full bg-[#6EC4A8]/20 border-none h-12 text-lg"
+            required
+          />
+          
+          <Input
+            type="date"
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
+            className="w-full bg-[#6EC4A8]/20 border-none h-12"
             required
           />
           
@@ -122,7 +144,7 @@ export const TimeBoxForm = () => {
                 type="time"
                 value={task.start_time}
                 onChange={(e) => setTask({ ...task, start_time: e.target.value })}
-                className="w-full bg-secondary/20 border-none h-12"
+                className="w-full bg-[#6EC4A8]/20 border-none h-12"
                 required
               />
               <Clock className="absolute right-3 top-3 text-gray-400" size={20} />
@@ -132,7 +154,7 @@ export const TimeBoxForm = () => {
                 type="time"
                 value={task.end_time}
                 onChange={(e) => setTask({ ...task, end_time: e.target.value })}
-                className="w-full bg-secondary/20 border-none h-12"
+                className="w-full bg-[#6EC4A8]/20 border-none h-12"
                 required
               />
               <Clock className="absolute right-3 top-3 text-gray-400" size={20} />
@@ -142,7 +164,7 @@ export const TimeBoxForm = () => {
 
         <Button
           type="submit"
-          className="w-full bg-primary hover:bg-primary-hover text-white h-12 text-lg"
+          className="w-full bg-[#9C8ADE] hover:bg-[#9C8ADE]/80 text-white h-12 text-lg"
           disabled={isLoading}
         >
           Add Task
