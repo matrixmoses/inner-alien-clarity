@@ -150,6 +150,8 @@ export type Database = {
           is_editing: boolean | null
           start_time: string
           task_date: string | null
+          task_description: string | null
+          task_name: string | null
           user_id: string
         }
         Insert: {
@@ -164,6 +166,8 @@ export type Database = {
           is_editing?: boolean | null
           start_time: string
           task_date?: string | null
+          task_description?: string | null
+          task_name?: string | null
           user_id: string
         }
         Update: {
@@ -178,6 +182,8 @@ export type Database = {
           is_editing?: boolean | null
           start_time?: string
           task_date?: string | null
+          task_description?: string | null
+          task_name?: string | null
           user_id?: string
         }
         Relationships: []
@@ -242,6 +248,13 @@ export type Database = {
         Args: {
           user_id_param: string
           date_param: string
+        }
+        Returns: number
+      }
+      calculate_task_completion_percentage: {
+        Args: {
+          p_user_id: string
+          p_date: string
         }
         Returns: number
       }
