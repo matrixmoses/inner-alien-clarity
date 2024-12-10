@@ -27,10 +27,13 @@ export const TimeBoxForm = () => {
 
     try {
       const { error } = await supabase.from("tasks").insert({
+        activity: taskName, // Using taskName as activity (required field)
         task_name: taskName,
         task_date: format(date, "yyyy-MM-dd"),
         start_time: startTime,
         end_time: endTime,
+        user_id: "00000000-0000-0000-0000-000000000000", // Placeholder UUID
+        category: "timebox"
       });
 
       if (error) throw error;
