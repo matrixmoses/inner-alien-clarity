@@ -140,7 +140,9 @@ export type Database = {
       tasks: {
         Row: {
           activity: string
+          category: string | null
           created_at: string
+          description: string | null
           end_time: string
           id: string
           is_completed: boolean | null
@@ -149,7 +151,9 @@ export type Database = {
         }
         Insert: {
           activity: string
+          category?: string | null
           created_at?: string
+          description?: string | null
           end_time: string
           id?: string
           is_completed?: boolean | null
@@ -158,7 +162,9 @@ export type Database = {
         }
         Update: {
           activity?: string
+          category?: string | null
           created_at?: string
+          description?: string | null
           end_time?: string
           id?: string
           is_completed?: boolean | null
