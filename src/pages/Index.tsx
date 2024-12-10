@@ -1,10 +1,14 @@
 import { Layout } from "@/components/Layout";
 import { Journal } from "@/components/Journal";
+import { TimeBox } from "@/components/TimeBox";
 
 const Index = () => {
   return (
     <Layout>
-      <Journal />
+      <div className="space-y-8">
+        <TimeBox />
+        <Journal />
+      </div>
     </Layout>
   );
 };
