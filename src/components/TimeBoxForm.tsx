@@ -1,17 +1,15 @@
 import { useState } from "react";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2 } from "lucide-react";
+import { Calendar, Clock } from "lucide-react";
 
 interface TimeBoxTask {
   start_time: string;
   end_time: string;
   activity: string;
-  description?: string;
+  date: string;
 }
 
 export const TimeBoxForm = () => {
@@ -21,7 +19,7 @@ export const TimeBoxForm = () => {
     start_time: "",
     end_time: "",
     activity: "",
-    description: "",
+    date: new Date().toISOString().split('T')[0]
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -40,7 +38,6 @@ export const TimeBoxForm = () => {
             start_time: task.start_time,
             end_time: task.end_time,
             activity: task.activity,
-            description: task.description,
             category: 'timebox'
           }
         ]);
@@ -53,12 +50,11 @@ export const TimeBoxForm = () => {
         className: "bg-secondary text-white",
       });
 
-      // Reset form
       setTask({
         start_time: "",
         end_time: "",
         activity: "",
-        description: "",
+        date: new Date().toISOString().split('T')[0]
       });
     } catch (error) {
       console.error('Error saving time box:', error);
@@ -73,77 +69,60 @@ export const TimeBoxForm = () => {
   };
 
   return (
-    <Card className="p-6 bg-white shadow-lg animate-fade-in">
-      <h2 className="text-xl font-semibold mb-6">Schedule Your Time</h2>
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <label htmlFor="start_time" className="block text-sm font-medium text-gray-700">
-              Start Time
-            </label>
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="space-y-4">
+        <Input
+          placeholder="Task name"
+          value={task.activity}
+          onChange={(e) => setTask({ ...task, activity: e.target.value })}
+          className="w-full bg-secondary/20 border-none h-12 text-lg"
+          required
+        />
+        
+        <div className="flex items-center gap-4">
+          <div className="relative flex-1">
             <Input
-              id="start_time"
+              type="date"
+              value={task.date}
+              onChange={(e) => setTask({ ...task, date: e.target.value })}
+              className="w-full bg-secondary/20 border-none h-12"
+              required
+            />
+            <Calendar className="absolute right-3 top-3 text-gray-400" size={20} />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div className="relative">
+            <Input
               type="time"
               value={task.start_time}
               onChange={(e) => setTask({ ...task, start_time: e.target.value })}
-              className="w-full"
+              className="w-full bg-secondary/20 border-none h-12"
               required
             />
+            <Clock className="absolute right-3 top-3 text-gray-400" size={20} />
           </div>
-          <div className="space-y-2">
-            <label htmlFor="end_time" className="block text-sm font-medium text-gray-700">
-              End Time
-            </label>
+          <div className="relative">
             <Input
-              id="end_time"
               type="time"
               value={task.end_time}
               onChange={(e) => setTask({ ...task, end_time: e.target.value })}
-              className="w-full"
+              className="w-full bg-secondary/20 border-none h-12"
               required
             />
+            <Clock className="absolute right-3 top-3 text-gray-400" size={20} />
           </div>
         </div>
+      </div>
 
-        <div className="space-y-2">
-          <label htmlFor="activity" className="block text-sm font-medium text-gray-700">
-            Activity
-          </label>
-          <Input
-            id="activity"
-            type="text"
-            value={task.activity}
-            onChange={(e) => setTask({ ...task, activity: e.target.value })}
-            placeholder="Enter activity name"
-            className="w-full"
-            required
-          />
-        </div>
-
-        <div className="space-y-2">
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-            Description
-          </label>
-          <Textarea
-            id="description"
-            value={task.description}
-            onChange={(e) => setTask({ ...task, description: e.target.value })}
-            placeholder="Enter task description"
-            className="w-full min-h-[100px]"
-          />
-        </div>
-
-        <Button
-          type="submit"
-          className="w-full bg-primary hover:bg-primary-hover text-white"
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <Loader2 className="h-4 w-4 animate-spin mr-2" />
-          ) : null}
-          Save Time Box
-        </Button>
-      </form>
-    </Card>
+      <Button
+        type="submit"
+        className="w-full bg-primary hover:bg-primary-hover text-white h-12 text-lg"
+        disabled={isLoading}
+      >
+        Add Task
+      </Button>
+    </form>
   );
 };

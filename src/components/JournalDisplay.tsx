@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Sun, Moon } from "lucide-react";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 
 interface JournalEntry {
@@ -25,7 +24,6 @@ export const JournalDisplay = () => {
       }
 
       if (data) {
-        // Filter and type assert the data to ensure it matches our interface
         const validEntries = data.filter(
           (entry): entry is JournalEntry => 
             entry.type === 'morning' || entry.type === 'evening'
@@ -37,32 +35,28 @@ export const JournalDisplay = () => {
     fetchTodayEntries();
   }, []);
 
-  const getMorningEntry = () => entries.find(entry => entry.type === 'morning')?.content || '';
-  const getEveningEntry = () => entries.find(entry => entry.type === 'evening')?.content || '';
+  if (entries.length === 0) {
+    return (
+      <div className="text-xl text-gray-600 italic">
+        No journal entries for today. Visit the{" "}
+        <Link to="/journal" className="text-primary hover:underline">
+          Journal page
+        </Link>{" "}
+        to add your reflections.
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <Card className="p-6 bg-secondary shadow-lg">
-        <div className="flex items-center gap-3 mb-4">
-          <Sun className="h-6 w-6 text-white" />
-          <h2 className="text-xl font-semibold text-white">Morning Journal</h2>
+    <div className="space-y-6">
+      {entries.map((entry) => (
+        <div key={entry.type} className="bg-white/50 p-4 rounded-lg">
+          <h2 className="text-lg font-semibold mb-2 capitalize">
+            {entry.type} Reflection
+          </h2>
+          <p className="text-gray-700">{entry.content}</p>
         </div>
-        <p className="text-lg mb-4 italic text-white/90">What good shall I do this day?</p>
-        <div className="bg-white/90 p-4 rounded-lg min-h-[150px] text-foreground">
-          {getMorningEntry() || "No morning entry for today"}
-        </div>
-      </Card>
-
-      <Card className="p-6 bg-secondary shadow-lg">
-        <div className="flex items-center gap-3 mb-4">
-          <Moon className="h-6 w-6 text-white" />
-          <h2 className="text-xl font-semibold text-white">Evening Journal</h2>
-        </div>
-        <p className="text-lg mb-4 italic text-white/90">What good have I done today?</p>
-        <div className="bg-white/90 p-4 rounded-lg min-h-[150px] text-foreground">
-          {getEveningEntry() || "No evening entry for today"}
-        </div>
-      </Card>
+      ))}
     </div>
   );
 };
