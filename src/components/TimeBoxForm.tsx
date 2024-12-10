@@ -11,19 +11,23 @@ interface TimeBoxTask {
   start_time: string;
   end_time: string;
   activity: string;
-  date: string;
   is_completed: boolean | null;
+  category?: string;
+  description?: string;
+  created_at: string;
+  user_id: string;
 }
 
 export const TimeBoxForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [tasks, setTasks] = useState<TimeBoxTask[]>([]);
   const { toast } = useToast();
-  const [task, setTask] = useState<Omit<TimeBoxTask, 'id' | 'is_completed'>>({
+  const [task, setTask] = useState<Omit<TimeBoxTask, 'id' | 'is_completed' | 'created_at' | 'user_id'>>({
     start_time: "",
     end_time: "",
     activity: "",
-    date: new Date().toISOString().split('T')[0]
+    category: 'timebox',
+    description: ""
   });
 
   const loadTasks = async () => {
@@ -66,7 +70,7 @@ export const TimeBoxForm = () => {
             start_time: task.start_time,
             end_time: task.end_time,
             activity: task.activity,
-            date: task.date,
+            date: new Date().toISOString().split('T')[0],
             category: 'timebox'
           }
         ]);
@@ -83,7 +87,8 @@ export const TimeBoxForm = () => {
         start_time: "",
         end_time: "",
         activity: "",
-        date: new Date().toISOString().split('T')[0]
+        category: 'timebox',
+        description: ""
       });
 
       loadTasks();
@@ -111,19 +116,6 @@ export const TimeBoxForm = () => {
             required
           />
           
-          <div className="flex items-center gap-4">
-            <div className="relative flex-1">
-              <Input
-                type="date"
-                value={task.date}
-                onChange={(e) => setTask({ ...task, date: e.target.value })}
-                className="w-full bg-secondary/20 border-none h-12"
-                required
-              />
-              <Calendar className="absolute right-3 top-3 text-gray-400" size={20} />
-            </div>
-          </div>
-
           <div className="grid grid-cols-2 gap-4">
             <div className="relative">
               <Input
