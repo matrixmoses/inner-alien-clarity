@@ -146,6 +146,7 @@ export type Database = {
           end_time: string
           id: string
           is_completed: boolean | null
+          is_editing: boolean | null
           start_time: string
           user_id: string
         }
@@ -157,6 +158,7 @@ export type Database = {
           end_time: string
           id?: string
           is_completed?: boolean | null
+          is_editing?: boolean | null
           start_time: string
           user_id: string
         }
@@ -168,6 +170,7 @@ export type Database = {
           end_time?: string
           id?: string
           is_completed?: boolean | null
+          is_editing?: boolean | null
           start_time?: string
           user_id?: string
         }
