@@ -25,7 +25,12 @@ export const JournalDisplay = () => {
       }
 
       if (data) {
-        setEntries(data);
+        // Filter and type assert the data to ensure it matches our interface
+        const validEntries = data.filter(
+          (entry): entry is JournalEntry => 
+            entry.type === 'morning' || entry.type === 'evening'
+        );
+        setEntries(validEntries);
       }
     };
 
