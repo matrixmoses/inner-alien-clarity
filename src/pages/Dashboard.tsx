@@ -11,8 +11,6 @@ import { ProductivityGraphs } from "@/components/dashboard/ProductivityGraphs";
 import { StreakTracker } from "@/components/dashboard/StreakTracker";
 import { TimeBoxHistory } from "@/components/dashboard/TimeBoxHistory";
 import { TimeStatistics } from "@/components/dashboard/TimeStatistics";
-import { JournalDisplay } from "@/components/JournalDisplay";
-import { Loader2 } from "lucide-react";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -40,11 +38,6 @@ const Dashboard = () => {
         <h1 className="text-3xl font-bold mb-8">Dashboard</h1>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Today's Journal</h2>
-            <JournalDisplay />
-          </Card>
-          
           <Card className="p-6">
             <h2 className="text-xl font-semibold mb-4">Focus Timer</h2>
             <CompactPomodoro />
