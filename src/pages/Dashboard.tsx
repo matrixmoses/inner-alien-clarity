@@ -5,51 +5,16 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
-import { Award, Clock, Trophy, Book, Dumbbell, Briefcase, MoreHorizontal } from "lucide-react";
+import { Clock } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-
-interface WeeklyProgress {
-  date: string;
-  completion: number;
-}
-
-interface Achievement {
-  name: string;
-  description: string;
-  icon: string;
-  unlocked_at: string | null;
-}
-
-interface SubjectStreak {
-  subject: string;
-  weekly_streak: number;
-  monthly_streak: number;
-  overall_streak: number;
-  weekly_total_hours: number;
-  monthly_total_hours: number;
-  all_time_total_hours: number;
-}
-
-const getSubjectIcon = (subject: string) => {
-  switch (subject) {
-    case 'study':
-      return <Book className="w-6 h-6 text-primary" />;
-    case 'sports':
-      return <Dumbbell className="w-6 h-6 text-primary" />;
-    case 'work':
-      return <Briefcase className="w-6 h-6 text-primary" />;
-    default:
-      return <MoreHorizontal className="w-6 h-6 text-primary" />;
-  }
-};
+import { AchievementsDisplay } from "@/components/dashboard/AchievementsDisplay";
+import { SubjectStreaks } from "@/components/dashboard/SubjectStreaks";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [todayProgress, setTodayProgress] = useState(0);
-  const [weeklyProgress, setWeeklyProgress] = useState<WeeklyProgress[]>([]);
-  const [achievements, setAchievements] = useState<Achievement[]>([]);
-  const [subjectStreaks, setSubjectStreaks] = useState<SubjectStreak[]>([]);
+  const [weeklyProgress, setWeeklyProgress] = useState([]);
   const [totalTimeToday, setTotalTimeToday] = useState(0);
   const [weeklyAverageTime, setWeeklyAverageTime] = useState(0);
 
@@ -73,20 +38,6 @@ const Dashboard = () => {
         { user_id_param: session.user.id, date_param: today }
       );
       setTodayProgress(todayData || 0);
-
-      // Fetch achievements
-      const { data: achievementsData } = await supabase
-        .from('achievements')
-        .select('*')
-        .eq('user_id', session.user.id);
-      setAchievements(achievementsData || []);
-
-      // Fetch subject streaks
-      const { data: streaksData } = await supabase
-        .from('subject_streaks')
-        .select('*')
-        .eq('user_id', session.user.id);
-      setSubjectStreaks(streaksData || []);
 
       // Calculate weekly progress
       const last7Days = Array.from({length: 7}, (_, i) => {
@@ -188,44 +139,10 @@ const Dashboard = () => {
           </Card>
 
           {/* Subject Streaks */}
-          <Card className="p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <Trophy className="w-6 h-6 text-primary" />
-              <h2 className="text-xl font-semibold">Subject Streaks</h2>
-            </div>
-            <div className="space-y-4">
-              {subjectStreaks.map((streak) => (
-                <div key={streak.subject} className="flex items-center gap-3">
-                  {getSubjectIcon(streak.subject)}
-                  <div>
-                    <p className="font-medium capitalize">{streak.subject}</p>
-                    <p className="text-sm text-gray-500">
-                      {streak.weekly_streak} week streak • {Math.round(streak.weekly_total_hours)}h this week
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Card>
+          <SubjectStreaks />
 
           {/* Achievements */}
-          <Card className="p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <Award className="w-6 h-6 text-primary" />
-              <h2 className="text-xl font-semibold">Achievements</h2>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              {achievements.map((achievement) => (
-                <div
-                  key={achievement.name}
-                  className="p-3 bg-primary/10 rounded-lg flex flex-col items-center text-center"
-                >
-                  <Award className="w-8 h-8 text-primary mb-2" />
-                  <p className="text-sm font-medium">{achievement.name}</p>
-                </div>
-              ))}
-            </div>
-          </Card>
+          <AchievementsDisplay />
 
           {/* Weekly Progress Chart */}
           <Card className="p-6 col-span-full">
