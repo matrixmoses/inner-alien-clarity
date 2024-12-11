@@ -29,8 +29,17 @@ export const TimeBoxForm = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("No user found");
 
+      console.log("Creating task with data:", {
+        user_id: user.id,
+        task_name: taskName,
+        task_date: format(date, "yyyy-MM-dd"),
+        start_time: startTime,
+        end_time: endTime,
+        activity: taskName,
+      });
+
       // Create the task first
-      const { error: taskError } = await supabase
+      const { data, error: taskError } = await supabase
         .from("tasks")
         .insert({
           user_id: user.id,
@@ -45,9 +54,15 @@ export const TimeBoxForm = () => {
           description: taskName,
           is_editing: false,
           subject: "other"
-        });
+        })
+        .select();
 
-      if (taskError) throw taskError;
+      if (taskError) {
+        console.error("Task creation error:", taskError);
+        throw taskError;
+      }
+
+      console.log("Task created successfully:", data);
 
       toast({
         title: "Success",
@@ -59,7 +74,7 @@ export const TimeBoxForm = () => {
       setStartTime("");
       setEndTime("");
     } catch (error: any) {
-      console.error("Error adding task:", error);
+      console.error("Detailed error:", error);
       toast({
         title: "Error",
         description: error.message || "Failed to add task",
