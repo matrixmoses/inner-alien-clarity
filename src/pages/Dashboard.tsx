@@ -7,6 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { Award, Clock, Trophy, Book, Dumbbell, Briefcase, MoreHorizontal } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { useQuery } from "@tanstack/react-query";
 
 interface WeeklyProgress {
   date: string;
@@ -43,13 +44,29 @@ const getSubjectIcon = (subject: string) => {
   }
 };
 
+const fetchUserData = async (userId: string) => {
+  const [achievementsResponse, subjectStreaksResponse] = await Promise.all([
+    supabase
+      .from('achievements')
+      .select('*')
+      .eq('user_id', userId),
+    supabase
+      .from('subject_streaks')
+      .select('*')
+      .eq('user_id', userId)
+  ]);
+
+  return {
+    achievements: achievementsResponse.data || [],
+    subjectStreaks: subjectStreaksResponse.data || []
+  };
+};
+
 const Dashboard = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [todayProgress, setTodayProgress] = useState(0);
   const [weeklyProgress, setWeeklyProgress] = useState<WeeklyProgress[]>([]);
-  const [achievements, setAchievements] = useState<Achievement[]>([]);
-  const [subjectStreaks, setSubjectStreaks] = useState<SubjectStreak[]>([]);
   const [totalTimeToday, setTotalTimeToday] = useState(0);
   const [weeklyAverageTime, setWeeklyAverageTime] = useState(0);
 
@@ -73,20 +90,6 @@ const Dashboard = () => {
         { user_id_param: session.user.id, date_param: today }
       );
       setTodayProgress(todayData || 0);
-
-      // Fetch achievements
-      const { data: achievementsData } = await supabase
-        .from('achievements')
-        .select('*')
-        .eq('user_id', session.user.id);
-      setAchievements(achievementsData || []);
-
-      // Fetch subject streaks
-      const { data: streaksData } = await supabase
-        .from('subject_streaks')
-        .select('*')
-        .eq('user_id', session.user.id);
-      setSubjectStreaks(streaksData || []);
 
       // Calculate weekly progress
       const last7Days = Array.from({length: 7}, (_, i) => {
@@ -151,6 +154,16 @@ const Dashboard = () => {
     checkAuth();
   }, [navigate, toast]);
 
+  // Use React Query to fetch user data
+  const { data: userData } = useQuery({
+    queryKey: ['userData'],
+    queryFn: async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return null;
+      return fetchUserData(session.user.id);
+    },
+  });
+
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8">
@@ -194,7 +207,7 @@ const Dashboard = () => {
               <h2 className="text-xl font-semibold">Subject Streaks</h2>
             </div>
             <div className="space-y-4">
-              {subjectStreaks.map((streak) => (
+              {userData?.subjectStreaks.map((streak) => (
                 <div key={streak.subject} className="flex items-center gap-3">
                   {getSubjectIcon(streak.subject)}
                   <div>
@@ -205,6 +218,9 @@ const Dashboard = () => {
                   </div>
                 </div>
               ))}
+              {(!userData?.subjectStreaks || userData.subjectStreaks.length === 0) && (
+                <p className="text-sm text-gray-500">No subject streaks yet. Start completing tasks to build your streaks!</p>
+              )}
             </div>
           </Card>
 
@@ -215,7 +231,7 @@ const Dashboard = () => {
               <h2 className="text-xl font-semibold">Achievements</h2>
             </div>
             <div className="grid grid-cols-2 gap-4">
-              {achievements.map((achievement) => (
+              {userData?.achievements.map((achievement) => (
                 <div
                   key={achievement.name}
                   className="p-3 bg-primary/10 rounded-lg flex flex-col items-center text-center"
@@ -224,6 +240,9 @@ const Dashboard = () => {
                   <p className="text-sm font-medium">{achievement.name}</p>
                 </div>
               ))}
+              {(!userData?.achievements || userData.achievements.length === 0) && (
+                <p className="text-sm text-gray-500 col-span-2">No achievements yet. Keep working to unlock them!</p>
+              )}
             </div>
           </Card>
 
