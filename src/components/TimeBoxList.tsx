@@ -52,13 +52,22 @@ export const TimeBoxList = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("No user found");
 
-      const { error } = await supabase
+      // First, delete related pomodoro sessions
+      const { error: pomodoroError } = await supabase
+        .from("pomodoro_sessions")
+        .delete()
+        .eq("task_id", id);
+
+      if (pomodoroError) throw pomodoroError;
+
+      // Then delete the task
+      const { error: taskError } = await supabase
         .from("tasks")
         .delete()
         .eq("id", id)
         .eq("user_id", user.id);
 
-      if (error) throw error;
+      if (taskError) throw taskError;
 
       toast({
         title: "Success",

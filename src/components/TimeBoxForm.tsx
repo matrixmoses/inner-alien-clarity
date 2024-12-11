@@ -29,22 +29,41 @@ export const TimeBoxForm = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("No user found");
 
-      const { error } = await supabase.from("tasks").insert({
-        user_id: user.id,
-        task_name: taskName,
-        task_date: format(date, "yyyy-MM-dd"),
-        start_time: startTime,
-        end_time: endTime,
-        activity: taskName,
-        category: "timebox",
-        completed: false,
-        is_completed: false,
-        description: taskName, // Adding description to match schema
-        is_editing: false, // Adding is_editing to match schema
-        subject: "other" // Adding default subject to match schema
-      });
+      // First, ensure the subject streak record exists
+      const { error: streakError } = await supabase
+        .from("subject_streaks")
+        .upsert({
+          user_id: user.id,
+          subject: "other",
+          weekly_streak: 0,
+          monthly_streak: 0,
+          overall_streak: 0,
+          weekly_total_hours: 0,
+          monthly_total_hours: 0,
+          all_time_total_hours: 0
+        });
 
-      if (error) throw error;
+      if (streakError) throw streakError;
+
+      // Then create the task
+      const { error: taskError } = await supabase
+        .from("tasks")
+        .insert({
+          user_id: user.id,
+          task_name: taskName,
+          task_date: format(date, "yyyy-MM-dd"),
+          start_time: startTime,
+          end_time: endTime,
+          activity: taskName,
+          category: "timebox",
+          completed: false,
+          is_completed: false,
+          description: taskName,
+          is_editing: false,
+          subject: "other"
+        });
+
+      if (taskError) throw taskError;
 
       toast({
         title: "Success",
