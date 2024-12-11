@@ -31,7 +31,13 @@ export const JournalHistory = () => {
           .order("date", { ascending: false });
 
         if (error) throw error;
-        setEntries(data || []);
+
+        // Validate and transform the entries
+        const validEntries = (data || []).filter((entry): entry is JournalEntry => {
+          return entry.type === "morning" || entry.type === "evening";
+        });
+
+        setEntries(validEntries);
       } catch (error) {
         console.error("Error fetching journal entries:", error);
       } finally {
