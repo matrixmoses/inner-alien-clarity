@@ -3,7 +3,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "./ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 
 export const TimeBoxForm = () => {
@@ -35,9 +35,10 @@ export const TimeBoxForm = () => {
         task_date: format(date, "yyyy-MM-dd"),
         start_time: startTime,
         end_time: endTime,
-        activity: taskName,
+        activity: taskName, // Set activity equal to taskName since it's required
         category: "timebox",
-        completed: false
+        completed: false,
+        is_completed: false // Ensure this is set to match the schema
       });
 
       if (error) throw error;
@@ -51,11 +52,11 @@ export const TimeBoxForm = () => {
       setTaskName("");
       setStartTime("");
       setEndTime("");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error adding task:", error);
       toast({
         title: "Error",
-        description: "Failed to add task",
+        description: error.message || "Failed to add task",
         variant: "destructive",
       });
     }
