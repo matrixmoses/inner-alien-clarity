@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { ChevronLeft, ChevronRight, Notebook, Clock, LayoutDashboard, Hourglass } from "lucide-react";
+import { ChevronLeft, ChevronRight, Notebook, Clock, LayoutDashboard, History, Hourglass } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const navItems = [
@@ -19,6 +19,11 @@ const navItems = [
     label: "Dashboard",
     icon: LayoutDashboard,
     href: "/dashboard",
+  },
+  {
+    label: "History",
+    icon: History,
+    href: "/history",
   },
   {
     label: "Procrastination",

@@ -6,6 +6,7 @@ import Blog from "./pages/Blog";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import TimeBox from "./pages/TimeBox";
+import History from "./pages/History";
 import { Toaster } from "./components/ui/toaster";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 
@@ -21,6 +22,7 @@ function App() {
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="/journal" element={<ProtectedRoute><Index /></ProtectedRoute>} />
         <Route path="/timebox" element={<ProtectedRoute><TimeBox /></ProtectedRoute>} />
+        <Route path="/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
       </Routes>
       <Toaster />
     </Router>
