@@ -35,10 +35,13 @@ export const TimeBoxForm = () => {
         task_date: format(date, "yyyy-MM-dd"),
         start_time: startTime,
         end_time: endTime,
-        activity: taskName, // Set activity equal to taskName since it's required
+        activity: taskName,
         category: "timebox",
         completed: false,
-        is_completed: false // Ensure this is set to match the schema
+        is_completed: false,
+        description: taskName, // Adding description to match schema
+        is_editing: false, // Adding is_editing to match schema
+        subject: "other" // Adding default subject to match schema
       });
 
       if (error) throw error;
