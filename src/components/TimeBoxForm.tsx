@@ -31,11 +31,11 @@ export const TimeBoxForm = () => {
 
       const { error } = await supabase.from("tasks").insert({
         user_id: user.id,
-        activity: taskName,
         task_name: taskName,
         task_date: format(date, "yyyy-MM-dd"),
         start_time: startTime,
         end_time: endTime,
+        activity: taskName,
         category: "timebox",
         completed: false
       });

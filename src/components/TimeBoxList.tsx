@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "./ui/use-toast";
 import { Check, X, Trash2, Clock } from "lucide-react";
-import { format, addDays, isBefore, isToday, isTomorrow } from "date-fns";
+import { format, addDays, isToday, isTomorrow } from "date-fns";
 
 interface Task {
   id: string;
@@ -19,23 +19,28 @@ export const TimeBoxList = () => {
   const { toast } = useToast();
 
   const fetchTasks = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
 
-    const { data, error } = await supabase
-      .from("tasks")
-      .select("*")
-      .gte('task_date', format(new Date(), "yyyy-MM-dd"))
-      .eq("user_id", user.id)
-      .order('task_date', { ascending: true })
-      .order('start_time', { ascending: true });
+      const { data, error } = await supabase
+        .from("tasks")
+        .select("*")
+        .gte('task_date', format(new Date(), "yyyy-MM-dd"))
+        .eq("user_id", user.id)
+        .order('task_date', { ascending: true })
+        .order('start_time', { ascending: true });
 
-    if (error) {
+      if (error) throw error;
+      setTasks(data || []);
+    } catch (error) {
       console.error("Error fetching tasks:", error);
-      return;
+      toast({
+        title: "Error",
+        description: "Failed to fetch tasks",
+        variant: "destructive",
+      });
     }
-
-    setTasks(data || []);
   };
 
   useEffect(() => {
@@ -43,10 +48,10 @@ export const TimeBoxList = () => {
   }, []);
 
   const handleDelete = async (id: string) => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
-
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("No user found");
+
       const { error } = await supabase
         .from("tasks")
         .delete()
@@ -72,10 +77,10 @@ export const TimeBoxList = () => {
   };
 
   const handleTaskStatus = async (id: string, status: 'completed' | 'missed') => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
-
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("No user found");
+
       const { error } = await supabase
         .from("tasks")
         .update({ completed: status === 'completed' })
@@ -101,9 +106,6 @@ export const TimeBoxList = () => {
   };
 
   const groupTasksByDate = (tasks: Task[]) => {
-    const today = new Date();
-    const tomorrow = addDays(today, 1);
-
     return {
       today: tasks.filter(task => isToday(new Date(task.task_date))),
       tomorrow: tasks.filter(task => isTomorrow(new Date(task.task_date))),
@@ -113,8 +115,6 @@ export const TimeBoxList = () => {
       })
     };
   };
-
-  const groupedTasks = groupTasksByDate(tasks);
 
   const TaskGroup = ({ title, tasks }: { title: string; tasks: Task[] }) => {
     if (tasks.length === 0) return null;
@@ -174,6 +174,8 @@ export const TimeBoxList = () => {
     );
   };
 
+  const groupedTasks = groupTasksByDate(tasks);
+
   if (tasks.length === 0) {
     return (
       <div className="text-center p-8 bg-white rounded-lg">
@@ -183,7 +185,7 @@ export const TimeBoxList = () => {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="flex flex-col space-y-8">
       <TaskGroup title="Today's Tasks" tasks={groupedTasks.today} />
       <TaskGroup title="Tomorrow's Tasks" tasks={groupedTasks.tomorrow} />
       <TaskGroup title="Upcoming Tasks" tasks={groupedTasks.future} />
