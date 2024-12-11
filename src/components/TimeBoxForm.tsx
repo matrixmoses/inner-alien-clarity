@@ -29,23 +29,7 @@ export const TimeBoxForm = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("No user found");
 
-      // First, ensure the subject streak record exists
-      const { error: streakError } = await supabase
-        .from("subject_streaks")
-        .upsert({
-          user_id: user.id,
-          subject: "other",
-          weekly_streak: 0,
-          monthly_streak: 0,
-          overall_streak: 0,
-          weekly_total_hours: 0,
-          monthly_total_hours: 0,
-          all_time_total_hours: 0
-        });
-
-      if (streakError) throw streakError;
-
-      // Then create the task
+      // Create the task first
       const { error: taskError } = await supabase
         .from("tasks")
         .insert({
