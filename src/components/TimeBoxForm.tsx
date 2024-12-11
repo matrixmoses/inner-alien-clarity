@@ -26,14 +26,18 @@ export const TimeBoxForm = () => {
     }
 
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("No user found");
+
       const { error } = await supabase.from("tasks").insert({
-        activity: taskName, // Using taskName as activity (required field)
+        user_id: user.id,
+        activity: taskName,
         task_name: taskName,
         task_date: format(date, "yyyy-MM-dd"),
         start_time: startTime,
         end_time: endTime,
-        user_id: "00000000-0000-0000-0000-000000000000", // Placeholder UUID
-        category: "timebox"
+        category: "timebox",
+        completed: false
       });
 
       if (error) throw error;
@@ -58,7 +62,8 @@ export const TimeBoxForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4 bg-[#F4F5F9] p-6 rounded-lg">
+      <h2 className="text-xl font-semibold mb-4">Add New Task</h2>
       <div>
         <label htmlFor="taskName" className="block text-sm font-medium mb-1">
           Task Name

@@ -7,9 +7,9 @@ export const TimeBoxContainer = () => {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
       <div className="space-y-8">
         <JournalDisplay />
+        <TimeBoxForm />
       </div>
       <div className="space-y-8 bg-[#F4F5F9] p-6 rounded-lg">
-        <TimeBoxForm />
         <TimeBoxList />
       </div>
     </div>
