@@ -197,6 +197,48 @@ export type Database = {
         }
         Relationships: []
       }
+      subject_streaks: {
+        Row: {
+          all_time_total_hours: number | null
+          created_at: string
+          id: string
+          monthly_streak: number | null
+          monthly_total_hours: number | null
+          overall_streak: number | null
+          subject: Database["public"]["Enums"]["task_subject"]
+          updated_at: string
+          user_id: string
+          weekly_streak: number | null
+          weekly_total_hours: number | null
+        }
+        Insert: {
+          all_time_total_hours?: number | null
+          created_at?: string
+          id?: string
+          monthly_streak?: number | null
+          monthly_total_hours?: number | null
+          overall_streak?: number | null
+          subject: Database["public"]["Enums"]["task_subject"]
+          updated_at?: string
+          user_id: string
+          weekly_streak?: number | null
+          weekly_total_hours?: number | null
+        }
+        Update: {
+          all_time_total_hours?: number | null
+          created_at?: string
+          id?: string
+          monthly_streak?: number | null
+          monthly_total_hours?: number | null
+          overall_streak?: number | null
+          subject?: Database["public"]["Enums"]["task_subject"]
+          updated_at?: string
+          user_id?: string
+          weekly_streak?: number | null
+          weekly_total_hours?: number | null
+        }
+        Relationships: []
+      }
       tasks: {
         Row: {
           activity: string
@@ -209,6 +251,7 @@ export type Database = {
           is_completed: boolean | null
           is_editing: boolean | null
           start_time: string
+          subject: Database["public"]["Enums"]["task_subject"] | null
           task_date: string | null
           task_description: string | null
           task_name: string | null
@@ -225,6 +268,7 @@ export type Database = {
           is_completed?: boolean | null
           is_editing?: boolean | null
           start_time: string
+          subject?: Database["public"]["Enums"]["task_subject"] | null
           task_date?: string | null
           task_description?: string | null
           task_name?: string | null
@@ -241,6 +285,7 @@ export type Database = {
           is_completed?: boolean | null
           is_editing?: boolean | null
           start_time?: string
+          subject?: Database["public"]["Enums"]["task_subject"] | null
           task_date?: string | null
           task_description?: string | null
           task_name?: string | null
@@ -326,7 +371,7 @@ export type Database = {
       }
     }
     Enums: {
-      [_ in never]: never
+      task_subject: "work" | "sports" | "study" | "other"
     }
     CompositeTypes: {
       [_ in never]: never
