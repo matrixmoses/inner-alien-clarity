@@ -1,18 +1,8 @@
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Check, X, Trash2, Clock } from "lucide-react";
 import { format, isToday, isTomorrow } from "date-fns";
-
-interface Task {
-  id: string;
-  task_name: string;
-  task_date: string;
-  start_time: string;
-  end_time: string;
-  completed: boolean;
-}
+import { Task, TaskGroup } from "./TaskGroup";
 
 export const TimeBoxList = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -128,66 +118,6 @@ export const TimeBoxList = () => {
     };
   };
 
-  const TaskGroup = ({ title, tasks }: { title: string; tasks: Task[] }) => {
-    if (tasks.length === 0) return null;
-
-    return (
-      <div className="w-full">
-        <h2 className="text-xl font-semibold mb-4">{title}</h2>
-        <div className="space-y-4">
-          {tasks.map((task) => (
-            <div
-              key={task.id}
-              className="bg-white p-4 rounded-lg border border-[#6EC4A8] space-y-2"
-            >
-              <div className="flex justify-between items-start">
-                <div className="flex items-center gap-3">
-                  <div className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className={`${
-                        task.completed
-                          ? "bg-green-500 text-white hover:bg-green-600"
-                          : "hover:bg-green-100"
-                      }`}
-                      onClick={() => handleTaskStatus(task.id, 'completed')}
-                    >
-                      <Check className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="hover:bg-red-100"
-                      onClick={() => handleTaskStatus(task.id, 'missed')}
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
-                  <h3 className="font-medium">{task.task_name}</h3>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4 text-gray-400" />
-                  <span className="text-sm text-gray-500">
-                    {task.start_time} - {task.end_time}
-                  </span>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-red-500 hover:text-red-600"
-                    onClick={() => handleDelete(task.id)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  };
-
   const groupedTasks = groupTasksByDate(tasks);
 
   if (tasks.length === 0) {
@@ -200,9 +130,24 @@ export const TimeBoxList = () => {
 
   return (
     <div className="flex flex-col space-y-8">
-      <TaskGroup title="Today's Tasks" tasks={groupedTasks.today} />
-      <TaskGroup title="Tomorrow's Tasks" tasks={groupedTasks.tomorrow} />
-      <TaskGroup title="Upcoming Tasks" tasks={groupedTasks.future} />
+      <TaskGroup 
+        title="Today's Tasks" 
+        tasks={groupedTasks.today}
+        onTaskStatusChange={handleTaskStatus}
+        onTaskDelete={handleDelete}
+      />
+      <TaskGroup 
+        title="Tomorrow's Tasks" 
+        tasks={groupedTasks.tomorrow}
+        onTaskStatusChange={handleTaskStatus}
+        onTaskDelete={handleDelete}
+      />
+      <TaskGroup 
+        title="Upcoming Tasks" 
+        tasks={groupedTasks.future}
+        onTaskStatusChange={handleTaskStatus}
+        onTaskDelete={handleDelete}
+      />
     </div>
   );
 };
