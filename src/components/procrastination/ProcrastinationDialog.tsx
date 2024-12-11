@@ -26,6 +26,12 @@ export const ProcrastinationDialog = ({ isOpen, onClose, task }: Procrastination
     try {
       setIsLoading(true);
 
+      // Get current user
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.user) {
+        throw new Error("No authenticated user found");
+      }
+
       // Get AI analysis
       const response = await fetch('/functions/v1/analyze-procrastination', {
         method: 'POST',
@@ -48,6 +54,7 @@ export const ProcrastinationDialog = ({ isOpen, onClose, task }: Procrastination
         .from('procrastination_entries')
         .insert({
           task_id: task.id,
+          user_id: session.user.id, // Add the user_id here
           reason: reason as any,
           custom_reason: customReason,
           reflection,
