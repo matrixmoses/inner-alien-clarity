@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { format, isToday, isTomorrow } from "date-fns";
-import { Task, TaskGroup } from "./TaskGroup";
+import { TaskGroup } from "./TaskGroup";
+import { Task } from "./TaskItem";
 
 export const TimeBoxList = () => {
   const [tasks, setTasks] = useState<Task[]>([]);

@@ -1,5 +1,4 @@
-import { Task } from "./TaskItem";
-import { TaskItem } from "./TaskItem";
+import { Task, TaskItem } from "./TaskItem";
 
 interface TaskGroupProps {
   title: string;
