@@ -11,6 +11,17 @@ interface JournalEntry {
   type: "morning" | "evening";
   content: string;
   date: string;
+  created_at: string;
+  user_id: string;
+}
+
+type DatabaseEntry = {
+  id: string;
+  type: string;
+  content: string;
+  date: string;
+  created_at: string;
+  user_id: string;
 }
 
 export const JournalHistory = () => {
@@ -33,8 +44,13 @@ export const JournalHistory = () => {
         if (error) throw error;
 
         // Validate and transform the entries
-        const validEntries = (data || []).filter((entry): entry is JournalEntry => {
-          return entry.type === "morning" || entry.type === "evening";
+        const validEntries = (data || []).filter((entry: DatabaseEntry): entry is JournalEntry => {
+          return (entry.type === "morning" || entry.type === "evening") &&
+                 typeof entry.content === "string" &&
+                 typeof entry.date === "string" &&
+                 typeof entry.id === "string" &&
+                 typeof entry.created_at === "string" &&
+                 typeof entry.user_id === "string";
         });
 
         setEntries(validEntries);
