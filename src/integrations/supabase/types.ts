@@ -167,6 +167,77 @@ export type Database = {
           },
         ]
       }
+      procrastination_entries: {
+        Row: {
+          ai_feedback: string | null
+          created_at: string
+          custom_reason: string | null
+          id: string
+          reason: Database["public"]["Enums"]["procrastination_reason"]
+          reflection: string | null
+          rescheduled_to: string | null
+          resolved: boolean | null
+          task_id: string
+          user_id: string
+        }
+        Insert: {
+          ai_feedback?: string | null
+          created_at?: string
+          custom_reason?: string | null
+          id?: string
+          reason: Database["public"]["Enums"]["procrastination_reason"]
+          reflection?: string | null
+          rescheduled_to?: string | null
+          resolved?: boolean | null
+          task_id: string
+          user_id: string
+        }
+        Update: {
+          ai_feedback?: string | null
+          created_at?: string
+          custom_reason?: string | null
+          id?: string
+          reason?: Database["public"]["Enums"]["procrastination_reason"]
+          reflection?: string | null
+          rescheduled_to?: string | null
+          resolved?: boolean | null
+          task_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "procrastination_entries_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      procrastination_insights: {
+        Row: {
+          created_at: string
+          id: string
+          insight_content: string
+          insight_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          insight_content: string
+          insight_type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          insight_content?: string
+          insight_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       streak_history: {
         Row: {
           created_at: string
@@ -371,6 +442,11 @@ export type Database = {
       }
     }
     Enums: {
+      procrastination_reason:
+        | "too_difficult"
+        | "lack_of_motivation"
+        | "forgot"
+        | "custom"
       task_subject: "work" | "sports" | "study" | "other"
     }
     CompositeTypes: {
