@@ -9,6 +9,9 @@ import { Clock } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { AchievementsDisplay } from "@/components/dashboard/AchievementsDisplay";
 import { SubjectStreaks } from "@/components/dashboard/SubjectStreaks";
+import { StreakTracker } from "@/components/dashboard/StreakTracker";
+import { TimeStatistics } from "@/components/dashboard/TimeStatistics";
+import { TimeBoxHistory } from "@/components/dashboard/TimeBoxHistory";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -121,28 +124,19 @@ const Dashboard = () => {
           </Card>
 
           {/* Time Statistics */}
-          <Card className="p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <Clock className="w-6 h-6 text-primary" />
-              <h2 className="text-xl font-semibold">Time Statistics</h2>
-            </div>
-            <div className="space-y-4">
-              <div>
-                <p className="text-sm text-gray-500">Today's Total Time</p>
-                <p className="text-2xl font-bold">{Math.round(totalTimeToday * 10) / 10}h</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Weekly Average</p>
-                <p className="text-2xl font-bold">{Math.round(weeklyAverageTime * 10) / 10}h</p>
-              </div>
-            </div>
-          </Card>
+          <TimeStatistics />
+
+          {/* Streak Tracker */}
+          <StreakTracker />
 
           {/* Subject Streaks */}
           <SubjectStreaks />
 
           {/* Achievements */}
           <AchievementsDisplay />
+
+          {/* Time Box History */}
+          <TimeBoxHistory />
 
           {/* Weekly Progress Chart */}
           <Card className="p-6 col-span-full">
