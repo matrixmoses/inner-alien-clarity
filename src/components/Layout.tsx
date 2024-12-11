@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
-import { LogIn, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "./ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { NavigationBar } from "./navigation/NavigationBar";
+import { PersistentTimer } from "./PersistentTimer";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -48,7 +49,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             <Link to="/" className="text-xl font-semibold">
               TheInnerAlien.co
             </Link>
-            <nav className="flex items-center gap-4">
+            <div className="flex items-center gap-4">
+              {isAuthenticated && <PersistentTimer />}
               {isAuthenticated ? (
                 <Button 
                   variant="ghost" 
@@ -61,12 +63,12 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
               ) : (
                 <Link to="/login">
                   <Button variant="ghost" className="flex items-center gap-2">
-                    <LogIn className="h-4 w-4" />
+                    <LogOut className="h-4 w-4" />
                     Login
                   </Button>
                 </Link>
               )}
-            </nav>
+            </div>
           </div>
         </header>
         <main className="container mx-auto px-4 py-6 animate-fade-in">
