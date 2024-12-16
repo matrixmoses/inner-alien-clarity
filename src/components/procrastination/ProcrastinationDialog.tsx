@@ -81,6 +81,12 @@ export const ProcrastinationDialog = ({ isOpen, onClose, task }: Procrastination
     }
   };
 
+  const formatAIFeedback = () => {
+    if (!aiFeedback) return "";
+    
+    return `Analysis:\n${aiFeedback.analysis}\n\nSteps to Improve:\n${aiFeedback.steps.map((step: string, index: number) => `${index + 1}. ${step}`).join('\n')}\n\nMotivation:\n${aiFeedback.motivation}`;
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
@@ -123,26 +129,11 @@ export const ProcrastinationDialog = ({ isOpen, onClose, task }: Procrastination
           />
 
           {aiFeedback && (
-            <div className="space-y-4 mt-4">
-              <div className="bg-secondary p-4 rounded-lg">
-                <h4 className="font-semibold mb-2">Analysis</h4>
-                <p>{aiFeedback.analysis}</p>
-              </div>
-              
-              <div className="bg-secondary p-4 rounded-lg">
-                <h4 className="font-semibold mb-2">Steps to Improve</h4>
-                <ul className="list-disc pl-4">
-                  {aiFeedback.steps.map((step: string, index: number) => (
-                    <li key={index}>{step}</li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="bg-secondary p-4 rounded-lg">
-                <h4 className="font-semibold mb-2">Motivation</h4>
-                <p>{aiFeedback.motivation}</p>
-              </div>
-            </div>
+            <Textarea
+              value={formatAIFeedback()}
+              readOnly
+              className="h-[150px] resize-none overflow-y-auto border border-input bg-muted px-3 py-2 text-sm font-mono whitespace-pre-wrap"
+            />
           )}
         </div>
 
