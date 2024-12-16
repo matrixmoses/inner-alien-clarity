@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Check, X, Trash2, Clock } from "lucide-react";
 import { useState } from "react";
 import { ProcrastinationDialog } from "./procrastination/ProcrastinationDialog";
+import { useToast } from "@/hooks/use-toast";
 
 export interface Task {
   id: string;
@@ -20,9 +21,46 @@ interface TaskItemProps {
 
 export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
   const [showProcrastinationDialog, setShowProcrastinationDialog] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const { toast } = useToast();
 
   const handleMissedTask = async () => {
     setShowProcrastinationDialog(true);
+  };
+
+  const handleDelete = async () => {
+    try {
+      setIsDeleting(true);
+      await onDelete(task.id);
+      toast({
+        title: "Success",
+        description: "Task deleted successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete task",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleComplete = async () => {
+    try {
+      await onStatusChange(task.id, 'completed');
+      toast({
+        title: "Success",
+        description: "Task marked as completed",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update task status",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -39,7 +77,7 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
                     ? "bg-green-500 text-white hover:bg-green-600"
                     : "hover:bg-green-100"
                 }`}
-                onClick={() => onStatusChange(task.id, 'completed')}
+                onClick={handleComplete}
               >
                 <Check className="h-4 w-4" />
               </Button>
@@ -63,7 +101,8 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
               variant="ghost"
               size="sm"
               className="text-red-500 hover:text-red-600"
-              onClick={() => onDelete(task.id)}
+              onClick={handleDelete}
+              disabled={isDeleting}
             >
               <Trash2 className="h-4 w-4" />
             </Button>

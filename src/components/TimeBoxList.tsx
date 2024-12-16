@@ -19,6 +19,7 @@ export const TimeBoxList = () => {
         .select("*")
         .gte('task_date', format(new Date(), "yyyy-MM-dd"))
         .eq("user_id", user.id)
+        .eq("completed", false) // Only fetch incomplete tasks
         .order('task_date', { ascending: true })
         .order('start_time', { ascending: true });
 
@@ -81,12 +82,14 @@ export const TimeBoxList = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("No user found");
 
+      const updates = {
+        completed: status === 'completed',
+        is_completed: status === 'completed'
+      };
+
       const { error } = await supabase
         .from("tasks")
-        .update({ 
-          completed: status === 'completed',
-          is_completed: status === 'completed'
-        })
+        .update(updates)
         .eq("id", id)
         .eq("user_id", user.id);
 
@@ -97,6 +100,7 @@ export const TimeBoxList = () => {
         description: `Task marked as ${status}`,
       });
 
+      // Refresh the task list to remove the completed/missed task
       fetchTasks();
     } catch (error: any) {
       console.error("Error updating task:", error);
