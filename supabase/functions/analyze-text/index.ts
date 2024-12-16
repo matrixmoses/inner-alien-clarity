@@ -13,18 +13,23 @@ serve(async (req) => {
 
   try {
     const { reason, customReason, taskDetails } = await req.json();
+    console.log('Received request with:', { reason, customReason, taskDetails });
 
     // Initialize OpenAI
     const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
+    if (!openAIApiKey) {
+      console.error('OpenAI API key not found');
+      throw new Error('OpenAI API key not configured');
+    }
     
     let prompt = `As a productivity assistant, analyze this procrastination situation and provide helpful advice. 
     Task: ${taskDetails.task_name}
     Reason: ${reason}${customReason ? ` (${customReason})` : ''}
     
     Provide:
-    1. A brief analysis of why this might be happening
-    2. Specific, actionable steps to overcome this
-    3. A motivational message
+    1. A brief analysis of why this might be happening (2-3 sentences)
+    2. Three specific, actionable steps to overcome this
+    3. A short motivational message (1 sentence)
     
     Format the response in JSON with these keys: analysis, steps (as an array), motivation`;
 
@@ -42,8 +47,16 @@ serve(async (req) => {
           { role: 'system', content: 'You are a supportive productivity assistant.' },
           { role: 'user', content: prompt }
         ],
+        temperature: 0.7,
+        max_tokens: 500,
       }),
     });
+
+    if (!response.ok) {
+      const error = await response.text();
+      console.error('OpenAI API error:', error);
+      throw new Error(`OpenAI API error: ${error}`);
+    }
 
     const data = await response.json();
     console.log('OpenAI response:', data);
@@ -60,7 +73,10 @@ serve(async (req) => {
     });
   } catch (error) {
     console.error('Error in analyze-text function:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ 
+      error: error.message,
+      details: 'Check the function logs for more information'
+    }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
