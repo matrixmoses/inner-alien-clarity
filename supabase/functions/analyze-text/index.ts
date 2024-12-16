@@ -13,60 +13,46 @@ serve(async (req) => {
 
   try {
     const { reason, customReason, taskDetails } = await req.json();
-    console.log('Received request with:', { reason, customReason, taskDetails });
 
-    // Initialize Cohere
-    const cohereApiKey = Deno.env.get('COHERE_API_KEY');
-    if (!cohereApiKey) {
-      console.error('Cohere API key not found');
-      throw new Error('Cohere API key not configured');
-    }
+    // Initialize OpenAI
+    const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
     
     let prompt = `As a productivity assistant, analyze this procrastination situation and provide helpful advice. 
     Task: ${taskDetails.task_name}
     Reason: ${reason}${customReason ? ` (${customReason})` : ''}
     
     Provide:
-    1. A brief analysis of why this might be happening (2-3 sentences)
-    2. Three specific, actionable steps to overcome this
-    3. A short motivational message (1 sentence)
+    1. A brief analysis of why this might be happening
+    2. Specific, actionable steps to overcome this
+    3. A motivational message
     
     Format the response in JSON with these keys: analysis, steps (as an array), motivation`;
 
-    console.log('Sending prompt to Cohere:', prompt);
+    console.log('Sending prompt to OpenAI:', prompt);
 
-    const response = await fetch('https://api.cohere.ai/v1/generate', {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${cohereApiKey}`,
+        'Authorization': `Bearer ${openAIApiKey}`,
         'Content-Type': 'application/json',
-        'Cohere-Version': '2022-12-06'
       },
       body: JSON.stringify({
-        model: 'command',
-        prompt: prompt,
-        max_tokens: 500,
-        temperature: 0.7,
-        format: 'json',
-        stop_sequences: ["}"]
+        model: 'gpt-4o-mini',
+        messages: [
+          { role: 'system', content: 'You are a supportive productivity assistant.' },
+          { role: 'user', content: prompt }
+        ],
       }),
     });
 
-    if (!response.ok) {
-      const error = await response.text();
-      console.error('Cohere API error:', error);
-      throw new Error(`Cohere API error: ${error}`);
+    const data = await response.json();
+    console.log('OpenAI response:', data);
+
+    if (!data.choices?.[0]?.message?.content) {
+      throw new Error('Invalid response from OpenAI');
     }
 
-    const data = await response.json();
-    console.log('Cohere response:', data);
-
-    // Parse the generated text as JSON
-    const generatedText = data.generations[0].text;
-    // Make sure the text ends with a closing brace if it doesn't already
-    const jsonText = generatedText.endsWith('}') ? generatedText : generatedText + '}';
-    const aiFeedback = JSON.parse(jsonText);
-
+    const aiFeedback = JSON.parse(data.choices[0].message.content);
     console.log('Parsed AI feedback:', aiFeedback);
 
     return new Response(JSON.stringify(aiFeedback), {
@@ -74,10 +60,7 @@ serve(async (req) => {
     });
   } catch (error) {
     console.error('Error in analyze-text function:', error);
-    return new Response(JSON.stringify({ 
-      error: error.message,
-      details: 'Check the function logs for more information'
-    }), {
+    return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });

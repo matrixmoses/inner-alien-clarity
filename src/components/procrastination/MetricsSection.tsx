@@ -4,7 +4,6 @@ import { MetricCard } from "./MetricCard";
 import { ProcrastinationChart } from "./ProcrastinationChart";
 import { ProcrastinationTrends } from "./ProcrastinationTrends";
 import { TaskCategoryInsights } from "./TaskCategoryInsights";
-import { ProcrastinationRecommendations } from "./ProcrastinationRecommendations";
 import { supabase } from "@/integrations/supabase/client";
 
 export const MetricsSection = () => {
@@ -106,8 +105,6 @@ export const MetricsSection = () => {
       <ProcrastinationTrends />
       
       <TaskCategoryInsights />
-
-      <ProcrastinationRecommendations />
     </div>
   );
 };
