@@ -7,13 +7,25 @@ import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
 
+interface Task {
+  id: string;
+  user_id: string;
+  task_name: string;
+  task_description?: string;
+  task_date: string;
+  start_time: string;
+  end_time: string;
+  completed: boolean;
+  created_at: string;
+}
+
 interface TaskHistoryProps {
   searchQuery: string;
   selectedDate?: Date;
 }
 
 export const TaskHistory = ({ searchQuery, selectedDate }: TaskHistoryProps) => {
-  const [tasks, setTasks] = useState<any[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
 
@@ -90,7 +102,7 @@ export const TaskHistory = ({ searchQuery, selectedDate }: TaskHistoryProps) => 
     }
     groups[date].push(task);
     return groups;
-  }, {} as Record<string, any[]>);
+  }, {} as Record<string, Task[]>);
 
   return (
     <Card className="p-6">

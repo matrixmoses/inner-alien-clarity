@@ -7,13 +7,22 @@ import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
 
+interface JournalEntry {
+  id: string;
+  user_id: string;
+  content: string;
+  type: 'morning' | 'evening';
+  date: string;
+  created_at: string;
+}
+
 interface JournalHistoryProps {
   searchQuery: string;
   selectedDate?: Date;
 }
 
 export const JournalHistory = ({ searchQuery, selectedDate }: JournalHistoryProps) => {
-  const [entries, setEntries] = useState<any[]>([]);
+  const [entries, setEntries] = useState<JournalEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
 
@@ -88,7 +97,7 @@ export const JournalHistory = ({ searchQuery, selectedDate }: JournalHistoryProp
     }
     groups[date].push(entry);
     return groups;
-  }, {} as Record<string, any[]>);
+  }, {} as Record<string, JournalEntry[]>);
 
   return (
     <Card className="p-6">
