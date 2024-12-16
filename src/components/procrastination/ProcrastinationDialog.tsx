@@ -1,14 +1,13 @@
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Card } from "@/components/ui/card";
+import { ProcrastinationForm } from "./ProcrastinationForm";
+import { ProcrastinationAnalysis } from "./ProcrastinationAnalysis";
+import { ActionButtons } from "./ActionButtons";
 
 interface ProcrastinationDialogProps {
   isOpen: boolean;
@@ -47,13 +46,6 @@ export const ProcrastinationDialog = ({ isOpen, onClose, task }: Procrastination
       setError(null);
       console.log('Starting analysis for task:', task.task_name);
 
-      // Get current user
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) {
-        throw new Error("No authenticated user found");
-      }
-
-      // Call the analyze-text Edge Function using supabase.functions.invoke
       const { data: analysisData, error: analysisError } = await supabase.functions.invoke('analyze-text', {
         body: {
           reason,
@@ -73,21 +65,21 @@ export const ProcrastinationDialog = ({ isOpen, onClose, task }: Procrastination
       console.log('Analysis response:', analysisData);
       setAiFeedback(analysisData);
 
-      // Store procrastination entry
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("No authenticated user found");
+
       const { error: insertError } = await supabase
         .from('procrastination_entries')
         .insert({
           task_id: task.id,
-          user_id: session.user.id,
+          user_id: user.id,
           reason: reason as any,
           custom_reason: customReason,
           reflection,
           ai_feedback: JSON.stringify(analysisData),
         });
 
-      if (insertError) {
-        throw insertError;
-      }
+      if (insertError) throw insertError;
 
       toast({
         title: "Analysis Complete",
@@ -173,37 +165,13 @@ export const ProcrastinationDialog = ({ isOpen, onClose, task }: Procrastination
         </DialogHeader>
 
         <div className="space-y-4 py-4">
-          <RadioGroup value={reason} onValueChange={setReason}>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="too_difficult" id="too_difficult" />
-              <Label htmlFor="too_difficult">Too difficult</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="lack_of_motivation" id="lack_of_motivation" />
-              <Label htmlFor="lack_of_motivation">Lack of motivation</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="forgot" id="forgot" />
-              <Label htmlFor="forgot">Forgot</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="custom" id="custom" />
-              <Label htmlFor="custom">Other reason</Label>
-            </div>
-          </RadioGroup>
-
-          {reason === "custom" && (
-            <Textarea
-              placeholder="Please describe your reason..."
-              value={customReason}
-              onChange={(e) => setCustomReason(e.target.value)}
-            />
-          )}
-
-          <Textarea
-            placeholder="Reflect on why this happened..."
-            value={reflection}
-            onChange={(e) => setReflection(e.target.value)}
+          <ProcrastinationForm
+            reason={reason}
+            customReason={customReason}
+            reflection={reflection}
+            onReasonChange={setReason}
+            onCustomReasonChange={setCustomReason}
+            onReflectionChange={setReflection}
           />
 
           {error && (
@@ -213,46 +181,14 @@ export const ProcrastinationDialog = ({ isOpen, onClose, task }: Procrastination
           )}
 
           {aiFeedback && (
-            <Card className="p-4 space-y-4 bg-muted/50">
-              <div>
-                <h3 className="text-lg font-semibold mb-2">Procrastination Analysis</h3>
-                <p className="text-sm text-muted-foreground">{aiFeedback.analysis}</p>
-              </div>
-              
-              <div>
-                <h4 className="font-semibold mb-2">Recommended Steps</h4>
-                <ol className="list-decimal pl-4 space-y-1">
-                  {aiFeedback.steps.map((step, index) => (
-                    <li key={index} className="text-sm">{step}</li>
-                  ))}
-                </ol>
-              </div>
-              
-              <div>
-                <h4 className="font-semibold mb-2">Motivation</h4>
-                <p className="text-sm italic text-muted-foreground">{aiFeedback.motivation}</p>
-              </div>
-
-              <div className="flex gap-2 pt-2">
-                <Button 
-                  onClick={handleMarkAsDone} 
-                  disabled={isUpdating}
-                  className="flex-1"
-                >
-                  {isUpdating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Mark as Done
-                </Button>
-                <Button 
-                  onClick={handleSaveForLater} 
-                  variant="outline"
-                  disabled={isUpdating}
-                  className="flex-1"
-                >
-                  {isUpdating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Save for Later
-                </Button>
-              </div>
-            </Card>
+            <>
+              <ProcrastinationAnalysis {...aiFeedback} />
+              <ActionButtons
+                isLoading={isUpdating}
+                onMarkAsDone={handleMarkAsDone}
+                onSaveForLater={handleSaveForLater}
+              />
+            </>
           )}
         </div>
 
