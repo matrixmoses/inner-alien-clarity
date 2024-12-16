@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { MetricCard } from "./MetricCard";
 import { ProcrastinationChart } from "./ProcrastinationChart";
+import { ProcrastinationTrends } from "./ProcrastinationTrends";
 import { supabase } from "@/integrations/supabase/client";
 
 export const MetricsSection = () => {
@@ -98,6 +99,8 @@ export const MetricsSection = () => {
         <h3 className="text-lg font-semibold mb-4">Reasons for Procrastination</h3>
         <ProcrastinationChart data={reasonsData} />
       </Card>
+
+      <ProcrastinationTrends />
     </div>
   );
 };
