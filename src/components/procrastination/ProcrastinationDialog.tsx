@@ -23,6 +23,15 @@ export const ProcrastinationDialog = ({ isOpen, onClose, task }: Procrastination
   const { toast } = useToast();
 
   const handleSubmit = async () => {
+    if (!reason) {
+      toast({
+        title: "Error",
+        description: "Please select a reason for missing the task",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
       setIsLoading(true);
 
@@ -48,6 +57,10 @@ export const ProcrastinationDialog = ({ isOpen, onClose, task }: Procrastination
         }),
       });
 
+      if (!response.ok) {
+        throw new Error('Failed to get AI analysis');
+      }
+
       const aiFeedback = await response.json();
       setAiFeedback(aiFeedback);
 
@@ -69,11 +82,11 @@ export const ProcrastinationDialog = ({ isOpen, onClose, task }: Procrastination
         title: "Analysis Complete",
         description: "We've analyzed your procrastination pattern and provided suggestions.",
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error:', error);
       toast({
         title: "Error",
-        description: "Failed to analyze procrastination. Please try again.",
+        description: error.message || "Failed to analyze procrastination. Please try again.",
         variant: "destructive",
       });
     } finally {
