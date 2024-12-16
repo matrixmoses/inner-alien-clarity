@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { MetricCard } from "./MetricCard";
 import { ProcrastinationChart } from "./ProcrastinationChart";
 import { ProcrastinationTrends } from "./ProcrastinationTrends";
+import { TaskCategoryInsights } from "./TaskCategoryInsights";
 import { supabase } from "@/integrations/supabase/client";
 
 export const MetricsSection = () => {
@@ -82,16 +83,17 @@ export const MetricsSection = () => {
         <MetricCard
           title="Total Procrastinated Tasks"
           value={metrics.totalProcrastinated}
+          description="Tasks marked as not completed"
         />
         <MetricCard
           title="Procrastination Rate"
           value={`${metrics.procrastinationRate}%`}
-          description="Percentage of total tasks"
+          description="Of total scheduled tasks"
         />
         <MetricCard
           title="Average Delay Duration"
-          value="Coming soon"
-          description="Average time before marking as incomplete"
+          value={metrics.averageDelay}
+          description="Time before marking as incomplete"
         />
       </div>
 
@@ -101,6 +103,8 @@ export const MetricsSection = () => {
       </Card>
 
       <ProcrastinationTrends />
+      
+      <TaskCategoryInsights />
     </div>
   );
 };
