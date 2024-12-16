@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2 } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface ProcrastinationDialogProps {
   isOpen: boolean;
@@ -14,12 +15,19 @@ interface ProcrastinationDialogProps {
   task: any;
 }
 
+interface AIFeedback {
+  analysis: string;
+  steps: string[];
+  motivation: string;
+}
+
 export const ProcrastinationDialog = ({ isOpen, onClose, task }: ProcrastinationDialogProps) => {
   const [reason, setReason] = useState<string>("");
   const [customReason, setCustomReason] = useState("");
   const [reflection, setReflection] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [aiFeedback, setAiFeedback] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [aiFeedback, setAiFeedback] = useState<AIFeedback | null>(null);
   const { toast } = useToast();
 
   const handleSubmit = async () => {
@@ -34,6 +42,7 @@ export const ProcrastinationDialog = ({ isOpen, onClose, task }: Procrastination
 
     try {
       setIsLoading(true);
+      setError(null);
       console.log('Starting analysis for task:', task.task_name);
 
       // Get current user
@@ -42,7 +51,7 @@ export const ProcrastinationDialog = ({ isOpen, onClose, task }: Procrastination
         throw new Error("No authenticated user found");
       }
 
-      // Get AI analysis
+      // Call the analyze-text Edge Function
       const { data: analysisData, error: analysisError } = await supabase.functions.invoke('analyze-text', {
         body: {
           reason,
@@ -93,6 +102,7 @@ export const ProcrastinationDialog = ({ isOpen, onClose, task }: Procrastination
       });
     } catch (error: any) {
       console.error('Error:', error);
+      setError(error.message || "Something went wrong. Please try again.");
       toast({
         title: "Error",
         description: error.message || "Failed to analyze procrastination. Please try again.",
@@ -101,12 +111,6 @@ export const ProcrastinationDialog = ({ isOpen, onClose, task }: Procrastination
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const formatAIFeedback = () => {
-    if (!aiFeedback) return "";
-    
-    return `Analysis:\n${aiFeedback.analysis}\n\nSteps to Improve:\n${aiFeedback.steps.map((step: string, index: number) => `${index + 1}. ${step}`).join('\n')}\n\nMotivation:\n${aiFeedback.motivation}`;
   };
 
   return (
@@ -150,12 +154,33 @@ export const ProcrastinationDialog = ({ isOpen, onClose, task }: Procrastination
             onChange={(e) => setReflection(e.target.value)}
           />
 
+          {error && (
+            <Alert variant="destructive">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+
           {aiFeedback && (
-            <Textarea
-              value={formatAIFeedback()}
-              readOnly
-              className="h-[150px] resize-none overflow-y-auto border border-input bg-muted px-3 py-2 text-sm font-mono whitespace-pre-wrap"
-            />
+            <div className="space-y-4 mt-4 p-4 bg-muted rounded-lg">
+              <div>
+                <h4 className="font-semibold mb-2">Analysis</h4>
+                <p className="text-sm text-muted-foreground">{aiFeedback.analysis}</p>
+              </div>
+              
+              <div>
+                <h4 className="font-semibold mb-2">Steps to Improve</h4>
+                <ul className="list-disc pl-4 space-y-1">
+                  {aiFeedback.steps.map((step, index) => (
+                    <li key={index} className="text-sm text-muted-foreground">{step}</li>
+                  ))}
+                </ul>
+              </div>
+              
+              <div>
+                <h4 className="font-semibold mb-2">Motivation</h4>
+                <p className="text-sm text-muted-foreground">{aiFeedback.motivation}</p>
+              </div>
+            </div>
           )}
         </div>
 
