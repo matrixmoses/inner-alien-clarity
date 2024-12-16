@@ -1,11 +1,16 @@
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { Hourglass, Trash2 } from "lucide-react";
+import { Hourglass, Trash2, ChevronDown } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 interface ProcrastinationHistoryProps {
   searchQuery: string;
@@ -91,6 +96,23 @@ export const ProcrastinationHistory = ({ searchQuery, selectedDate }: Procrastin
     entry.reflection?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const formatAIFeedback = (feedback: string) => {
+    try {
+      const parsedFeedback = JSON.parse(feedback);
+      return {
+        analysis: parsedFeedback.analysis,
+        steps: parsedFeedback.steps,
+        motivation: parsedFeedback.motivation
+      };
+    } catch (e) {
+      return {
+        analysis: feedback,
+        steps: [],
+        motivation: ''
+      };
+    }
+  };
+
   return (
     <Card className="p-6">
       <div className="flex items-center gap-3 mb-6">
@@ -98,48 +120,87 @@ export const ProcrastinationHistory = ({ searchQuery, selectedDate }: Procrastin
         <h2 className="text-2xl font-semibold">Procrastination Log</h2>
       </div>
 
-      <ScrollArea className="h-[600px] pr-4">
-        <div className="space-y-6">
-          {filteredEntries.map((entry) => (
-            <div
-              key={entry.id}
-              className="bg-[#6EC4A8]/10 p-4 rounded-lg space-y-2"
-            >
-              <div className="flex justify-between items-start">
-                <div className="space-y-2">
+      <Accordion type="single" collapsible className="space-y-4">
+        {filteredEntries.map((entry) => (
+          <AccordionItem
+            key={entry.id}
+            value={entry.id}
+            className="bg-[#6EC4A8]/10 p-4 rounded-lg"
+          >
+            <div className="flex justify-between items-start">
+              <AccordionTrigger className="hover:no-underline">
+                <div className="flex flex-col items-start">
                   <h3 className="font-medium">{entry.tasks?.task_name}</h3>
                   <p className="text-sm text-gray-500">
-                    Original Date: {format(new Date(entry.tasks?.task_date), "PPP")}
+                    {format(new Date(entry.tasks?.task_date), "PPP")}
                   </p>
+                </div>
+              </AccordionTrigger>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDelete(entry.id);
+                }}
+                className="text-red-500 hover:text-red-600"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
+
+            <AccordionContent className="pt-4">
+              <div className="space-y-4">
+                <div>
                   <p className="text-sm text-gray-500">
                     Scheduled Time: {entry.tasks?.start_time} - {entry.tasks?.end_time}
                   </p>
-                  <p className="text-sm">Reason: {entry.reason}</p>
+                  <p className="text-sm mt-2">Reason: {entry.reason}</p>
                   {entry.reflection && (
-                    <p className="text-sm">Reflection: {entry.reflection}</p>
-                  )}
-                  {entry.ai_feedback && (
-                    <div className="mt-2 p-2 bg-white/50 rounded">
-                      <p className="text-sm font-medium">AI Feedback:</p>
-                      <pre className="text-sm whitespace-pre-wrap">
-                        {JSON.stringify(JSON.parse(entry.ai_feedback), null, 2)}
-                      </pre>
-                    </div>
+                    <p className="text-sm mt-2">Reflection: {entry.reflection}</p>
                   )}
                 </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => handleDelete(entry.id)}
-                  className="text-red-500 hover:text-red-600"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+
+                {entry.ai_feedback && (
+                  <div className="mt-4 bg-white/50 rounded p-4 space-y-3">
+                    <h4 className="font-medium">AI Analysis</h4>
+                    {(() => {
+                      const feedback = formatAIFeedback(entry.ai_feedback);
+                      return (
+                        <div className="space-y-3">
+                          <p className="text-sm">{feedback.analysis}</p>
+                          {feedback.steps.length > 0 && (
+                            <div>
+                              <h5 className="font-medium mb-2">Steps to Improve:</h5>
+                              <ul className="list-decimal list-inside space-y-1">
+                                {feedback.steps.map((step: string, index: number) => (
+                                  <li key={index} className="text-sm">{step}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                          {feedback.motivation && (
+                            <div>
+                              <h5 className="font-medium mb-2">Motivation:</h5>
+                              <p className="text-sm">{feedback.motivation}</p>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
+                  </div>
+                )}
               </div>
-            </div>
-          ))}
-        </div>
-      </ScrollArea>
+            </AccordionContent>
+          </AccordionItem>
+        ))}
+      </Accordion>
+
+      {filteredEntries.length === 0 && (
+        <p className="text-center text-gray-500 py-4">
+          No procrastination entries yet.
+        </p>
+      )}
     </Card>
   );
 };
