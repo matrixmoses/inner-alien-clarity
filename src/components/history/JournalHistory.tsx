@@ -1,33 +1,21 @@
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Sun, Moon, Search, Calendar } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Sun, Moon, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
+import { useToast } from "@/hooks/use-toast";
 
-interface JournalEntry {
-  id: string;
-  type: "morning" | "evening";
-  content: string;
-  date: string;
-  created_at: string;
-  user_id: string;
+interface JournalHistoryProps {
+  searchQuery: string;
+  selectedDate?: Date;
 }
 
-type DatabaseEntry = {
-  id: string;
-  type: string;
-  content: string;
-  date: string;
-  created_at: string;
-  user_id: string;
-}
-
-export const JournalHistory = () => {
-  const [entries, setEntries] = useState<JournalEntry[]>([]);
-  const [searchQuery, setSearchQuery] = useState("");
+export const JournalHistory = ({ searchQuery, selectedDate }: JournalHistoryProps) => {
+  const [entries, setEntries] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { toast } = useToast();
 
   useEffect(() => {
     const fetchEntries = async () => {
@@ -35,34 +23,59 @@ export const JournalHistory = () => {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
 
-        const { data, error } = await supabase
+        let query = supabase
           .from("journal_entries")
           .select("*")
           .eq("user_id", user.id)
           .order("date", { ascending: false });
 
+        if (selectedDate) {
+          const dateStr = format(selectedDate, "yyyy-MM-dd");
+          query = query.eq("date", dateStr);
+        }
+
+        const { data, error } = await query;
+
         if (error) throw error;
-
-        // Validate and transform the entries
-        const validEntries = (data || []).filter((entry: DatabaseEntry): entry is JournalEntry => {
-          return (entry.type === "morning" || entry.type === "evening") &&
-                 typeof entry.content === "string" &&
-                 typeof entry.date === "string" &&
-                 typeof entry.id === "string" &&
-                 typeof entry.created_at === "string" &&
-                 typeof entry.user_id === "string";
-        });
-
-        setEntries(validEntries);
+        setEntries(data || []);
       } catch (error) {
         console.error("Error fetching journal entries:", error);
+        toast({
+          title: "Error",
+          description: "Could not load journal entries",
+          variant: "destructive",
+        });
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchEntries();
-  }, []);
+  }, [selectedDate, toast]);
+
+  const handleDelete = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from("journal_entries")
+        .delete()
+        .eq("id", id);
+
+      if (error) throw error;
+
+      setEntries(entries.filter(entry => entry.id !== id));
+      toast({
+        title: "Success",
+        description: "Entry deleted successfully",
+      });
+    } catch (error) {
+      console.error("Error deleting entry:", error);
+      toast({
+        title: "Error",
+        description: "Could not delete entry",
+        variant: "destructive",
+      });
+    }
+  };
 
   const filteredEntries = entries.filter(entry =>
     entry.content.toLowerCase().includes(searchQuery.toLowerCase())
@@ -75,24 +88,13 @@ export const JournalHistory = () => {
     }
     groups[date].push(entry);
     return groups;
-  }, {} as Record<string, JournalEntry[]>);
+  }, {} as Record<string, any[]>);
 
   return (
     <Card className="p-6">
       <div className="flex items-center gap-3 mb-6">
-        <Calendar className="h-6 w-6 text-[#9C8ADE]" />
+        <Sun className="h-6 w-6 text-[#9C8ADE]" />
         <h2 className="text-2xl font-semibold">Journal Entries</h2>
-      </div>
-
-      <div className="relative mb-6">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-        <Input
-          type="text"
-          placeholder="Search entries..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-10"
-        />
       </div>
 
       <ScrollArea className="h-[600px] pr-4">
@@ -107,19 +109,29 @@ export const JournalHistory = () => {
                   key={entry.id}
                   className="bg-[#6EC4A8]/10 p-4 rounded-lg space-y-2"
                 >
-                  <div className="flex items-center gap-2">
-                    {entry.type === "morning" ? (
-                      <Sun className="h-4 w-4 text-[#9C8ADE]" />
-                    ) : (
-                      <Moon className="h-4 w-4 text-[#9C8ADE]" />
-                    )}
-                    <span className="font-medium capitalize">
-                      {entry.type} Reflection
-                    </span>
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <div className="flex items-center gap-2 mb-2">
+                        {entry.type === "morning" ? (
+                          <Sun className="h-4 w-4 text-[#9C8ADE]" />
+                        ) : (
+                          <Moon className="h-4 w-4 text-[#9C8ADE]" />
+                        )}
+                        <span className="font-medium capitalize">
+                          {entry.type} Reflection
+                        </span>
+                      </div>
+                      <p className="whitespace-pre-wrap">{entry.content}</p>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleDelete(entry.id)}
+                      className="text-red-500 hover:text-red-600"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
                   </div>
-                  <p className="text-gray-600 whitespace-pre-wrap">
-                    {entry.content}
-                  </p>
                 </div>
               ))}
             </div>
