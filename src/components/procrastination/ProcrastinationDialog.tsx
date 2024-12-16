@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Card } from "@/components/ui/card";
 
 interface ProcrastinationDialogProps {
   isOpen: boolean;
@@ -28,6 +29,7 @@ export const ProcrastinationDialog = ({ isOpen, onClose, task }: Procrastination
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [aiFeedback, setAiFeedback] = useState<AIFeedback | null>(null);
+  const [isUpdating, setIsUpdating] = useState(false);
   const { toast } = useToast();
 
   const handleSubmit = async () => {
@@ -87,16 +89,6 @@ export const ProcrastinationDialog = ({ isOpen, onClose, task }: Procrastination
         throw insertError;
       }
 
-      // Update task status
-      const { error: updateError } = await supabase
-        .from('tasks')
-        .update({ completed: false })
-        .eq('id', task.id);
-
-      if (updateError) {
-        throw updateError;
-      }
-
       toast({
         title: "Analysis Complete",
         description: "We've analyzed your procrastination pattern and provided suggestions.",
@@ -111,6 +103,65 @@ export const ProcrastinationDialog = ({ isOpen, onClose, task }: Procrastination
       });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleMarkAsDone = async () => {
+    try {
+      setIsUpdating(true);
+      const { error: updateError } = await supabase
+        .from('tasks')
+        .update({ completed: true })
+        .eq('id', task.id);
+
+      if (updateError) throw updateError;
+
+      const { error: procrastinationError } = await supabase
+        .from('procrastination_entries')
+        .update({ resolved: true })
+        .eq('task_id', task.id);
+
+      if (procrastinationError) throw procrastinationError;
+
+      toast({
+        title: "Success",
+        description: "Task marked as completed",
+      });
+      onClose();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: "Failed to update task status",
+        variant: "destructive",
+      });
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const handleSaveForLater = async () => {
+    try {
+      setIsUpdating(true);
+      const { error: updateError } = await supabase
+        .from('procrastination_entries')
+        .update({ rescheduled_to: new Date().toISOString() })
+        .eq('task_id', task.id);
+
+      if (updateError) throw updateError;
+
+      toast({
+        title: "Success",
+        description: "Task saved for later review",
+      });
+      onClose();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: "Failed to save task for later",
+        variant: "destructive",
+      });
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -162,26 +213,46 @@ export const ProcrastinationDialog = ({ isOpen, onClose, task }: Procrastination
           )}
 
           {aiFeedback && (
-            <div className="space-y-4 mt-4 p-4 bg-muted rounded-lg">
+            <Card className="p-4 space-y-4 bg-muted/50">
               <div>
-                <h4 className="font-semibold mb-2">Analysis</h4>
+                <h3 className="text-lg font-semibold mb-2">Procrastination Analysis</h3>
                 <p className="text-sm text-muted-foreground">{aiFeedback.analysis}</p>
               </div>
               
               <div>
-                <h4 className="font-semibold mb-2">Steps to Improve</h4>
-                <ul className="list-disc pl-4 space-y-1">
+                <h4 className="font-semibold mb-2">Recommended Steps</h4>
+                <ol className="list-decimal pl-4 space-y-1">
                   {aiFeedback.steps.map((step, index) => (
-                    <li key={index} className="text-sm text-muted-foreground">{step}</li>
+                    <li key={index} className="text-sm">{step}</li>
                   ))}
-                </ul>
+                </ol>
               </div>
               
               <div>
                 <h4 className="font-semibold mb-2">Motivation</h4>
-                <p className="text-sm text-muted-foreground">{aiFeedback.motivation}</p>
+                <p className="text-sm italic text-muted-foreground">{aiFeedback.motivation}</p>
               </div>
-            </div>
+
+              <div className="flex gap-2 pt-2">
+                <Button 
+                  onClick={handleMarkAsDone} 
+                  disabled={isUpdating}
+                  className="flex-1"
+                >
+                  {isUpdating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  Mark as Done
+                </Button>
+                <Button 
+                  onClick={handleSaveForLater} 
+                  variant="outline"
+                  disabled={isUpdating}
+                  className="flex-1"
+                >
+                  {isUpdating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  Save for Later
+                </Button>
+              </div>
+            </Card>
           )}
         </div>
 
