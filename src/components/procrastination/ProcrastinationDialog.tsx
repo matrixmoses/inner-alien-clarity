@@ -33,16 +33,18 @@ export const ProcrastinationDialog = ({ isOpen, onClose, task }: Procrastination
       }
 
       // Get AI analysis
-      const response = await fetch('/functions/v1/analyze-procrastination', {
+      const response = await fetch('https://wrkoqykpormjkpkeqgjh.functions.supabase.co/analyze-text', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.SUPABASE_ANON_KEY}`,
+          'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indya29xeWtwb3Jtamtwa2VxZ2poIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzM2OTU2MjUsImV4cCI6MjA0OTI3MTYyNX0.CdgKa7XWjolBDijfBgFmUn9wTTw8aIagDCibj3nkq48`,
         },
         body: JSON.stringify({
           reason,
           customReason,
-          taskDetails: task,
+          taskDetails: {
+            task_name: task.task_name
+          }
         }),
       });
 
@@ -54,7 +56,7 @@ export const ProcrastinationDialog = ({ isOpen, onClose, task }: Procrastination
         .from('procrastination_entries')
         .insert({
           task_id: task.id,
-          user_id: session.user.id, // Add the user_id here
+          user_id: session.user.id,
           reason: reason as any,
           custom_reason: customReason,
           reflection,
