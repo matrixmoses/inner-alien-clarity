@@ -1,10 +1,11 @@
 import { Layout } from "@/components/Layout";
+import { MetricsSection } from "@/components/procrastination/MetricsSection";
 
 const Procrastination = () => {
   return (
     <Layout>
       <div className="container mx-auto px-4 py-8">
-        {/* Content will be added later */}
+        <MetricsSection />
       </div>
     </Layout>
   );
