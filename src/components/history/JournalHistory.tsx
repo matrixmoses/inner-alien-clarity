@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
@@ -46,7 +46,14 @@ export const JournalHistory = ({ searchQuery, selectedDate }: JournalHistoryProp
         const { data, error } = await query;
 
         if (error) throw error;
-        setEntries(data || []);
+        
+        // Type assertion to ensure the data matches our JournalEntry interface
+        const typedEntries = (data || []).map(entry => ({
+          ...entry,
+          type: entry.type as 'morning' | 'evening'
+        }));
+        
+        setEntries(typedEntries);
       } catch (error) {
         console.error("Error fetching journal entries:", error);
         toast({
