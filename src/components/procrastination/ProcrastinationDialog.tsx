@@ -34,6 +34,7 @@ export const ProcrastinationDialog = ({ isOpen, onClose, task }: Procrastination
 
     try {
       setIsLoading(true);
+      console.log('Starting analysis for task:', task.task_name);
 
       // Get current user
       const { data: { session } } = await supabase.auth.getSession();
@@ -42,27 +43,23 @@ export const ProcrastinationDialog = ({ isOpen, onClose, task }: Procrastination
       }
 
       // Get AI analysis
-      const response = await fetch('https://wrkoqykpormjkpkeqgjh.functions.supabase.co/analyze-text', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indya29xeWtwb3Jtamtwa2VxZ2poIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzM2OTU2MjUsImV4cCI6MjA0OTI3MTYyNX0.CdgKa7XWjolBDijfBgFmUn9wTTw8aIagDCibj3nkq48`,
-        },
-        body: JSON.stringify({
+      const { data: analysisData, error: analysisError } = await supabase.functions.invoke('analyze-text', {
+        body: {
           reason,
           customReason,
           taskDetails: {
-            task_name: task.task_name
+            task_name: task.task_name,
+            task_description: task.task_description
           }
-        }),
+        }
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to get AI analysis');
+      if (analysisError) {
+        throw new Error(`Analysis failed: ${analysisError.message}`);
       }
 
-      const aiFeedback = await response.json();
-      setAiFeedback(aiFeedback);
+      console.log('Analysis response:', analysisData);
+      setAiFeedback(analysisData);
 
       // Store procrastination entry
       const { error: insertError } = await supabase
@@ -73,10 +70,22 @@ export const ProcrastinationDialog = ({ isOpen, onClose, task }: Procrastination
           reason: reason as any,
           custom_reason: customReason,
           reflection,
-          ai_feedback: JSON.stringify(aiFeedback),
+          ai_feedback: JSON.stringify(analysisData),
         });
 
-      if (insertError) throw insertError;
+      if (insertError) {
+        throw insertError;
+      }
+
+      // Update task status
+      const { error: updateError } = await supabase
+        .from('tasks')
+        .update({ completed: false })
+        .eq('id', task.id);
+
+      if (updateError) {
+        throw updateError;
+      }
 
       toast({
         title: "Analysis Complete",
