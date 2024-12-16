@@ -51,7 +51,7 @@ export const ProcrastinationDialog = ({ isOpen, onClose, task }: Procrastination
         throw new Error("No authenticated user found");
       }
 
-      // Call the analyze-text Edge Function
+      // Call the analyze-text Edge Function using supabase.functions.invoke
       const { data: analysisData, error: analysisError } = await supabase.functions.invoke('analyze-text', {
         body: {
           reason,
@@ -64,6 +64,7 @@ export const ProcrastinationDialog = ({ isOpen, onClose, task }: Procrastination
       });
 
       if (analysisError) {
+        console.error('Analysis error:', analysisError);
         throw new Error(`Analysis failed: ${analysisError.message}`);
       }
 
