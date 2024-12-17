@@ -83,9 +83,10 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         if (error) {
           console.error(`Error clearing ${table}:`, error);
           errors.push(table);
-        } else {
-          console.log(`Successfully cleared ${table}`);
+          // If we encounter an error, we'll continue with the next table
+          continue;
         }
+        console.log(`Successfully cleared ${table}`);
       }
 
       if (errors.length > 0) {
@@ -97,8 +98,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         description: "All your data has been successfully cleared.",
       });
 
-      // Force a complete page reload to clear all states
-      window.location.replace(window.location.pathname);
+      // Force a complete page reload and clear cache
+      window.location.replace(window.location.href);
     } catch (error: any) {
       console.error('Error clearing data:', error);
       toast({
