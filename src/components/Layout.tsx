@@ -71,6 +71,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         'achievements' as const
       ];
 
+      let errors = [];
+
       // Delete data from each table sequentially
       for (const table of tables) {
         const { error } = await supabase
@@ -80,11 +82,14 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         
         if (error) {
           console.error(`Error clearing ${table}:`, error);
-          // Continue with other tables even if one fails
-          continue;
+          errors.push(table);
+        } else {
+          console.log(`Successfully cleared ${table}`);
         }
-        
-        console.log(`Successfully cleared ${table}`);
+      }
+
+      if (errors.length > 0) {
+        throw new Error(`Failed to clear some tables: ${errors.join(', ')}`);
       }
 
       toast({
@@ -92,8 +97,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         description: "All your data has been successfully cleared.",
       });
 
-      // Force reload all data by refreshing the page
-      window.location.reload();
+      // Force a hard reload of the page to clear all React state
+      window.location.href = window.location.pathname;
     } catch (error: any) {
       console.error('Error clearing data:', error);
       toast({
