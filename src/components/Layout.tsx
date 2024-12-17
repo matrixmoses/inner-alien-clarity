@@ -56,21 +56,24 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("No user found");
 
-      // Delete data from all relevant tables
+      // Define tables with their correct types
       const tables = [
-        'tasks',
-        'subtasks',
-        'journal_entries',
-        'pomodoro_sessions',
-        'procrastination_entries',
-        'procrastination_insights',
-        'streak_history',
-        'subject_streaks',
-        'user_streaks',
-        'wins',
-        'achievements'
+        'tasks' as const,
+        'subtasks' as const,
+        'journal_entries' as const,
+        'pomodoro_sessions' as const,
+        'procrastination_entries' as const,
+        'procrastination_insights' as const,
+        'streak_history' as const,
+        'subject_streaks' as const,
+        'user_streaks' as const,
+        'wins' as const,
+        'achievements' as const
       ];
 
+      let hasError = false;
+
+      // Delete data from each table
       for (const table of tables) {
         const { error } = await supabase
           .from(table)
@@ -79,21 +82,26 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         
         if (error) {
           console.error(`Error clearing ${table}:`, error);
+          hasError = true;
         }
       }
 
+      if (hasError) {
+        throw new Error("Some tables could not be cleared");
+      }
+
       toast({
-        title: "Data cleared",
+        title: "Success",
         description: "All your data has been successfully cleared.",
       });
 
-      // Refresh the page to show the cleared state
+      // Force reload all data by refreshing the page
       window.location.reload();
     } catch (error: any) {
       console.error('Error clearing data:', error);
       toast({
         title: "Error",
-        description: "Failed to clear data. Please try again.",
+        description: error.message || "Failed to clear data. Please try again.",
         variant: "destructive",
       });
     }
