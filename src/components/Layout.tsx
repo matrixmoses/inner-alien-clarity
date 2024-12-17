@@ -72,12 +72,12 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
       // Define tables in strict order based on foreign key relationships
       const tablesToDelete: TableName[] = [
-        // Level 1: Tables that reference tasks and have no dependencies
-        'procrastination_entries',  // Must be deleted before tasks due to foreign key
-        'pomodoro_sessions',        // Must be deleted before tasks due to foreign key
-        'subtasks',                 // Must be deleted before tasks due to foreign key
+        // Level 1: Delete child tables first (tables with foreign keys to tasks)
+        'subtasks',                 // References tasks
+        'procrastination_entries',  // References tasks
+        'pomodoro_sessions',        // References tasks
         
-        // Level 2: Independent tables that don't reference tasks
+        // Level 2: Delete independent tables (no dependencies on tasks)
         'procrastination_insights',
         'streak_history',
         'subject_streaks',
@@ -86,7 +86,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         'achievements',
         'journal_entries',
         
-        // Level 3: Main tasks table (deleted last after all references are removed)
+        // Level 3: Finally delete the tasks table
         'tasks'
       ];
 
@@ -121,7 +121,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         description: "All your data has been successfully cleared.",
       });
 
-      // Force a complete page reload
+      // Force a complete page reload to refresh all data
       window.location.reload();
     } catch (error: any) {
       console.error('Detailed error in handleClearData:', error);
