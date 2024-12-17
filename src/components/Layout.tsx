@@ -58,39 +58,36 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
       // Define tables in order of deletion (children first, then parents)
       const tables = [
-        'pomodoro_sessions' as const,
-        'procrastination_entries' as const,
-        'procrastination_insights' as const,
-        'subtasks' as const,
-        'streak_history' as const,
-        'subject_streaks' as const,
-        'user_streaks' as const,
-        'wins' as const,
-        'achievements' as const,
-        'journal_entries' as const,
-        'tasks' as const
-      ];
+        'subtasks',
+        'pomodoro_sessions',
+        'procrastination_entries',
+        'procrastination_insights',
+        'streak_history',
+        'subject_streaks',
+        'user_streaks',
+        'wins',
+        'achievements',
+        'journal_entries',
+        'tasks'
+      ] as const;
 
-      let errors = [];
-
-      // Delete data from each table sequentially
+      // Delete data from each table sequentially with proper error handling
       for (const table of tables) {
-        const { error } = await supabase
-          .from(table)
-          .delete()
-          .eq('user_id', user.id);
-        
-        if (error) {
-          console.error(`Error clearing ${table}:`, error);
-          errors.push(table);
-          // If we encounter an error, we'll continue with the next table
-          continue;
+        try {
+          const { error } = await supabase
+            .from(table)
+            .delete()
+            .eq('user_id', user.id);
+          
+          if (error) {
+            console.error(`Error clearing ${table}:`, error);
+            throw new Error(`Failed to clear table: ${table}`);
+          }
+          console.log(`Successfully cleared ${table}`);
+        } catch (tableError) {
+          console.error(`Failed to clear ${table}:`, tableError);
+          throw tableError;
         }
-        console.log(`Successfully cleared ${table}`);
-      }
-
-      if (errors.length > 0) {
-        throw new Error(`Failed to clear some tables: ${errors.join(', ')}`);
       }
 
       toast({
@@ -99,7 +96,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       });
 
       // Force a complete page reload and clear cache
-      window.location.replace(window.location.href);
+      window.location.reload();
     } catch (error: any) {
       console.error('Error clearing data:', error);
       toast({
