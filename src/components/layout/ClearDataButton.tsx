@@ -15,6 +15,15 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
+type TableName = "subtasks" | "procrastination_entries" | "pomodoro_sessions" | 
+                 "procrastination_insights" | "streak_history" | "subject_streaks" | 
+                 "user_streaks" | "wins" | "achievements" | "journal_entries" | "tasks";
+
+interface DeleteOperation {
+  table: TableName;
+  message: string;
+}
+
 export const ClearDataButton = () => {
   const [isClearing, setIsClearing] = useState(false);
   const { toast } = useToast();
@@ -26,23 +35,23 @@ export const ClearDataButton = () => {
       if (!user) throw new Error("No user found");
 
       // Delete data in the correct order based on foreign key relationships
-      const deleteOperations = [
+      const deleteOperations: DeleteOperation[] = [
         // First level: Delete dependent tables
-        { table: 'subtasks', message: 'Clearing subtasks...' },
-        { table: 'procrastination_entries', message: 'Clearing procrastination entries...' },
-        { table: 'pomodoro_sessions', message: 'Clearing pomodoro sessions...' },
+        { table: "subtasks", message: 'Clearing subtasks...' },
+        { table: "procrastination_entries", message: 'Clearing procrastination entries...' },
+        { table: "pomodoro_sessions", message: 'Clearing pomodoro sessions...' },
         
         // Second level: Delete independent tables
-        { table: 'procrastination_insights', message: 'Clearing insights...' },
-        { table: 'streak_history', message: 'Clearing streak history...' },
-        { table: 'subject_streaks', message: 'Clearing subject streaks...' },
-        { table: 'user_streaks', message: 'Clearing user streaks...' },
-        { table: 'wins', message: 'Clearing wins...' },
-        { table: 'achievements', message: 'Clearing achievements...' },
-        { table: 'journal_entries', message: 'Clearing journal entries...' },
+        { table: "procrastination_insights", message: 'Clearing insights...' },
+        { table: "streak_history", message: 'Clearing streak history...' },
+        { table: "subject_streaks", message: 'Clearing subject streaks...' },
+        { table: "user_streaks", message: 'Clearing user streaks...' },
+        { table: "wins", message: 'Clearing wins...' },
+        { table: "achievements", message: 'Clearing achievements...' },
+        { table: "journal_entries", message: 'Clearing journal entries...' },
         
         // Final level: Delete main table
-        { table: 'tasks', message: 'Clearing tasks...' },
+        { table: "tasks", message: 'Clearing tasks...' },
       ];
 
       for (const operation of deleteOperations) {
