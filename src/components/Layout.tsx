@@ -1,11 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
-import { LogOut } from "lucide-react";
+import { LogOut, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { NavigationBar } from "./navigation/NavigationBar";
 import { PersistentTimer } from "./PersistentTimer";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -40,6 +51,54 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     navigate("/login");
   };
 
+  const handleClearData = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("No user found");
+
+      // Delete data from all relevant tables
+      const tables = [
+        'tasks',
+        'subtasks',
+        'journal_entries',
+        'pomodoro_sessions',
+        'procrastination_entries',
+        'procrastination_insights',
+        'streak_history',
+        'subject_streaks',
+        'user_streaks',
+        'wins',
+        'achievements'
+      ];
+
+      for (const table of tables) {
+        const { error } = await supabase
+          .from(table)
+          .delete()
+          .eq('user_id', user.id);
+        
+        if (error) {
+          console.error(`Error clearing ${table}:`, error);
+        }
+      }
+
+      toast({
+        title: "Data cleared",
+        description: "All your data has been successfully cleared.",
+      });
+
+      // Refresh the page to show the cleared state
+      window.location.reload();
+    } catch (error: any) {
+      console.error('Error clearing data:', error);
+      toast({
+        title: "Error",
+        description: "Failed to clear data. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen flex bg-background">
       {isAuthenticated && <NavigationBar />}
@@ -51,6 +110,37 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
             </Link>
             <div className="flex items-center gap-4">
               {isAuthenticated && <PersistentTimer />}
+              {isAuthenticated && (
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button 
+                      variant="ghost"
+                      className="flex items-center gap-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                      Clear Data
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This action cannot be undone. This will permanently delete all your tasks,
+                        journal entries, achievements, and other data.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction 
+                        onClick={handleClearData}
+                        className="bg-red-600 hover:bg-red-700"
+                      >
+                        Clear all data
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              )}
               {isAuthenticated ? (
                 <Button 
                   variant="ghost" 
