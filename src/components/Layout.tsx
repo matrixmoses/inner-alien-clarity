@@ -22,6 +22,20 @@ interface LayoutProps {
   children: React.ReactNode;
 }
 
+// Define valid table names as a type
+type TableName = 
+  | "subtasks"
+  | "pomodoro_sessions"
+  | "procrastination_entries"
+  | "procrastination_insights"
+  | "streak_history"
+  | "subject_streaks"
+  | "user_streaks"
+  | "wins"
+  | "achievements"
+  | "journal_entries"
+  | "tasks";
+
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
@@ -58,7 +72,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
       // Define tables in strict order based on foreign key relationships
       // Tables with foreign keys to tasks must be deleted first
-      const tablesToDelete = [
+      const tablesToDelete: TableName[] = [
         // Level 1: Tables that reference tasks
         'subtasks',
         'pomodoro_sessions',
