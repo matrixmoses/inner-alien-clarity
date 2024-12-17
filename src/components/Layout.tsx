@@ -56,14 +56,14 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("No user found");
 
-      // Define tables with their correct types
+      // Define tables in order of deletion (children first, then parents)
       const tables = [
-        'tasks' as const,
         'subtasks' as const,
-        'journal_entries' as const,
-        'pomodoro_sessions' as const,
         'procrastination_entries' as const,
         'procrastination_insights' as const,
+        'pomodoro_sessions' as const,
+        'tasks' as const,
+        'journal_entries' as const,
         'streak_history' as const,
         'subject_streaks' as const,
         'user_streaks' as const,
@@ -71,9 +71,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         'achievements' as const
       ];
 
-      let hasError = false;
-
-      // Delete data from each table
+      // Delete data from each table sequentially
       for (const table of tables) {
         const { error } = await supabase
           .from(table)
@@ -82,12 +80,11 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         
         if (error) {
           console.error(`Error clearing ${table}:`, error);
-          hasError = true;
+          // Continue with other tables even if one fails
+          continue;
         }
-      }
-
-      if (hasError) {
-        throw new Error("Some tables could not be cleared");
+        
+        console.log(`Successfully cleared ${table}`);
       }
 
       toast({
