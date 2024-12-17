@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { Timer, Pause, Play, RotateCcw, Settings } from "lucide-react";
+import { Timer, Pause, Play, RotateCcw } from "lucide-react";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export const PersistentTimer = () => {
   const [timeLeft, setTimeLeft] = useState(() => {
@@ -15,7 +16,7 @@ export const PersistentTimer = () => {
       const { timeLeft: savedTime } = JSON.parse(saved);
       return savedTime;
     }
-    return 25 * 60; // 25 minutes in seconds
+    return 25 * 60;
   });
   
   const [isRunning, setIsRunning] = useState(() => {
@@ -27,6 +28,7 @@ export const PersistentTimer = () => {
     return false;
   });
 
+  const [showCustomTime, setShowCustomTime] = useState(false);
   const [customMinutes, setCustomMinutes] = useState("25");
 
   useEffect(() => {
@@ -74,6 +76,7 @@ export const PersistentTimer = () => {
     const minutes = parseInt(customMinutes) || 25;
     setTimeLeft(minutes * 60);
     setIsRunning(false);
+    setShowCustomTime(false);
     localStorage.setItem(
       "timerState",
       JSON.stringify({ timeLeft: minutes * 60, isRunning: false })
@@ -88,61 +91,64 @@ export const PersistentTimer = () => {
   };
 
   return (
-    <div className="flex items-center gap-2">
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button variant="ghost" size="icon">
-            <Settings className="h-4 w-4" />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-48">
-          <div className="space-y-2">
-            <label className="text-sm font-medium">
-              Duration (minutes):
-            </label>
-            <Input
-              type="number"
-              value={customMinutes}
-              onChange={handleCustomTimeChange}
-              min="1"
-              max="120"
-              className="w-full"
-            />
-            <Button onClick={resetTimer} className="w-full">
-              Set Timer
-            </Button>
-          </div>
-        </PopoverContent>
-      </Popover>
+    <>
+      <div className="flex items-center gap-2">
+        <div 
+          className="flex items-center gap-2 bg-white rounded-lg px-3 py-1 shadow-sm cursor-pointer"
+          onClick={() => setShowCustomTime(true)}
+        >
+          <Timer className="h-4 w-4 text-primary" />
+          <span className="text-lg font-medium">
+            {formatTime(timeLeft)}
+          </span>
+        </div>
 
-      <div className="flex items-center gap-2 bg-white rounded-lg px-3 py-1 shadow-sm">
-        <Timer className="h-4 w-4 text-primary" />
-        <span className="text-lg font-medium">
-          {formatTime(timeLeft)}
-        </span>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={toggleTimer}
+          className="hover:bg-primary/10"
+        >
+          {isRunning ? (
+            <Pause className="h-4 w-4" />
+          ) : (
+            <Play className="h-4 w-4" />
+          )}
+        </Button>
+
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={resetTimer}
+          className="hover:bg-primary/10"
+        >
+          <RotateCcw className="h-4 w-4" />
+        </Button>
       </div>
 
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={toggleTimer}
-        className="hover:bg-primary/10"
-      >
-        {isRunning ? (
-          <Pause className="h-4 w-4" />
-        ) : (
-          <Play className="h-4 w-4" />
-        )}
-      </Button>
-
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={resetTimer}
-        className="hover:bg-primary/10"
-      >
-        <RotateCcw className="h-4 w-4" />
-      </Button>
-    </div>
+      <Dialog open={showCustomTime} onOpenChange={setShowCustomTime}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Set Timer Duration</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="space-y-2">
+              <Input
+                type="number"
+                value={customMinutes}
+                onChange={handleCustomTimeChange}
+                min="1"
+                max="120"
+                className="w-full"
+                placeholder="Enter minutes (1-120)"
+              />
+              <Button onClick={resetTimer} className="w-full">
+                Set Timer
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
