@@ -58,17 +58,17 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
 
       // Define tables in order of deletion (children first, then parents)
       const tables = [
-        'subtasks' as const,
+        'pomodoro_sessions' as const,
         'procrastination_entries' as const,
         'procrastination_insights' as const,
-        'pomodoro_sessions' as const,
-        'tasks' as const,
-        'journal_entries' as const,
+        'subtasks' as const,
         'streak_history' as const,
         'subject_streaks' as const,
         'user_streaks' as const,
         'wins' as const,
-        'achievements' as const
+        'achievements' as const,
+        'journal_entries' as const,
+        'tasks' as const
       ];
 
       let errors = [];
@@ -97,8 +97,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         description: "All your data has been successfully cleared.",
       });
 
-      // Force a hard reload of the page to clear all React state
-      window.location.href = window.location.pathname;
+      // Force a complete page reload to clear all states
+      window.location.replace(window.location.pathname);
     } catch (error: any) {
       console.error('Error clearing data:', error);
       toast({
