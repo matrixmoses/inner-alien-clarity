@@ -56,11 +56,14 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("No user found");
 
-      // Define tables in order of deletion (children first, then parents)
-      const tables = [
+      // Define tables in strict order based on foreign key relationships
+      // Tables with foreign keys to tasks must be deleted first
+      const tablesToDelete = [
+        // Level 1: Tables that reference tasks
         'subtasks',
         'pomodoro_sessions',
         'procrastination_entries',
+        // Level 2: Independent tables or tables referencing user only
         'procrastination_insights',
         'streak_history',
         'subject_streaks',
@@ -68,37 +71,45 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         'wins',
         'achievements',
         'journal_entries',
+        // Level 3: Main tasks table (deleted last)
         'tasks'
-      ] as const;
+      ];
 
-      // Delete data from each table sequentially with proper error handling
-      for (const table of tables) {
+      console.log('Starting data deletion process...');
+
+      // Delete data from each table sequentially
+      for (const table of tablesToDelete) {
         try {
+          console.log(`Attempting to clear table: ${table}`);
+          
           const { error } = await supabase
             .from(table)
             .delete()
             .eq('user_id', user.id);
           
           if (error) {
-            console.error(`Error clearing ${table}:`, error);
-            throw new Error(`Failed to clear table: ${table}`);
+            console.error(`Error details for ${table}:`, error);
+            throw new Error(`Failed to clear table ${table}: ${error.message}`);
           }
-          console.log(`Successfully cleared ${table}`);
+          
+          console.log(`Successfully cleared table: ${table}`);
         } catch (tableError) {
-          console.error(`Failed to clear ${table}:`, tableError);
+          console.error(`Detailed error for ${table}:`, tableError);
           throw tableError;
         }
       }
+
+      console.log('All tables cleared successfully');
 
       toast({
         title: "Success",
         description: "All your data has been successfully cleared.",
       });
 
-      // Force a complete page reload and clear cache
-      window.location.reload();
+      // Force a complete page reload
+      window.location.href = window.location.href;
     } catch (error: any) {
-      console.error('Error clearing data:', error);
+      console.error('Detailed error in handleClearData:', error);
       toast({
         title: "Error",
         description: error.message || "Failed to clear data. Please try again.",
