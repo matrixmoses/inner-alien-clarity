@@ -71,13 +71,13 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       if (!user) throw new Error("No user found");
 
       // Define tables in strict order based on foreign key relationships
-      // Tables with foreign keys to tasks must be deleted first
       const tablesToDelete: TableName[] = [
-        // Level 1: Tables that reference tasks
-        'subtasks',
-        'pomodoro_sessions',
-        'procrastination_entries',
-        // Level 2: Independent tables or tables referencing user only
+        // Level 1: Tables that reference tasks and have no dependencies
+        'procrastination_entries',  // Must be deleted before tasks due to foreign key
+        'pomodoro_sessions',        // Must be deleted before tasks due to foreign key
+        'subtasks',                 // Must be deleted before tasks due to foreign key
+        
+        // Level 2: Independent tables that don't reference tasks
         'procrastination_insights',
         'streak_history',
         'subject_streaks',
@@ -85,7 +85,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         'wins',
         'achievements',
         'journal_entries',
-        // Level 3: Main tasks table (deleted last)
+        
+        // Level 3: Main tasks table (deleted last after all references are removed)
         'tasks'
       ];
 
@@ -121,7 +122,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       });
 
       // Force a complete page reload
-      window.location.href = window.location.href;
+      window.location.reload();
     } catch (error: any) {
       console.error('Detailed error in handleClearData:', error);
       toast({
