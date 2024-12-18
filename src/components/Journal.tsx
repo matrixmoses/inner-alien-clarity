@@ -70,14 +70,14 @@ export const Journal = () => {
         // Update existing entry
         result = await supabase
           .from('journal_entries')
-          .update({ content })
+          .update({ content, is_draft: false })
           .eq('id', existingEntries.id);
       } else {
         // Insert new entry
         result = await supabase
           .from('journal_entries')
           .insert([
-            { user_id: user.id, type, content, date }
+            { user_id: user.id, type, content, date, is_draft: false }
           ]);
       }
 

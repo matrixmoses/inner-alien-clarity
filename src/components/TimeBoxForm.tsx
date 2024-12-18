@@ -6,7 +6,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 
-export const TimeBoxForm = () => {
+interface TimeBoxFormProps {
+  onSuccess?: () => void;
+}
+
+export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
   const [taskName, setTaskName] = useState("");
   const [date, setDate] = useState<Date>(new Date());
   const [startTime, setStartTime] = useState("");
@@ -38,7 +42,6 @@ export const TimeBoxForm = () => {
         activity: taskName,
       });
 
-      // Create the task first
       const { data, error: taskError } = await supabase
         .from("tasks")
         .insert({
@@ -68,6 +71,9 @@ export const TimeBoxForm = () => {
         title: "Success",
         description: "Task added successfully",
       });
+
+      // Call onSuccess callback if provided
+      onSuccess?.();
 
       // Reset form
       setTaskName("");
