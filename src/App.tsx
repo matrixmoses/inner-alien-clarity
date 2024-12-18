@@ -8,6 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import TimeBox from "./pages/TimeBox";
 import History from "./pages/History";
 import Procrastination from "./pages/Procrastination";
+import ProfileSettings from "./pages/ProfileSettings";
 import { Toaster } from "./components/ui/toaster";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 
@@ -25,6 +26,7 @@ function App() {
         <Route path="/timebox" element={<ProtectedRoute><TimeBox /></ProtectedRoute>} />
         <Route path="/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
         <Route path="/procrastination" element={<ProtectedRoute><Procrastination /></ProtectedRoute>} />
+        <Route path="/profile" element={<ProtectedRoute><ProfileSettings /></ProtectedRoute>} />
       </Routes>
       <Toaster />
     </Router>
