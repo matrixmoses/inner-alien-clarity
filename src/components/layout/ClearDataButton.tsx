@@ -29,8 +29,8 @@ export const ClearDataButton = () => {
   const { toast } = useToast();
 
   const handleClearData = async () => {
+    setIsClearing(true);
     try {
-      setIsClearing(true);
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("No user found");
 
@@ -55,7 +55,7 @@ export const ClearDataButton = () => {
       ];
 
       for (const operation of deleteOperations) {
-        console.log(`Starting: ${operation.message}`);
+        toast({ description: operation.message });
         const { error } = await supabase
           .from(operation.table)
           .delete()
@@ -63,22 +63,22 @@ export const ClearDataButton = () => {
         
         if (error) {
           console.error(`Error clearing ${operation.table}:`, error);
-          throw new Error(`Failed to clear ${operation.table}: ${error.message}`);
+          throw error;
         }
-        console.log(`Completed: ${operation.message}`);
       }
 
       toast({
         title: "Success",
-        description: "All your data has been successfully cleared.",
+        description: "All data has been cleared successfully.",
       });
 
+      // Reload the page to reflect the changes
       window.location.reload();
     } catch (error: any) {
-      console.error('Error in handleClearData:', error);
+      console.error('Error clearing data:', error);
       toast({
         title: "Error",
-        description: error.message || "Failed to clear data. Please try again.",
+        description: "Failed to clear data. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -89,30 +89,26 @@ export const ClearDataButton = () => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button 
-          variant="ghost"
-          className="flex items-center gap-2 text-red-600 hover:text-red-700 hover:bg-red-50"
-          disabled={isClearing}
-        >
-          <Trash2 className="h-4 w-4" />
+        <Button variant="outline" size="sm" className="text-red-500 hover:text-red-600">
+          <Trash2 className="h-4 w-4 mr-2" />
           Clear Data
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete all your tasks,
-            journal entries, achievements, and other data.
+            This action cannot be undone. This will permanently delete all your data.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction 
+          <AlertDialogAction
             onClick={handleClearData}
-            className="bg-red-600 hover:bg-red-700"
+            className="bg-red-500 hover:bg-red-600"
+            disabled={isClearing}
           >
-            Clear all data
+            {isClearing ? "Clearing..." : "Clear All Data"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

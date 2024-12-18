@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { ProcrastinationForm } from "./ProcrastinationForm";
 import { ProcrastinationAnalysisDisplay } from "./ProcrastinationAnalysisDisplay";
 import { useProcrastinationAnalysis } from "@/hooks/useProcrastinationAnalysis";
@@ -50,49 +51,51 @@ export const ProcrastinationDialog = ({ isOpen, onClose, task }: Procrastination
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] max-h-[90vh]">
         <DialogHeader>
           <DialogTitle>Why did you miss this task?</DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-4 py-4">
-          <ProcrastinationForm
-            reason={reason}
-            customReason={customReason}
-            reflection={reflection}
-            onReasonChange={setReason}
-            onCustomReasonChange={setCustomReason}
-            onReflectionChange={setReflection}
-          />
+        <ScrollArea className="h-[calc(90vh-200px)] pr-4">
+          <div className="space-y-4 py-4">
+            <ProcrastinationForm
+              reason={reason}
+              customReason={customReason}
+              reflection={reflection}
+              onReasonChange={setReason}
+              onCustomReasonChange={setCustomReason}
+              onReflectionChange={setReflection}
+            />
 
-          <ProcrastinationAnalysisDisplay
-            isAnalyzing={isAnalyzing}
-            analysis={aiFeedback}
-            error={error}
-          />
+            <ProcrastinationAnalysisDisplay
+              isAnalyzing={isAnalyzing}
+              analysis={aiFeedback}
+              error={error}
+            />
 
-          {aiFeedback && (
-            <div className="flex gap-2 pt-2">
-              <Button 
-                onClick={handleMarkAsDone} 
-                disabled={isUpdating}
-                className="flex-1"
-              >
-                Mark as Done
-              </Button>
-              <Button 
-                onClick={handleSaveForLater} 
-                variant="outline"
-                disabled={isUpdating}
-                className="flex-1"
-              >
-                Save for Later
-              </Button>
-            </div>
-          )}
-        </div>
+            {aiFeedback && (
+              <div className="flex gap-2 pt-2">
+                <Button 
+                  onClick={handleMarkAsDone} 
+                  disabled={isUpdating}
+                  className="flex-1"
+                >
+                  Mark as Done
+                </Button>
+                <Button 
+                  onClick={handleSaveForLater} 
+                  variant="outline"
+                  disabled={isUpdating}
+                  className="flex-1"
+                >
+                  Save for Later
+                </Button>
+              </div>
+            )}
+          </div>
+        </ScrollArea>
 
-        <div className="flex justify-end gap-2">
+        <div className="flex justify-end gap-2 mt-4">
           <Button variant="outline" onClick={onClose}>
             Cancel
           </Button>

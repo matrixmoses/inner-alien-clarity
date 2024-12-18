@@ -14,8 +14,8 @@ export const TimeBoxContainer = () => {
       <div className="space-y-8">
         <JournalDisplay />
         <Dialog open={showForm} onOpenChange={setShowForm}>
-          <DialogContent className="max-w-lg">
-            <TimeBoxForm />
+          <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+            <TimeBoxForm onSuccess={() => setShowForm(false)} />
           </DialogContent>
         </Dialog>
       </div>

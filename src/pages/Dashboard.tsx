@@ -7,7 +7,6 @@ import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { Clock } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { AchievementsDisplay } from "@/components/dashboard/AchievementsDisplay";
 import { SubjectStreaks } from "@/components/dashboard/SubjectStreaks";
 import { StreakTracker } from "@/components/dashboard/StreakTracker";
 import { TimeStatistics } from "@/components/dashboard/TimeStatistics";
@@ -131,9 +130,6 @@ const Dashboard = () => {
 
           {/* Subject Streaks */}
           <SubjectStreaks />
-
-          {/* Achievements */}
-          <AchievementsDisplay />
 
           {/* Time Box History */}
           <TimeBoxHistory />
