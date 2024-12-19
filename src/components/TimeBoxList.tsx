@@ -1,18 +1,21 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { format, isToday, isTomorrow, isAfter } from "date-fns";
+import { format, isToday, isTomorrow, isAfter, isBefore } from "date-fns";
 import { TaskGroup } from "./TaskGroup";
 import { Task } from "./TaskItem";
 import { Card } from "./ui/card";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, Search } from "lucide-react";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
+import { Input } from "./ui/input";
 
 export const TimeBoxList = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [sectionsCollapsed, setSectionsCollapsed] = useState({
     today: false,
+    tomorrow: false,
     upcoming: false
   });
   const { toast } = useToast();
@@ -27,7 +30,7 @@ export const TimeBoxList = () => {
         .select("*")
         .gte('task_date', format(new Date(), "yyyy-MM-dd"))
         .eq("user_id", user.id)
-        .eq("completed", false) // Only fetch incomplete tasks
+        .eq("completed", false)
         .order('task_date', { ascending: true })
         .order('start_time', { ascending: true });
 
@@ -121,16 +124,21 @@ export const TimeBoxList = () => {
   };
 
   const groupTasksByDate = (tasks: Task[]) => {
+    const filteredTasks = tasks.filter(task => 
+      task.task_name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    
     return {
-      today: tasks.filter(task => isToday(new Date(task.task_date))),
-      upcoming: tasks.filter(task => {
+      today: filteredTasks.filter(task => isToday(new Date(task.task_date))),
+      tomorrow: filteredTasks.filter(task => isTomorrow(new Date(task.task_date))),
+      upcoming: filteredTasks.filter(task => {
         const taskDate = new Date(task.task_date);
-        return isAfter(taskDate, new Date()) && !isToday(taskDate);
+        return isAfter(taskDate, new Date()) && !isToday(taskDate) && !isTomorrow(taskDate);
       })
     };
   };
 
-  const toggleSection = (section: 'today' | 'upcoming') => {
+  const toggleSection = (section: 'today' | 'tomorrow' | 'upcoming') => {
     setSectionsCollapsed(prev => ({
       ...prev,
       [section]: !prev[section]
@@ -147,7 +155,7 @@ export const TimeBoxList = () => {
     );
   }
 
-  const renderSection = (title: string, tasks: Task[], section: 'today' | 'upcoming') => {
+  const renderSection = (title: string, tasks: Task[], section: 'today' | 'tomorrow' | 'upcoming') => {
     if (tasks.length === 0) return null;
     
     return (
@@ -185,7 +193,18 @@ export const TimeBoxList = () => {
 
   return (
     <Card className="p-6 space-y-8 bg-white/50 backdrop-blur-sm">
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+        <Input
+          type="text"
+          placeholder="Search tasks..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="pl-10"
+        />
+      </div>
       {renderSection("Today's Tasks", groupedTasks.today, 'today')}
+      {renderSection("Tomorrow's Tasks", groupedTasks.tomorrow, 'tomorrow')}
       {renderSection("Upcoming Tasks", groupedTasks.upcoming, 'upcoming')}
     </Card>
   );
