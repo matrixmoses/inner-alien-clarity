@@ -33,21 +33,14 @@ export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("No user found");
 
-      console.log("Creating task with data:", {
-        user_id: user.id,
-        task_name: taskName,
-        task_date: format(date, "yyyy-MM-dd"),
-        start_time: startTime,
-        end_time: endTime,
-        activity: taskName,
-      });
+      const formattedDate = format(date, "yyyy-MM-dd");
 
       const { data, error: taskError } = await supabase
         .from("tasks")
         .insert({
           user_id: user.id,
           task_name: taskName,
-          task_date: format(date, "yyyy-MM-dd"),
+          task_date: formattedDate,
           start_time: startTime,
           end_time: endTime,
           activity: taskName,
@@ -65,14 +58,11 @@ export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
         throw taskError;
       }
 
-      console.log("Task created successfully:", data);
-
       toast({
         title: "Success",
         description: "Task added successfully",
       });
 
-      // Call onSuccess callback if provided
       onSuccess?.();
 
       // Reset form
@@ -110,8 +100,9 @@ export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
         <Calendar
           mode="single"
           selected={date}
-          onSelect={(date) => date && setDate(date)}
+          onSelect={(newDate) => newDate && setDate(newDate)}
           className="rounded-md border border-[#6EC4A8] bg-white"
+          disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
         />
       </div>
 

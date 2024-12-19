@@ -2,8 +2,10 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Plus } from "lucide-react";
+import { Plus, Loader2 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface Subtask {
   id: string;
@@ -12,7 +14,7 @@ interface Subtask {
 }
 
 interface SubtaskListProps {
-  taskId: string;  // Added this prop
+  taskId: string;
   onStatusChange: (id: string, status: 'completed' | 'missed') => Promise<void>;
 }
 
@@ -23,17 +25,66 @@ export const SubtaskList = ({
   const [newSubtaskTitle, setNewSubtaskTitle] = useState("");
   const [subtasks, setSubtasks] = useState<Subtask[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
 
   const handleAddSubtask = async () => {
     if (!newSubtaskTitle.trim()) return;
     setIsLoading(true);
     try {
-      // Add subtask logic here
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("No user found");
+
+      const { data, error } = await supabase
+        .from('subtasks')
+        .insert({
+          task_id: taskId,
+          user_id: user.id,
+          title: newSubtaskTitle,
+          completed: false
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      setSubtasks([...subtasks, data]);
       setNewSubtaskTitle("");
-    } catch (error) {
+      
+      toast({
+        title: "Success",
+        description: "Subtask added successfully",
+      });
+    } catch (error: any) {
       console.error("Error adding subtask:", error);
+      toast({
+        title: "Error",
+        description: "Failed to add subtask",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleToggleSubtask = async (subtaskId: string, completed: boolean) => {
+    try {
+      const { error } = await supabase
+        .from('subtasks')
+        .update({ completed })
+        .eq('id', subtaskId);
+
+      if (error) throw error;
+
+      setSubtasks(subtasks.map(st => 
+        st.id === subtaskId ? { ...st, completed } : st
+      ));
+    } catch (error) {
+      console.error("Error updating subtask:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update subtask",
+        variant: "destructive",
+      });
     }
   };
 
@@ -46,7 +97,7 @@ export const SubtaskList = ({
               <Checkbox
                 checked={subtask.completed}
                 onCheckedChange={(checked) => 
-                  onStatusChange(subtask.id, checked ? 'completed' : 'missed')
+                  handleToggleSubtask(subtask.id, checked as boolean)
                 }
               />
               <span className={`text-sm ${subtask.completed ? 'line-through text-gray-500' : ''}`}>
@@ -69,7 +120,11 @@ export const SubtaskList = ({
           disabled={isLoading}
           size="sm"
         >
-          <Plus className="h-4 w-4" />
+          {isLoading ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Plus className="h-4 w-4" />
+          )}
         </Button>
       </div>
     </div>
