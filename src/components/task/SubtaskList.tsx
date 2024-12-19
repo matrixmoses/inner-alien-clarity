@@ -12,24 +12,29 @@ interface Subtask {
 }
 
 interface SubtaskListProps {
-  subtasks: Subtask[];
-  onSubtaskToggle: (id: string, completed: boolean) => Promise<void>;
-  onAddSubtask: (title: string) => Promise<void>;
-  isLoading: boolean;
+  taskId: string;  // Added this prop
+  onStatusChange: (id: string, status: 'completed' | 'missed') => Promise<void>;
 }
 
 export const SubtaskList = ({
-  subtasks,
-  onSubtaskToggle,
-  onAddSubtask,
-  isLoading,
+  taskId,
+  onStatusChange,
 }: SubtaskListProps) => {
   const [newSubtaskTitle, setNewSubtaskTitle] = useState("");
+  const [subtasks, setSubtasks] = useState<Subtask[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleAddSubtask = async () => {
     if (!newSubtaskTitle.trim()) return;
-    await onAddSubtask(newSubtaskTitle);
-    setNewSubtaskTitle("");
+    setIsLoading(true);
+    try {
+      // Add subtask logic here
+      setNewSubtaskTitle("");
+    } catch (error) {
+      console.error("Error adding subtask:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -41,7 +46,7 @@ export const SubtaskList = ({
               <Checkbox
                 checked={subtask.completed}
                 onCheckedChange={(checked) => 
-                  onSubtaskToggle(subtask.id, checked as boolean)
+                  onStatusChange(subtask.id, checked ? 'completed' : 'missed')
                 }
               />
               <span className={`text-sm ${subtask.completed ? 'line-through text-gray-500' : ''}`}>
