@@ -13,8 +13,8 @@ export const TaskSection = ({ title, tasks, onTaskStatusChange, onTaskDelete }: 
 
   return (
     <div className="space-y-2">
-      <h2 className="text-2xl font-semibold text-white mb-4">{title}</h2>
-      <div className="space-y-1">
+      <h2 className="text-2xl font-semibold text-[#333333] mb-4">{title}</h2>
+      <div className="space-y-2">
         {tasks.map((task) => (
           <TaskRow
             key={task.id}

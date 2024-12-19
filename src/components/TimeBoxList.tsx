@@ -3,8 +3,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { isToday, isTomorrow, isAfter } from "date-fns";
 import { Task } from "./TaskItem";
-import { Plus } from "lucide-react";
-import { Button } from "./ui/button";
 import { TaskSection } from "./task/TaskSection";
 
 export const TimeBoxList = () => {
@@ -118,7 +116,7 @@ export const TimeBoxList = () => {
   const groupedTasks = groupTasksByDate(tasks);
 
   return (
-    <div className="min-h-screen bg-black p-6 space-y-8">
+    <div className="space-y-8 bg-[#F4F5F9] p-6">
       <TaskSection
         title="Today"
         tasks={groupedTasks.today}
@@ -137,13 +135,6 @@ export const TimeBoxList = () => {
         onTaskStatusChange={handleTaskStatus}
         onTaskDelete={handleDelete}
       />
-      <Button
-        onClick={() => {}} // This will be handled by your existing form dialog
-        className="fixed bottom-8 right-8 w-full max-w-md mx-auto bg-[#2C2C2E] hover:bg-[#3C3C3E] text-white rounded-lg p-4 flex items-center gap-2"
-      >
-        <Plus className="h-5 w-5" />
-        <span>Add task</span>
-      </Button>
     </div>
   );
 };
