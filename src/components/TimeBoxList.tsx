@@ -1,12 +1,20 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { format, isToday, isTomorrow } from "date-fns";
+import { format, isToday, isTomorrow, isAfter } from "date-fns";
 import { TaskGroup } from "./TaskGroup";
 import { Task } from "./TaskItem";
+import { Card } from "./ui/card";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import { Button } from "./ui/button";
+import { cn } from "@/lib/utils";
 
 export const TimeBoxList = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [sectionsCollapsed, setSectionsCollapsed] = useState({
+    today: false,
+    upcoming: false
+  });
   const { toast } = useToast();
 
   const fetchTasks = async () => {
@@ -115,44 +123,70 @@ export const TimeBoxList = () => {
   const groupTasksByDate = (tasks: Task[]) => {
     return {
       today: tasks.filter(task => isToday(new Date(task.task_date))),
-      tomorrow: tasks.filter(task => isTomorrow(new Date(task.task_date))),
-      future: tasks.filter(task => {
+      upcoming: tasks.filter(task => {
         const taskDate = new Date(task.task_date);
-        return !isToday(taskDate) && !isTomorrow(taskDate);
+        return isAfter(taskDate, new Date()) && !isToday(taskDate);
       })
     };
+  };
+
+  const toggleSection = (section: 'today' | 'upcoming') => {
+    setSectionsCollapsed(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
   };
 
   const groupedTasks = groupTasksByDate(tasks);
 
   if (tasks.length === 0) {
     return (
-      <div className="text-center p-8 bg-white rounded-lg">
+      <Card className="p-6 text-center bg-white/50 backdrop-blur-sm">
         <p className="text-gray-500">No tasks scheduled.</p>
-      </div>
+      </Card>
     );
   }
 
+  const renderSection = (title: string, tasks: Task[], section: 'today' | 'upcoming') => {
+    if (tasks.length === 0) return null;
+    
+    return (
+      <div className="space-y-4 animate-fade-in">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold text-gray-900">{title}</h2>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => toggleSection(section)}
+            className="text-gray-500 hover:text-gray-700"
+          >
+            {sectionsCollapsed[section] ? (
+              <ChevronDown className="h-5 w-5" />
+            ) : (
+              <ChevronUp className="h-5 w-5" />
+            )}
+          </Button>
+        </div>
+        
+        <div className={cn(
+          "space-y-4 transition-all duration-300",
+          sectionsCollapsed[section] ? "hidden" : "block"
+        )}>
+          <TaskGroup
+            title=""
+            tasks={tasks}
+            onTaskStatusChange={handleTaskStatus}
+            onTaskDelete={handleDelete}
+          />
+        </div>
+      </div>
+    );
+  };
+
   return (
-    <div className="flex flex-col space-y-8">
-      <TaskGroup 
-        title="Today's Tasks" 
-        tasks={groupedTasks.today}
-        onTaskStatusChange={handleTaskStatus}
-        onTaskDelete={handleDelete}
-      />
-      <TaskGroup 
-        title="Tomorrow's Tasks" 
-        tasks={groupedTasks.tomorrow}
-        onTaskStatusChange={handleTaskStatus}
-        onTaskDelete={handleDelete}
-      />
-      <TaskGroup 
-        title="Upcoming Tasks" 
-        tasks={groupedTasks.future}
-        onTaskStatusChange={handleTaskStatus}
-        onTaskDelete={handleDelete}
-      />
-    </div>
+    <Card className="p-6 space-y-8 bg-white/50 backdrop-blur-sm">
+      {renderSection("Today's Tasks", groupedTasks.today, 'today')}
+      {renderSection("Upcoming Tasks", groupedTasks.upcoming, 'upcoming')}
+    </Card>
   );
 };
