@@ -1,9 +1,12 @@
 import { Task } from "../TaskItem";
 import { format } from "date-fns";
-import { Check, X, ChevronDown, ChevronUp } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import { SubtaskList } from "./SubtaskList";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
+import { Input } from "../ui/input";
+import { Textarea } from "../ui/textarea";
 
 interface TaskRowProps {
   task: Task;
@@ -12,60 +15,92 @@ interface TaskRowProps {
 }
 
 export const TaskRow = ({ task, onStatusChange, onDelete }: TaskRowProps) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [showDetails, setShowDetails] = useState(false);
+  const [editedTask, setEditedTask] = useState(task);
 
   return (
     <div className="group">
-      <div className="flex items-center justify-between bg-white rounded-lg p-4 hover:bg-[#F4F5F9] transition-colors">
-        <div className="flex items-center gap-3">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-6 w-6 rounded-full border border-[#9C8ADE] p-0 hover:bg-[#9C8ADE]/10"
-            onClick={() => onStatusChange(task.id, 'completed')}
-          >
-            {task.completed && <Check className="h-4 w-4 text-[#9C8ADE]" />}
-          </Button>
-          <div>
-            <h3 className="font-medium text-[#333333]">{task.task_name}</h3>
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-[#666666]">
-                {format(new Date(task.task_date), "MMM d, yyyy")}
-              </span>
-            </div>
-          </div>
+      <div 
+        className="flex items-center justify-between bg-background hover:bg-[#F4F5F9] p-4 rounded-lg cursor-pointer"
+        onClick={() => setShowDetails(true)}
+      >
+        <div className="flex items-center gap-4 flex-1">
+          <span className="font-medium text-foreground">{task.task_name}</span>
+          <span className="text-sm text-muted-foreground">
+            {format(new Date(task.task_date), "MMM d, yyyy")}
+          </span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="text-[#666666] hover:text-[#9C8ADE]"
+            className="hover:bg-primary/10 hover:text-primary"
+            onClick={(e) => {
+              e.stopPropagation();
+              onStatusChange(task.id, 'completed');
+            }}
           >
-            {isExpanded ? (
-              <ChevronUp className="h-4 w-4" />
-            ) : (
-              <ChevronDown className="h-4 w-4" />
-            )}
+            <Check className="h-4 w-4" />
           </Button>
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => onDelete(task.id)}
-            className="opacity-0 group-hover:opacity-100 transition-opacity text-[#666666] hover:text-red-500"
+            className="hover:bg-destructive/10 hover:text-destructive"
+            onClick={(e) => {
+              e.stopPropagation();
+              onStatusChange(task.id, 'missed');
+            }}
           >
             <X className="h-4 w-4" />
           </Button>
         </div>
       </div>
-      {isExpanded && (
-        <div className="mt-2 pl-12 pr-4">
-          <SubtaskList
-            taskId={task.id}
-            onStatusChange={onStatusChange}
-          />
-        </div>
-      )}
+
+      <Dialog open={showDetails} onOpenChange={setShowDetails}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>{task.task_name}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div>
+              <label className="text-sm font-medium mb-1 block">Title</label>
+              <Input
+                value={editedTask.task_name}
+                onChange={(e) => setEditedTask({ ...editedTask, task_name: e.target.value })}
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium mb-1 block">Notes</label>
+              <Textarea
+                value={editedTask.notes || ""}
+                onChange={(e) => setEditedTask({ ...editedTask, notes: e.target.value })}
+                placeholder="Add notes..."
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium mb-1 block">Hashtags</label>
+              <Input
+                placeholder="Add hashtags (e.g., #Work #Personal)"
+                value={editedTask.hashtags?.join(" ") || ""}
+                onChange={(e) => {
+                  const hashtags = e.target.value
+                    .split(" ")
+                    .filter(tag => tag.startsWith("#"))
+                    .map(tag => tag.trim());
+                  setEditedTask({ ...editedTask, hashtags });
+                }}
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium mb-1 block">Subtasks</label>
+              <SubtaskList
+                taskId={task.id}
+                onStatusChange={onStatusChange}
+              />
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

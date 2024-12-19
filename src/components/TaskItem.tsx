@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Check, X, ChevronDown, ChevronUp, Hash, Clock, Calendar } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { SubtaskList } from "./task/SubtaskList";
 import { TaskHeader } from "./task/TaskHeader";
@@ -14,7 +14,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -39,7 +38,6 @@ interface TaskItemProps {
 export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
   const [showProcrastinationDialog, setShowProcrastinationDialog] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
   const [editedTask, setEditedTask] = useState(task);
   const { toast } = useToast();
@@ -87,95 +85,81 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
             <div className="flex-1">
               <h3 className="font-semibold text-lg">{task.task_name}</h3>
               <div className="flex items-center gap-2 text-sm text-gray-500 mt-1">
-                <Calendar className="h-4 w-4" />
                 <span>{format(new Date(task.task_date), "MMM d, yyyy")}</span>
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <Dialog open={showDetails} onOpenChange={setShowDetails}>
-                <DialogTrigger asChild>
-                  <Button variant="ghost" size="sm">
-                    Details
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-lg">
-                  <DialogHeader>
-                    <DialogTitle>Task Details</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-4 py-4">
-                    <div>
-                      <label className="text-sm font-medium mb-1 block">Title</label>
-                      <Input
-                        value={editedTask.task_name}
-                        onChange={(e) => setEditedTask({ ...editedTask, task_name: e.target.value })}
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium mb-1 block">Notes</label>
-                      <Textarea
-                        value={editedTask.notes || ""}
-                        onChange={(e) => setEditedTask({ ...editedTask, notes: e.target.value })}
-                        placeholder="Add notes..."
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium mb-1 block">Hashtags</label>
-                      <Input
-                        placeholder="Add hashtags (e.g., #Work #Personal)"
-                        value={editedTask.hashtags?.join(" ") || ""}
-                        onChange={(e) => {
-                          const hashtags = e.target.value
-                            .split(" ")
-                            .filter(tag => tag.startsWith("#"))
-                            .map(tag => tag.trim());
-                          setEditedTask({ ...editedTask, hashtags });
-                        }}
-                      />
-                    </div>
-                    <SubtaskList
-                      taskId={task.id}
-                      onStatusChange={onStatusChange}
-                    />
-                  </div>
-                </DialogContent>
-              </Dialog>
-              <TaskHeader
-                taskName={task.task_name}
-                completed={task.completed}
-                onComplete={handleComplete}
-                onMissed={() => setShowProcrastinationDialog(true)}
-                onDelete={handleDelete}
-                isDeleting={isDeleting}
-              />
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowDetails(true)}
+              >
+                Details
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleComplete}
+              >
+                <Check className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleDelete}
+                disabled={isDeleting}
+              >
+                <X className="h-4 w-4" />
+              </Button>
             </div>
           </div>
 
           <TaskTime startTime={task.start_time} endTime={task.end_time} />
-
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="flex items-center gap-1 text-sm text-gray-500 w-full justify-between mt-2"
-          >
-            <span>Subtasks</span>
-            {isExpanded ? (
-              <ChevronUp className="h-4 w-4" />
-            ) : (
-              <ChevronDown className="h-4 w-4" />
-            )}
-          </Button>
-
-          {isExpanded && (
-            <ScrollArea className="max-h-[300px] mt-2">
-              <SubtaskList
-                taskId={task.id}
-                onStatusChange={onStatusChange}
-              />
-            </ScrollArea>
-          )}
         </div>
       </Card>
+
+      <Dialog open={showDetails} onOpenChange={setShowDetails}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Task Details</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div>
+              <label className="text-sm font-medium mb-1 block">Title</label>
+              <Input
+                value={editedTask.task_name}
+                onChange={(e) => setEditedTask({ ...editedTask, task_name: e.target.value })}
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium mb-1 block">Notes</label>
+              <Textarea
+                value={editedTask.notes || ""}
+                onChange={(e) => setEditedTask({ ...editedTask, notes: e.target.value })}
+                placeholder="Add notes..."
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium mb-1 block">Hashtags</label>
+              <Input
+                placeholder="Add hashtags (e.g., #Work #Personal)"
+                value={editedTask.hashtags?.join(" ") || ""}
+                onChange={(e) => {
+                  const hashtags = e.target.value
+                    .split(" ")
+                    .filter(tag => tag.startsWith("#"))
+                    .map(tag => tag.trim());
+                  setEditedTask({ ...editedTask, hashtags });
+                }}
+              />
+            </div>
+            <SubtaskList
+              taskId={task.id}
+              onStatusChange={onStatusChange}
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <ProcrastinationDialog
         isOpen={showProcrastinationDialog}
