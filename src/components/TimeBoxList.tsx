@@ -1,23 +1,14 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { format, isToday, isTomorrow, isAfter, isBefore } from "date-fns";
-import { TaskGroup } from "./TaskGroup";
+import { isToday, isTomorrow, isAfter } from "date-fns";
 import { Task } from "./TaskItem";
-import { Card } from "./ui/card";
-import { ChevronDown, ChevronUp, Search } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Button } from "./ui/button";
-import { cn } from "@/lib/utils";
-import { Input } from "./ui/input";
+import { TaskSection } from "./task/TaskSection";
 
 export const TimeBoxList = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [sectionsCollapsed, setSectionsCollapsed] = useState({
-    today: false,
-    tomorrow: false,
-    upcoming: false
-  });
   const { toast } = useToast();
 
   const fetchTasks = async () => {
@@ -28,7 +19,7 @@ export const TimeBoxList = () => {
       const { data, error } = await supabase
         .from("tasks")
         .select("*")
-        .gte('task_date', format(new Date(), "yyyy-MM-dd"))
+        .gte('task_date', new Date().toISOString().split('T')[0])
         .eq("user_id", user.id)
         .eq("completed", false)
         .order('task_date', { ascending: true })
@@ -55,22 +46,13 @@ export const TimeBoxList = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("No user found");
 
-      // First, delete related pomodoro sessions
-      const { error: pomodoroError } = await supabase
-        .from("pomodoro_sessions")
-        .delete()
-        .eq("task_id", id);
-
-      if (pomodoroError) throw pomodoroError;
-
-      // Then delete the task
-      const { error: taskError } = await supabase
+      const { error } = await supabase
         .from("tasks")
         .delete()
         .eq("id", id)
         .eq("user_id", user.id);
 
-      if (taskError) throw taskError;
+      if (error) throw error;
 
       toast({
         title: "Success",
@@ -111,7 +93,6 @@ export const TimeBoxList = () => {
         description: `Task marked as ${status}`,
       });
 
-      // Refresh the task list to remove the completed/missed task
       fetchTasks();
     } catch (error: any) {
       console.error("Error updating task:", error);
@@ -124,88 +105,45 @@ export const TimeBoxList = () => {
   };
 
   const groupTasksByDate = (tasks: Task[]) => {
-    const filteredTasks = tasks.filter(task => 
-      task.task_name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    
     return {
-      today: filteredTasks.filter(task => isToday(new Date(task.task_date))),
-      tomorrow: filteredTasks.filter(task => isTomorrow(new Date(task.task_date))),
-      upcoming: filteredTasks.filter(task => {
+      today: tasks.filter(task => isToday(new Date(task.task_date))),
+      tomorrow: tasks.filter(task => isTomorrow(new Date(task.task_date))),
+      upcoming: tasks.filter(task => {
         const taskDate = new Date(task.task_date);
         return isAfter(taskDate, new Date()) && !isToday(taskDate) && !isTomorrow(taskDate);
       })
     };
   };
 
-  const toggleSection = (section: 'today' | 'tomorrow' | 'upcoming') => {
-    setSectionsCollapsed(prev => ({
-      ...prev,
-      [section]: !prev[section]
-    }));
-  };
-
   const groupedTasks = groupTasksByDate(tasks);
 
-  if (tasks.length === 0) {
-    return (
-      <Card className="p-6 text-center bg-white/50 backdrop-blur-sm">
-        <p className="text-gray-500">No tasks scheduled.</p>
-      </Card>
-    );
-  }
-
-  const renderSection = (title: string, tasks: Task[], section: 'today' | 'tomorrow' | 'upcoming') => {
-    if (tasks.length === 0) return null;
-    
-    return (
-      <div className="space-y-4 animate-fade-in">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-gray-900">{title}</h2>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => toggleSection(section)}
-            className="text-gray-500 hover:text-gray-700"
-          >
-            {sectionsCollapsed[section] ? (
-              <ChevronDown className="h-5 w-5" />
-            ) : (
-              <ChevronUp className="h-5 w-5" />
-            )}
-          </Button>
-        </div>
-        
-        <div className={cn(
-          "space-y-4 transition-all duration-300",
-          sectionsCollapsed[section] ? "hidden" : "block"
-        )}>
-          <TaskGroup
-            title=""
-            tasks={tasks}
-            onTaskStatusChange={handleTaskStatus}
-            onTaskDelete={handleDelete}
-          />
-        </div>
-      </div>
-    );
-  };
-
   return (
-    <Card className="p-6 space-y-8 bg-white/50 backdrop-blur-sm">
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-        <Input
-          type="text"
-          placeholder="Search tasks..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-10"
-        />
-      </div>
-      {renderSection("Today's Tasks", groupedTasks.today, 'today')}
-      {renderSection("Tomorrow's Tasks", groupedTasks.tomorrow, 'tomorrow')}
-      {renderSection("Upcoming Tasks", groupedTasks.upcoming, 'upcoming')}
-    </Card>
+    <div className="min-h-screen bg-black p-6 space-y-8">
+      <TaskSection
+        title="Today"
+        tasks={groupedTasks.today}
+        onTaskStatusChange={handleTaskStatus}
+        onTaskDelete={handleDelete}
+      />
+      <TaskSection
+        title="Tomorrow"
+        tasks={groupedTasks.tomorrow}
+        onTaskStatusChange={handleTaskStatus}
+        onTaskDelete={handleDelete}
+      />
+      <TaskSection
+        title="Upcoming"
+        tasks={groupedTasks.upcoming}
+        onTaskStatusChange={handleTaskStatus}
+        onTaskDelete={handleDelete}
+      />
+      <Button
+        onClick={() => {}} // This will be handled by your existing form dialog
+        className="fixed bottom-8 right-8 w-full max-w-md mx-auto bg-[#2C2C2E] hover:bg-[#3C3C3E] text-white rounded-lg p-4 flex items-center gap-2"
+      >
+        <Plus className="h-5 w-5" />
+        <span>Add task</span>
+      </Button>
+    </div>
   );
 };
