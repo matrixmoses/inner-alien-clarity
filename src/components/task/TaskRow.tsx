@@ -7,6 +7,7 @@ import { SubtaskList } from "./SubtaskList";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
+import { ProcrastinationDialog } from "../procrastination/ProcrastinationDialog";
 
 interface TaskRowProps {
   task: Task;
@@ -17,6 +18,11 @@ interface TaskRowProps {
 export const TaskRow = ({ task, onStatusChange, onDelete }: TaskRowProps) => {
   const [showDetails, setShowDetails] = useState(false);
   const [editedTask, setEditedTask] = useState(task);
+  const [showProcrastinationDialog, setShowProcrastinationDialog] = useState(false);
+
+  const handleMissed = () => {
+    setShowProcrastinationDialog(true);
+  };
 
   return (
     <div className="group">
@@ -48,7 +54,7 @@ export const TaskRow = ({ task, onStatusChange, onDelete }: TaskRowProps) => {
             className="hover:bg-destructive/10 hover:text-destructive"
             onClick={(e) => {
               e.stopPropagation();
-              onStatusChange(task.id, 'missed');
+              handleMissed();
             }}
           >
             <X className="h-4 w-4" />
@@ -101,6 +107,12 @@ export const TaskRow = ({ task, onStatusChange, onDelete }: TaskRowProps) => {
           </div>
         </DialogContent>
       </Dialog>
+
+      <ProcrastinationDialog
+        isOpen={showProcrastinationDialog}
+        onClose={() => setShowProcrastinationDialog(false)}
+        task={task}
+      />
     </div>
   );
 };
