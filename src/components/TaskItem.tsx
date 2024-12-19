@@ -77,6 +77,10 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
     }
   };
 
+  const handleMissed = () => {
+    setShowProcrastinationDialog(true);
+  };
+
   return (
     <>
       <Card className="p-4 bg-white shadow-custom transform hover:scale-[1.01] transition-all duration-200">
@@ -106,8 +110,7 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={handleDelete}
-                disabled={isDeleting}
+                onClick={handleMissed}
               >
                 <X className="h-4 w-4" />
               </Button>
