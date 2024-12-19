@@ -12,12 +12,14 @@ interface ProcrastinationFormProps {
   onSaveForLater: () => void;
 }
 
+type ProcrastinationReason = "too_difficult" | "lack_of_motivation" | "forgot" | "custom";
+
 export const ProcrastinationForm = ({
   taskId,
   onSuccess,
   onSaveForLater,
 }: ProcrastinationFormProps) => {
-  const [reason, setReason] = useState("");
+  const [reason, setReason] = useState<ProcrastinationReason>("too_difficult");
   const [customReason, setCustomReason] = useState("");
   const [reflection, setReflection] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -26,16 +28,21 @@ export const ProcrastinationForm = ({
   const handleSubmit = async () => {
     try {
       setIsLoading(true);
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        throw new Error("User not authenticated");
+      }
+
       const { error } = await supabase
         .from('procrastination_entries')
-        .insert([
-          {
-            task_id: taskId,
-            reason: reason,
-            custom_reason: reason === 'custom' ? customReason : null,
-            reflection: reflection,
-          }
-        ]);
+        .insert({
+          task_id: taskId,
+          user_id: user.id,
+          reason: reason,
+          custom_reason: reason === 'custom' ? customReason : null,
+          reflection: reflection,
+        });
 
       if (error) throw error;
 
@@ -57,7 +64,7 @@ export const ProcrastinationForm = ({
 
   return (
     <div className="space-y-4">
-      <RadioGroup value={reason} onValueChange={setReason}>
+      <RadioGroup value={reason} onValueChange={(value) => setReason(value as ProcrastinationReason)}>
         <div className="flex items-center space-x-2">
           <RadioGroupItem value="too_difficult" id="too_difficult" />
           <Label htmlFor="too_difficult">Too difficult</Label>
