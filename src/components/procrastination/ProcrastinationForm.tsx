@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ActionButtons } from "./ActionButtons";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
 
 interface ProcrastinationFormProps {
   taskId: string;
@@ -62,6 +63,86 @@ export const ProcrastinationForm = ({
     }
   };
 
+  const handleAnalyze = async () => {
+    try {
+      setIsLoading(true);
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        throw new Error("User not authenticated");
+      }
+
+      // First save the entry
+      const { error: saveError } = await supabase
+        .from('procrastination_entries')
+        .insert({
+          task_id: taskId,
+          user_id: user.id,
+          reason: reason,
+          custom_reason: reason === 'custom' ? customReason : null,
+          reflection: reflection,
+          resolved: false
+        });
+
+      if (saveError) throw saveError;
+
+      // Then trigger analysis (you can implement this part based on your needs)
+      toast({
+        title: "Analysis Started",
+        description: "Your procrastination pattern is being analyzed",
+      });
+      
+      onSuccess();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to analyze procrastination entry",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSaveForLater = async () => {
+    try {
+      setIsLoading(true);
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        throw new Error("User not authenticated");
+      }
+
+      const { error } = await supabase
+        .from('procrastination_entries')
+        .insert({
+          task_id: taskId,
+          user_id: user.id,
+          reason: reason,
+          custom_reason: reason === 'custom' ? customReason : null,
+          reflection: reflection,
+          rescheduled_to: new Date().toISOString(),
+          resolved: false
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Task saved for later review",
+      });
+      onSaveForLater();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to save task for later",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="space-y-4">
       <RadioGroup value={reason} onValueChange={(value) => setReason(value as ProcrastinationReason)}>
@@ -97,11 +178,23 @@ export const ProcrastinationForm = ({
         onChange={(e) => setReflection(e.target.value)}
       />
 
-      <ActionButtons
-        isLoading={isLoading}
-        onMarkAsDone={handleSubmit}
-        onSaveForLater={onSaveForLater}
-      />
+      <div className="flex gap-2 pt-2">
+        <Button 
+          onClick={handleAnalyze}
+          className="flex-1"
+          disabled={isLoading}
+        >
+          Analyze
+        </Button>
+        <Button 
+          onClick={handleSaveForLater}
+          variant="outline"
+          className="flex-1"
+          disabled={isLoading}
+        >
+          Save for Later
+        </Button>
+      </div>
     </div>
   );
 };
