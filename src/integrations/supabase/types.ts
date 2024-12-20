@@ -375,14 +375,17 @@ export type Database = {
       tasks: {
         Row: {
           activity: string
+          analysis: Json | null
           category: string | null
           completed: boolean | null
           created_at: string
           description: string | null
           end_time: string
+          hashtags: string[] | null
           id: string
           is_completed: boolean | null
           is_editing: boolean | null
+          is_procrastinated: boolean | null
           start_time: string
           subject: Database["public"]["Enums"]["task_subject"] | null
           task_date: string | null
@@ -392,14 +395,17 @@ export type Database = {
         }
         Insert: {
           activity: string
+          analysis?: Json | null
           category?: string | null
           completed?: boolean | null
           created_at?: string
           description?: string | null
           end_time: string
+          hashtags?: string[] | null
           id?: string
           is_completed?: boolean | null
           is_editing?: boolean | null
+          is_procrastinated?: boolean | null
           start_time: string
           subject?: Database["public"]["Enums"]["task_subject"] | null
           task_date?: string | null
@@ -409,14 +415,17 @@ export type Database = {
         }
         Update: {
           activity?: string
+          analysis?: Json | null
           category?: string | null
           completed?: boolean | null
           created_at?: string
           description?: string | null
           end_time?: string
+          hashtags?: string[] | null
           id?: string
           is_completed?: boolean | null
           is_editing?: boolean | null
+          is_procrastinated?: boolean | null
           start_time?: string
           subject?: Database["public"]["Enums"]["task_subject"] | null
           task_date?: string | null
