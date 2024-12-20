@@ -25,15 +25,27 @@ export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
   const { toast } = useToast();
 
   const handleSetToday = () => {
-    setDate(new Date());
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    setDate(today);
     setShowCalendar(false);
   };
 
   const handleSetTomorrow = () => {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0, 0, 0, 0);
     setDate(tomorrow);
     setShowCalendar(false);
+  };
+
+  const handleDateSelect = (newDate: Date | undefined) => {
+    if (newDate) {
+      const selectedDate = new Date(newDate);
+      selectedDate.setHours(0, 0, 0, 0);
+      setDate(selectedDate);
+      setShowCalendar(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -166,12 +178,7 @@ export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
             <Calendar
               mode="single"
               selected={date}
-              onSelect={(newDate) => {
-                if (newDate) {
-                  setDate(newDate);
-                  setShowCalendar(false);
-                }
-              }}
+              onSelect={handleDateSelect}
               disabled={isBeforeToday}
             />
           </PopoverContent>
