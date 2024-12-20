@@ -1,4 +1,4 @@
-import { startOfDay } from "date-fns";
+import { startOfDay, format } from "date-fns";
 
 export const validateTimeRange = (start: string, end: string): boolean => {
   if (!start || !end) return false;
@@ -12,11 +12,12 @@ export const validateTimeRange = (start: string, end: string): boolean => {
 };
 
 export const formatDateForStorage = (date: Date): string => {
-  // Ensure we're working with the local date
-  const localDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
-  return localDate.toISOString().split('T')[0];
+  // Get the local date string in YYYY-MM-DD format
+  return format(date, 'yyyy-MM-dd');
 };
 
 export const isBeforeToday = (date: Date): boolean => {
-  return date < startOfDay(new Date());
+  const today = startOfDay(new Date());
+  const compareDate = startOfDay(date);
+  return compareDate < today;
 };

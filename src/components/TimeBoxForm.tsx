@@ -51,6 +51,7 @@ export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
       if (!user) throw new Error("No user found");
 
       const formattedDate = formatDateForStorage(date);
+      console.log('Formatted date for storage:', formattedDate); // Debug log
 
       const { error: taskError } = await supabase
         .from("tasks")
@@ -121,7 +122,13 @@ export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
         <Calendar
           mode="single"
           selected={date}
-          onSelect={(newDate) => newDate && setDate(startOfDay(newDate))}
+          onSelect={(newDate) => {
+            if (newDate) {
+              const selectedDate = startOfDay(newDate);
+              console.log('Selected date:', selectedDate); // Debug log
+              setDate(selectedDate);
+            }
+          }}
           className="rounded-md border border-[#6EC4A8] bg-white"
           disabled={isBeforeToday}
         />
