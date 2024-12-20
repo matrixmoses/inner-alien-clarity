@@ -18,7 +18,7 @@ export const JournalDisplay = () => {
         .from('journal_entries')
         .select('type, content')
         .eq('date', today)
-        .eq('is_draft', true);
+        .eq('is_draft', false); // Changed from true to false to show completed entries
 
       if (error) {
         console.error('Error fetching journal entries:', error);
@@ -41,7 +41,7 @@ export const JournalDisplay = () => {
     return (
       <div className="text-center p-8 bg-[#6EC4A8]/10 rounded-lg">
         <p className="text-lg text-gray-600">
-          No pending journal entries for today. Visit the{" "}
+          No journal entries for today. Visit the{" "}
           <Link to="/journal" className="text-[#9C8ADE] hover:underline">
             Journal page
           </Link>{" "}
