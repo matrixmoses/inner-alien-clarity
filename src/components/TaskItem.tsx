@@ -48,28 +48,18 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm p-4 mb-4 relative">
-      {/* Header with Delete Button */}
-      <div className="flex justify-between items-center mb-2">
-        <h3 className="font-medium text-lg">{task.task_name}</h3>
-        <Button
-          variant="destructive"
-          size="sm"
-          onClick={handleDelete}
-          className="absolute top-2 right-2"
-        >
-          <Trash2 className="h-4 w-4" />
-        </Button>
-      </div>
-
-      {/* Date and Time */}
-      <div className="text-sm text-gray-600 mb-3">
-        <div>{format(new Date(task.task_date), "MMM d, yyyy")}</div>
-        <div>{task.start_time} - {task.end_time}</div>
+    <div className="flex items-center justify-between bg-white rounded-lg p-4 mb-2 shadow-sm">
+      {/* Task Info */}
+      <div className="flex-1 mr-4">
+        <h3 className="font-medium text-lg mb-1">{task.task_name}</h3>
+        <div className="text-sm text-gray-600">
+          <div>{format(new Date(task.task_date), "MMM d, yyyy")}</div>
+          <div>{task.start_time} - {task.end_time}</div>
+        </div>
       </div>
 
       {/* Action Buttons */}
-      <div className="flex gap-2">
+      <div className="flex items-center gap-2">
         <Button
           variant="outline"
           size="sm"
@@ -92,6 +82,13 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
           className="text-red-600 hover:text-red-700"
         >
           <X className="h-4 w-4" />
+        </Button>
+        <Button
+          variant="destructive"
+          size="sm"
+          onClick={handleDelete}
+        >
+          <Trash2 className="h-4 w-4" />
         </Button>
       </div>
 
