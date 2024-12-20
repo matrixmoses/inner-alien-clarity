@@ -27,6 +27,11 @@ export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
   const handleSetToday = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
+    console.log('Setting Today:', {
+      originalDate: today,
+      isoString: today.toISOString(),
+      localString: today.toLocaleString()
+    });
     setDate(today);
     setShowCalendar(false);
   };
@@ -35,6 +40,11 @@ export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     tomorrow.setHours(0, 0, 0, 0);
+    console.log('Setting Tomorrow:', {
+      originalDate: tomorrow,
+      isoString: tomorrow.toISOString(),
+      localString: tomorrow.toLocaleString()
+    });
     setDate(tomorrow);
     setShowCalendar(false);
   };
@@ -43,6 +53,12 @@ export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
     if (newDate) {
       const selectedDate = new Date(newDate);
       selectedDate.setHours(0, 0, 0, 0);
+      console.log('Date Selected:', {
+        originalDate: newDate,
+        normalizedDate: selectedDate,
+        isoString: selectedDate.toISOString(),
+        localString: selectedDate.toLocaleString()
+      });
       setDate(selectedDate);
       setShowCalendar(false);
     }
@@ -77,8 +93,18 @@ export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
       if (!user) throw new Error("No user found");
 
       const formattedDate = formatDateForStorage(date);
-      console.log('Selected date:', date);
-      console.log('Formatted date for storage:', formattedDate);
+      console.log('Task Creation:', {
+        selectedDate: date,
+        formattedDate,
+        dateComponents: {
+          year: date.getFullYear(),
+          month: date.getMonth() + 1,
+          day: date.getDate()
+        },
+        timeZoneOffset: date.getTimezoneOffset(),
+        isoString: date.toISOString(),
+        localString: date.toLocaleString()
+      });
 
       const { error: taskError } = await supabase
         .from("tasks")
