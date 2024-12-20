@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { isValid, startOfDay } from "date-fns";
+import { isValid } from "date-fns";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { TimeInputs } from "./TimeInputs";
@@ -16,7 +16,7 @@ interface TimeBoxFormProps {
 
 export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
   const [taskName, setTaskName] = useState("");
-  const [date, setDate] = useState<Date>(startOfDay(new Date()));
+  const [date, setDate] = useState<Date>(new Date());
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -51,8 +51,6 @@ export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
       if (!user) throw new Error("No user found");
 
       const formattedDate = formatDateForStorage(date);
-      console.log('Selected date object:', date);
-      console.log('Formatted date for storage:', formattedDate);
 
       const { error: taskError } = await supabase
         .from("tasks")
@@ -82,7 +80,7 @@ export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
       setTaskName("");
       setStartTime("");
       setEndTime("");
-      setDate(startOfDay(new Date()));
+      setDate(new Date());
     } catch (error: any) {
       console.error("Error creating task:", error);
       setError(error.message || "Failed to add task");
@@ -123,15 +121,7 @@ export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
         <Calendar
           mode="single"
           selected={date}
-          onSelect={(newDate) => {
-            if (newDate) {
-              // Ensure we're working with dates at midnight in the local timezone
-              const selectedDate = startOfDay(newDate);
-              console.log('Raw selected date:', newDate);
-              console.log('Processed selected date:', selectedDate);
-              setDate(selectedDate);
-            }
-          }}
+          onSelect={(newDate) => newDate && setDate(newDate)}
           className="rounded-md border border-[#6EC4A8] bg-white"
           disabled={isBeforeToday}
         />
