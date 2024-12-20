@@ -83,50 +83,51 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
 
   return (
     <>
-      <Card className="p-6 bg-white shadow-custom transform hover:scale-[1.01] transition-all duration-200 w-full max-w-3xl mx-auto mb-4">
-        <div className="flex flex-col space-y-4">
-          <div className="flex justify-between items-start">
+      <Card className="p-4 bg-white shadow-custom transform hover:scale-[1.01] transition-all duration-200 w-full max-w-xl mx-auto mb-4">
+        <div className="flex flex-col space-y-3">
+          <div className="flex justify-between items-center">
             <div className="flex-1 mr-4">
               <h3 className="font-semibold text-lg line-clamp-1">{task.task_name}</h3>
-              <div className="flex items-center gap-2 text-sm text-gray-500 mt-1">
+              <div className="flex items-center gap-2 text-sm text-gray-500">
                 <span>{format(new Date(task.task_date), "MMM d, yyyy")}</span>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowDetails(true)}
-                className="hover:bg-gray-100"
-              >
-                Details
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleComplete}
-                className="hover:bg-green-100"
-              >
-                <Check className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleMissed}
-                className="hover:bg-red-100"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={handleDelete}
-                disabled={isDeleting}
-                className="bg-red-500 hover:bg-red-600 text-white"
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </div>
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={handleDelete}
+              disabled={isDeleting}
+              className="bg-red-500 hover:bg-red-600 text-white min-w-[40px] h-[40px]"
+            >
+              <Trash2 className="h-5 w-5" />
+            </Button>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowDetails(true)}
+              className="hover:bg-gray-100"
+            >
+              Details
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleComplete}
+              className="hover:bg-green-100"
+            >
+              <Check className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleMissed}
+              className="hover:bg-red-100"
+            >
+              <X className="h-4 w-4" />
+            </Button>
           </div>
 
           <TaskTime startTime={task.start_time} endTime={task.end_time} />
