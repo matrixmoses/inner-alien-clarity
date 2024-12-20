@@ -83,23 +83,23 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
 
   return (
     <>
-      <Card className="p-4 bg-white shadow-custom transform hover:scale-[1.01] transition-all duration-200 w-full max-w-xl mx-auto mb-4">
+      <Card className="p-4 bg-white shadow-custom transform hover:scale-[1.01] transition-all duration-200 w-full max-w-md mx-auto mb-4">
         <div className="flex flex-col space-y-3">
-          <div className="flex justify-between items-center">
-            <div className="flex-1 mr-4">
-              <h3 className="font-semibold text-lg line-clamp-1">{task.task_name}</h3>
-              <div className="flex items-center gap-2 text-sm text-gray-500">
-                <span>{format(new Date(task.task_date), "MMM d, yyyy")}</span>
-              </div>
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex-1 min-w-0">
+              <h3 className="font-semibold text-lg truncate">{task.task_name}</h3>
+              <span className="text-sm text-gray-500">
+                {format(new Date(task.task_date), "MMM d, yyyy")}
+              </span>
             </div>
             <Button
               variant="destructive"
-              size="sm"
+              size="icon"
               onClick={handleDelete}
               disabled={isDeleting}
-              className="bg-red-500 hover:bg-red-600 text-white min-w-[40px] h-[40px]"
+              className="shrink-0 h-8 w-8"
             >
-              <Trash2 className="h-5 w-5" />
+              <Trash2 className="h-4 w-4" />
             </Button>
           </div>
 
