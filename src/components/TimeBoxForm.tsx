@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { format, isValid, startOfDay } from "date-fns";
+import { format, isValid, startOfDay, parseISO } from "date-fns";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
@@ -59,7 +59,10 @@ export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("No user found");
 
-      const formattedDate = format(date, "yyyy-MM-dd");
+      // Format date in YYYY-MM-DD format using the local timezone
+      const formattedDate = format(date, 'yyyy-MM-dd');
+      console.log('Selected date:', date);
+      console.log('Formatted date for storage:', formattedDate);
 
       const { data, error: taskError } = await supabase
         .from("tasks")
@@ -133,7 +136,13 @@ export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
         <Calendar
           mode="single"
           selected={date}
-          onSelect={(newDate) => newDate && setDate(startOfDay(newDate))}
+          onSelect={(newDate) => {
+            if (newDate) {
+              const localDate = startOfDay(newDate);
+              console.log('Selected date before setting:', localDate);
+              setDate(localDate);
+            }
+          }}
           className="rounded-md border border-[#6EC4A8] bg-white"
           disabled={(date) => date < startOfDay(new Date())}
         />
