@@ -3,20 +3,12 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Check, X, Trash2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { SubtaskList } from "./task/SubtaskList";
-import { TaskHeader } from "./task/TaskHeader";
-import { TaskTime } from "./task/TaskTime";
-import { ProcrastinationDialog } from "./procrastination/ProcrastinationDialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { format } from "date-fns";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { SubtaskList } from "./task/SubtaskList";
+import { ProcrastinationDialog } from "./procrastination/ProcrastinationDialog";
 
 export interface Task {
   id: string;
@@ -37,14 +29,11 @@ interface TaskItemProps {
 
 export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
   const [showProcrastinationDialog, setShowProcrastinationDialog] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
-  const [editedTask, setEditedTask] = useState(task);
   const { toast } = useToast();
 
   const handleDelete = async () => {
     try {
-      setIsDeleting(true);
       await onDelete(task.id);
       toast({
         title: "Success",
@@ -56,123 +45,85 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
         description: "Failed to delete task",
         variant: "destructive",
       });
-    } finally {
-      setIsDeleting(false);
     }
-  };
-
-  const handleComplete = async () => {
-    try {
-      await onStatusChange(task.id, 'completed');
-      toast({
-        title: "Success",
-        description: "Task marked as completed",
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to update task status",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleMissed = () => {
-    setShowProcrastinationDialog(true);
   };
 
   return (
-    <>
-      <Card className="p-4 bg-white shadow-custom transform hover:scale-[1.01] transition-all duration-200 w-full max-w-md mx-auto mb-4">
-        <div className="flex flex-col space-y-3">
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-lg truncate">{task.task_name}</h3>
-              <span className="text-sm text-gray-500">
-                {format(new Date(task.task_date), "MMM d, yyyy")}
-              </span>
-            </div>
-            <Button
-              variant="destructive"
-              size="icon"
-              onClick={handleDelete}
-              disabled={isDeleting}
-              className="shrink-0 h-8 w-8"
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
+    <Card className="bg-white p-4 shadow-sm hover:shadow-md transition-all duration-200 w-full max-w-sm">
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center justify-between">
+          <div className="flex-1 min-w-0">
+            <h3 className="font-medium text-base truncate">{task.task_name}</h3>
+            <span className="text-sm text-gray-500">
+              {format(new Date(task.task_date), "MMM d, yyyy")}
+            </span>
           </div>
-
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setShowDetails(true)}
-              className="hover:bg-gray-100"
-            >
-              Details
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleComplete}
-              className="hover:bg-green-100"
-            >
-              <Check className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleMissed}
-              className="hover:bg-red-100"
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
-
-          <TaskTime startTime={task.start_time} endTime={task.end_time} />
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={handleDelete}
+            className="h-8 w-8 p-0"
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
         </div>
-      </Card>
+
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowDetails(true)}
+          >
+            Details
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onStatusChange(task.id, 'completed')}
+            className="text-green-600 hover:text-green-700"
+          >
+            <Check className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowProcrastinationDialog(true)}
+            className="text-red-600 hover:text-red-700"
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+
+        <div className="text-sm text-gray-600">
+          {task.start_time} - {task.end_time}
+        </div>
+      </div>
 
       <Dialog open={showDetails} onOpenChange={setShowDetails}>
-        <DialogContent className="max-w-lg">
+        <DialogContent>
           <DialogHeader>
             <DialogTitle>Task Details</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4 py-4">
+          <div className="space-y-4">
             <div>
               <label className="text-sm font-medium mb-1 block">Title</label>
-              <Input
-                value={editedTask.task_name}
-                onChange={(e) => setEditedTask({ ...editedTask, task_name: e.target.value })}
-              />
+              <Input value={task.task_name} readOnly />
             </div>
             <div>
               <label className="text-sm font-medium mb-1 block">Notes</label>
-              <Textarea
-                value={editedTask.notes || ""}
-                onChange={(e) => setEditedTask({ ...editedTask, notes: e.target.value })}
-                placeholder="Add notes..."
-              />
+              <Textarea value={task.notes || ""} readOnly />
             </div>
             <div>
               <label className="text-sm font-medium mb-1 block">Hashtags</label>
-              <Input
-                placeholder="Add hashtags (e.g., #Work #Personal)"
-                value={editedTask.hashtags?.join(" ") || ""}
-                onChange={(e) => {
-                  const hashtags = e.target.value
-                    .split(" ")
-                    .filter(tag => tag.startsWith("#"))
-                    .map(tag => tag.trim());
-                  setEditedTask({ ...editedTask, hashtags });
-                }}
-              />
+              <div className="flex flex-wrap gap-2">
+                {task.hashtags?.map((tag) => (
+                  <span key={tag} className="bg-gray-100 px-2 py-1 rounded text-sm">
+                    {tag}
+                  </span>
+                ))}
+              </div>
             </div>
-            <SubtaskList
-              taskId={task.id}
-              onStatusChange={onStatusChange}
-            />
+            <SubtaskList taskId={task.id} onStatusChange={onStatusChange} />
           </div>
         </DialogContent>
       </Dialog>
@@ -182,6 +133,6 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
         onClose={() => setShowProcrastinationDialog(false)}
         task={task}
       />
-    </>
+    </Card>
   );
 };
