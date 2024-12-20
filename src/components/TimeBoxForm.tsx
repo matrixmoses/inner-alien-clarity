@@ -5,10 +5,11 @@ import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { isValid } from "date-fns";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, CalendarIcon } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { TimeInputs } from "./TimeInputs";
 import { validateTimeRange, formatDateForStorage, isBeforeToday } from "@/utils/dateValidation";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
 interface TimeBoxFormProps {
   onSuccess?: () => void;
@@ -20,7 +21,20 @@ export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [showCalendar, setShowCalendar] = useState(false);
   const { toast } = useToast();
+
+  const handleSetToday = () => {
+    setDate(new Date());
+    setShowCalendar(false);
+  };
+
+  const handleSetTomorrow = () => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    setDate(tomorrow);
+    setShowCalendar(false);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,6 +65,8 @@ export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
       if (!user) throw new Error("No user found");
 
       const formattedDate = formatDateForStorage(date);
+      console.log('Selected date:', date);
+      console.log('Formatted date for storage:', formattedDate);
 
       const { error: taskError } = await supabase
         .from("tasks")
@@ -116,15 +132,50 @@ export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
         />
       </div>
 
-      <div>
+      <div className="space-y-2">
         <label className="block text-sm font-medium mb-1">Date</label>
-        <Calendar
-          mode="single"
-          selected={date}
-          onSelect={(newDate) => newDate && setDate(newDate)}
-          className="rounded-md border border-[#6EC4A8] bg-white"
-          disabled={isBeforeToday}
-        />
+        <div className="flex gap-2 mb-2">
+          <Button
+            type="button"
+            variant="outline"
+            className="flex-1"
+            onClick={handleSetToday}
+          >
+            Today
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            className="flex-1"
+            onClick={handleSetTomorrow}
+          >
+            Tomorrow
+          </Button>
+        </div>
+        <Popover open={showCalendar} onOpenChange={setShowCalendar}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              className="w-full justify-start text-left font-normal"
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {date ? date.toLocaleDateString() : "Pick a date"}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="start">
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={(newDate) => {
+                if (newDate) {
+                  setDate(newDate);
+                  setShowCalendar(false);
+                }
+              }}
+              disabled={isBeforeToday}
+            />
+          </PopoverContent>
+        </Popover>
       </div>
 
       <TimeInputs
