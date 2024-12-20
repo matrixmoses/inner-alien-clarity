@@ -4,9 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { format, isValid, startOfDay, parseISO } from "date-fns";
+import { isValid, startOfDay } from "date-fns";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { TimeInputs } from "./TimeInputs";
+import { validateTimeRange, formatDateForStorage, isBeforeToday } from "@/utils/dateValidation";
 
 interface TimeBoxFormProps {
   onSuccess?: () => void;
@@ -19,17 +21,6 @@ export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
   const [endTime, setEndTime] = useState("");
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
-
-  const validateTimeRange = (start: string, end: string): boolean => {
-    if (!start || !end) return false;
-    const [startHour, startMinute] = start.split(":").map(Number);
-    const [endHour, endMinute] = end.split(":").map(Number);
-    
-    if (startHour > endHour) return false;
-    if (startHour === endHour && startMinute >= endMinute) return false;
-    
-    return true;
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,12 +50,9 @@ export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("No user found");
 
-      // Format date in YYYY-MM-DD format using the local timezone
-      const formattedDate = format(date, 'yyyy-MM-dd');
-      console.log('Selected date:', date);
-      console.log('Formatted date for storage:', formattedDate);
+      const formattedDate = formatDateForStorage(date);
 
-      const { data, error: taskError } = await supabase
+      const { error: taskError } = await supabase
         .from("tasks")
         .insert({
           user_id: user.id,
@@ -79,8 +67,7 @@ export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
           description: taskName,
           is_editing: false,
           subject: "other"
-        })
-        .select();
+        });
 
       if (taskError) throw taskError;
 
@@ -90,8 +77,6 @@ export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
       });
 
       onSuccess?.();
-
-      // Reset form
       setTaskName("");
       setStartTime("");
       setEndTime("");
@@ -136,45 +121,18 @@ export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
         <Calendar
           mode="single"
           selected={date}
-          onSelect={(newDate) => {
-            if (newDate) {
-              const localDate = startOfDay(newDate);
-              console.log('Selected date before setting:', localDate);
-              setDate(localDate);
-            }
-          }}
+          onSelect={(newDate) => newDate && setDate(startOfDay(newDate))}
           className="rounded-md border border-[#6EC4A8] bg-white"
-          disabled={(date) => date < startOfDay(new Date())}
+          disabled={isBeforeToday}
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label htmlFor="startTime" className="block text-sm font-medium mb-1">
-            Start Time
-          </label>
-          <Input
-            id="startTime"
-            type="time"
-            value={startTime}
-            onChange={(e) => setStartTime(e.target.value)}
-            className="bg-white border-[#6EC4A8]"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="endTime" className="block text-sm font-medium mb-1">
-            End Time
-          </label>
-          <Input
-            id="endTime"
-            type="time"
-            value={endTime}
-            onChange={(e) => setEndTime(e.target.value)}
-            className="bg-white border-[#6EC4A8]"
-          />
-        </div>
-      </div>
+      <TimeInputs
+        startTime={startTime}
+        endTime={endTime}
+        onStartTimeChange={setStartTime}
+        onEndTimeChange={setEndTime}
+      />
 
       <Button 
         type="submit" 
