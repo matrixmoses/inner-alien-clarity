@@ -51,7 +51,8 @@ export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
       if (!user) throw new Error("No user found");
 
       const formattedDate = formatDateForStorage(date);
-      console.log('Formatted date for storage:', formattedDate); // Debug log
+      console.log('Selected date object:', date);
+      console.log('Formatted date for storage:', formattedDate);
 
       const { error: taskError } = await supabase
         .from("tasks")
@@ -124,8 +125,10 @@ export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
           selected={date}
           onSelect={(newDate) => {
             if (newDate) {
+              // Ensure we're working with dates at midnight in the local timezone
               const selectedDate = startOfDay(newDate);
-              console.log('Selected date:', selectedDate); // Debug log
+              console.log('Raw selected date:', newDate);
+              console.log('Processed selected date:', selectedDate);
               setDate(selectedDate);
             }
           }}
