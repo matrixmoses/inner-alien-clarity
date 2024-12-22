@@ -12,16 +12,18 @@ export const validateTimeRange = (start: string, end: string): boolean => {
 };
 
 export const formatDateForStorage = (date: Date): string => {
-  // Create a new Date object and ensure it's at the start of the day
+  // Create a new Date object at midnight in local timezone
   const localDate = new Date(date);
   localDate.setHours(0, 0, 0, 0);
   
-  // Get the date in local timezone
+  // Format the date components
   const year = localDate.getFullYear();
   const month = String(localDate.getMonth() + 1).padStart(2, '0');
   const day = String(localDate.getDate()).padStart(2, '0');
   
-  // Return the date in YYYY-MM-DD format
+  console.log('Original date:', date);
+  console.log('Formatted local date:', `${year}-${month}-${day}`);
+  
   return `${year}-${month}-${day}`;
 };
 

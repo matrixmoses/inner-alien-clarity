@@ -28,6 +28,7 @@ export const DateSelector = ({ date, onDateChange }: DateSelectorProps) => {
       // Create a new date object at midnight in local timezone
       const selectedDate = new Date(newDate);
       selectedDate.setHours(0, 0, 0, 0);
+      console.log('Selected date before change:', selectedDate.toLocaleString());
       onDateChange(selectedDate);
     }
   };
