@@ -73,10 +73,10 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
     }
   };
 
-  const confirmAndDelete = () => {
+  const confirmAndDelete = async () => {
     const confirmation = window.confirm("Are you sure you want to delete this task?");
     if (confirmation) {
-      handleDelete();
+      await handleDelete();
     }
   };
 
