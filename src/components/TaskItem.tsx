@@ -41,6 +41,7 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
   const handleDelete = async () => {
     try {
       await onDelete(task.id);
+      setShowDetails(false);
       toast({
         title: "Success",
         description: "Task deleted successfully",
@@ -123,13 +124,6 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
         >
           <X className="h-4 w-4" />
         </Button>
-        <Button
-          variant="destructive"
-          size="sm"
-          onClick={handleDelete}
-        >
-          <Trash2 className="h-4 w-4" />
-        </Button>
       </div>
 
       <Dialog open={showDetails} onOpenChange={setShowDetails}>
@@ -172,6 +166,16 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
             <div>
               <label className="text-sm font-medium mb-1 block">Subtasks</label>
               <SubtaskList taskId={task.id} onStatusChange={onStatusChange} />
+            </div>
+            <div className="flex justify-between items-center pt-4 border-t">
+              <Button
+                variant="destructive"
+                onClick={handleDelete}
+                className="w-full"
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                Delete Task
+              </Button>
             </div>
             <div className="flex justify-end pt-4">
               <Button onClick={handleSave}>Save Changes</Button>
