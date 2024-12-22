@@ -12,24 +12,26 @@ interface DateSelectorProps {
 export const DateSelector = ({ date, onDateChange }: DateSelectorProps) => {
   const handleSetToday = () => {
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
     onDateChange(today);
   };
 
   const handleSetTomorrow = () => {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
-    tomorrow.setHours(0, 0, 0, 0);
     onDateChange(tomorrow);
   };
 
   const handleDateSelect = (newDate: Date | undefined) => {
     if (newDate) {
-      // Ensure we're working with local timezone dates
+      // Create a new date using local timezone components
       const localDate = new Date(
         newDate.getFullYear(),
         newDate.getMonth(),
-        newDate.getDate()
+        newDate.getDate(),
+        12, // Set to noon to avoid timezone issues
+        0,
+        0,
+        0
       );
       onDateChange(localDate);
     }
@@ -63,7 +65,7 @@ export const DateSelector = ({ date, onDateChange }: DateSelectorProps) => {
             className="w-full justify-start text-left font-normal"
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
-            {date ? date.toLocaleDateString() : "Pick a date"}
+            {date.toLocaleDateString()}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">

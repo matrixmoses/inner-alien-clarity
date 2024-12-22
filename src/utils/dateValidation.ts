@@ -12,9 +12,13 @@ export const validateTimeRange = (start: string, end: string): boolean => {
 };
 
 export const formatDateForStorage = (date: Date): string => {
-  // Ensure we're working with the date in the local timezone
-  const localDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
-  return localDate.toISOString().split('T')[0];
+  // Get year, month, and day in local timezone
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  
+  // Format as YYYY-MM-DD
+  return `${year}-${month}-${day}`;
 };
 
 export const isBeforeToday = (date: Date): boolean => {

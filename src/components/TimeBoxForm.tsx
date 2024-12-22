@@ -45,6 +45,7 @@ export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
       if (!user) throw new Error("No user found");
 
       const formattedDate = formatDateForStorage(date);
+      console.log('Formatted date for storage:', formattedDate);
       
       const { error: taskError } = await supabase
         .from("tasks")
