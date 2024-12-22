@@ -48,18 +48,18 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
   };
 
   return (
-    <div className="flex items-center justify-between bg-white rounded-lg p-4 mb-2 shadow-sm">
-      {/* Task Info */}
-      <div className="flex-1 mr-4">
-        <h3 className="font-medium text-lg mb-1">{task.task_name}</h3>
-        <div className="text-sm text-gray-600">
-          <div>{format(new Date(task.task_date), "MMM d, yyyy")}</div>
-          <div>{task.start_time} - {task.end_time}</div>
+    <div className="grid grid-cols-[1fr,auto] gap-4 bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
+      {/* Task Information */}
+      <div className="space-y-1">
+        <h3 className="font-medium text-lg text-foreground">{task.task_name}</h3>
+        <div className="text-sm text-muted-foreground">
+          <p>{format(new Date(task.task_date), "MMM d, yyyy")}</p>
+          <p>{task.start_time} - {task.end_time}</p>
         </div>
       </div>
 
-      {/* Action Buttons */}
-      <div className="flex items-center gap-2">
+      {/* Actions */}
+      <div className="flex items-center gap-2 self-center">
         <Button
           variant="outline"
           size="sm"
