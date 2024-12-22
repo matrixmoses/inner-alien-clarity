@@ -27,11 +27,6 @@ export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
   const handleSetToday = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    console.log('Setting Today:', {
-      originalDate: today,
-      isoString: today.toISOString(),
-      localString: today.toLocaleString()
-    });
     setDate(today);
     setShowCalendar(false);
   };
@@ -40,25 +35,19 @@ export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     tomorrow.setHours(0, 0, 0, 0);
-    console.log('Setting Tomorrow:', {
-      originalDate: tomorrow,
-      isoString: tomorrow.toISOString(),
-      localString: tomorrow.toLocaleString()
-    });
     setDate(tomorrow);
     setShowCalendar(false);
   };
 
   const handleDateSelect = (newDate: Date | undefined) => {
     if (newDate) {
-      const selectedDate = new Date(newDate);
-      selectedDate.setHours(0, 0, 0, 0);
-      console.log('Date Selected:', {
-        originalDate: newDate,
-        normalizedDate: selectedDate,
-        isoString: selectedDate.toISOString(),
-        localString: selectedDate.toLocaleString()
-      });
+      // Create a new date object at midnight in the local timezone
+      const selectedDate = new Date(
+        newDate.getFullYear(),
+        newDate.getMonth(),
+        newDate.getDate(),
+        0, 0, 0, 0
+      );
       setDate(selectedDate);
       setShowCalendar(false);
     }
@@ -92,7 +81,9 @@ export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("No user found");
 
+      // Format the date in the local timezone
       const formattedDate = formatDateForStorage(date);
+      
       console.log('Task Creation:', {
         selectedDate: date,
         formattedDate,
@@ -100,10 +91,7 @@ export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
           year: date.getFullYear(),
           month: date.getMonth() + 1,
           day: date.getDate()
-        },
-        timeZoneOffset: date.getTimezoneOffset(),
-        isoString: date.toISOString(),
-        localString: date.toLocaleString()
+        }
       });
 
       const { error: taskError } = await supabase
