@@ -94,18 +94,18 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
 
       {/* Details Dialog */}
       <Dialog open={showDetails} onOpenChange={setShowDetails}>
-        <DialogContent>
+        <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>Task Details</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className="space-y-4 max-h-[80vh] overflow-y-auto">
             <div>
               <label className="text-sm font-medium mb-1 block">Title</label>
               <Input value={task.task_name} readOnly />
             </div>
             <div>
               <label className="text-sm font-medium mb-1 block">Notes</label>
-              <Textarea value={task.notes || ""} readOnly />
+              <Textarea value={task.notes || ""} readOnly className="min-h-[100px]" />
             </div>
             <div>
               <label className="text-sm font-medium mb-1 block">Hashtags</label>
@@ -117,7 +117,10 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
                 ))}
               </div>
             </div>
-            <SubtaskList taskId={task.id} onStatusChange={onStatusChange} />
+            <div>
+              <label className="text-sm font-medium mb-1 block">Subtasks</label>
+              <SubtaskList taskId={task.id} onStatusChange={onStatusChange} />
+            </div>
           </div>
         </DialogContent>
       </Dialog>
