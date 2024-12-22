@@ -5,6 +5,8 @@ import { ProcrastinationDialog } from "./procrastination/ProcrastinationDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { TaskHeader } from "./task/TaskHeader";
 import { TaskDetailsForm } from "./task/TaskDetailsForm";
+import { Button } from "./ui/button";
+import { Trash2, Loader2 } from "lucide-react";
 
 export interface Task {
   id: string;
@@ -35,9 +37,13 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
   }, [task, showDetails]);
 
   const handleDelete = async () => {
+    const confirmation = confirm("Are you sure you want to delete this task?");
+    if (!confirmation) return;
+
     try {
       setIsDeleting(true);
       
+      // First delete all subtasks
       const { error: subtasksError } = await supabase
         .from('subtasks')
         .delete()
@@ -45,6 +51,7 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
 
       if (subtasksError) throw subtasksError;
 
+      // Then delete the task
       await onDelete(task.id);
       setShowDetails(false);
       
@@ -116,6 +123,21 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
             isDeleting={isDeleting}
             onStatusChange={onStatusChange}
           />
+          <div className="mt-4 pt-4 border-t">
+            <Button
+              variant="destructive"
+              onClick={handleDelete}
+              disabled={isDeleting}
+              className="w-full"
+            >
+              {isDeleting ? (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <Trash2 className="h-4 w-4 mr-2" />
+              )}
+              {isDeleting ? 'Deleting...' : 'Delete Task'}
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
 
