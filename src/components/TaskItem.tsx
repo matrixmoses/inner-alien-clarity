@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { SubtaskList } from "./task/SubtaskList";
 import { ProcrastinationDialog } from "./procrastination/ProcrastinationDialog";
+import { supabase } from "@/integrations/supabase/client";
 
 export interface Task {
   id: string;
@@ -29,6 +30,7 @@ interface TaskItemProps {
 export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
   const [showDetails, setShowDetails] = useState(false);
   const [showProcrastinationDialog, setShowProcrastinationDialog] = useState(false);
+  const [editedTask, setEditedTask] = useState(task);
   const { toast } = useToast();
 
   const handleDelete = async () => {
@@ -47,9 +49,43 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
     }
   };
 
+  const handleSave = async () => {
+    try {
+      const { error } = await supabase
+        .from('tasks')
+        .update({
+          task_name: editedTask.task_name,
+          notes: editedTask.notes,
+          hashtags: editedTask.hashtags
+        })
+        .eq('id', task.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Task updated successfully",
+      });
+      setShowDetails(false);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update task",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleHashtagsChange = (value: string) => {
+    const hashtags = value
+      .split(' ')
+      .filter(tag => tag.startsWith('#'))
+      .map(tag => tag.trim());
+    setEditedTask({ ...editedTask, hashtags });
+  };
+
   return (
     <div className="grid grid-cols-[1fr,auto] gap-4 bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
-      {/* Task Information */}
       <div className="space-y-1">
         <h3 className="font-medium text-lg text-foreground">{task.task_name}</h3>
         <div className="text-sm text-muted-foreground">
@@ -58,7 +94,6 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
         </div>
       </div>
 
-      {/* Actions */}
       <div className="flex items-center gap-2 self-center">
         <Button
           variant="outline"
@@ -92,7 +127,6 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
         </Button>
       </div>
 
-      {/* Details Dialog */}
       <Dialog open={showDetails} onOpenChange={setShowDetails}>
         <DialogContent className="max-w-md">
           <DialogHeader>
@@ -101,16 +135,29 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
           <div className="space-y-4 max-h-[80vh] overflow-y-auto">
             <div>
               <label className="text-sm font-medium mb-1 block">Title</label>
-              <Input value={task.task_name} readOnly />
+              <Input 
+                value={editedTask.task_name}
+                onChange={(e) => setEditedTask({ ...editedTask, task_name: e.target.value })}
+              />
             </div>
             <div>
               <label className="text-sm font-medium mb-1 block">Notes</label>
-              <Textarea value={task.notes || ""} readOnly className="min-h-[100px]" />
+              <Textarea 
+                value={editedTask.notes || ""}
+                onChange={(e) => setEditedTask({ ...editedTask, notes: e.target.value })}
+                className="min-h-[100px]"
+                placeholder="Add notes..."
+              />
             </div>
             <div>
               <label className="text-sm font-medium mb-1 block">Hashtags</label>
-              <div className="flex flex-wrap gap-2">
-                {task.hashtags?.map((tag) => (
+              <Input
+                placeholder="Add hashtags (e.g., #Work #Personal)"
+                value={editedTask.hashtags?.join(' ') || ''}
+                onChange={(e) => handleHashtagsChange(e.target.value)}
+              />
+              <div className="flex flex-wrap gap-2 mt-2">
+                {editedTask.hashtags?.map((tag) => (
                   <span key={tag} className="bg-gray-100 px-2 py-1 rounded text-sm">
                     {tag}
                   </span>
@@ -121,11 +168,13 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
               <label className="text-sm font-medium mb-1 block">Subtasks</label>
               <SubtaskList taskId={task.id} onStatusChange={onStatusChange} />
             </div>
+            <div className="flex justify-end pt-4">
+              <Button onClick={handleSave}>Save Changes</Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
 
-      {/* Procrastination Dialog */}
       <ProcrastinationDialog
         isOpen={showProcrastinationDialog}
         onClose={() => setShowProcrastinationDialog(false)}
