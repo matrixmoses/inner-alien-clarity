@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { TaskHeader } from "./task/TaskHeader";
 import { TaskDetailsForm } from "./task/TaskDetailsForm";
 import { Button } from "./ui/button";
-import { Trash2, Loader2 } from "lucide-react";
+import { Trash2, X } from "lucide-react";
 
 export interface Task {
   id: string;
@@ -37,7 +37,7 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
   }, [task, showDetails]);
 
   const handleDelete = async () => {
-    const confirmation = confirm("Are you sure you want to delete this task?");
+    const confirmation = window.confirm("Are you sure you want to delete this task?");
     if (!confirmation) return;
 
     try {
@@ -57,7 +57,7 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
       
       toast({
         title: "Success",
-        description: "Task and all subtasks deleted successfully",
+        description: "Task deleted successfully",
       });
     } catch (error: any) {
       console.error('Error deleting task:', error);
@@ -68,33 +68,6 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
       });
     } finally {
       setIsDeleting(false);
-    }
-  };
-
-  const handleSave = async () => {
-    try {
-      const { error } = await supabase
-        .from('tasks')
-        .update({
-          task_name: editedTask.task_name,
-          notes: editedTask.notes,
-          hashtags: editedTask.hashtags
-        })
-        .eq('id', task.id);
-
-      if (error) throw error;
-
-      toast({
-        title: "Success",
-        description: "Task updated successfully",
-      });
-      setShowDetails(false);
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: "Failed to update task",
-        variant: "destructive",
-      });
     }
   };
 
@@ -111,18 +84,54 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
       />
 
       <Dialog open={showDetails} onOpenChange={setShowDetails}>
-        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Task Details</DialogTitle>
+            <DialogTitle className="flex justify-between items-center">
+              Task Details
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => setShowDetails(false)}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </DialogTitle>
           </DialogHeader>
+          
           <TaskDetailsForm
             editedTask={editedTask}
             onTaskChange={setEditedTask}
-            onSave={handleSave}
+            onSave={async () => {
+              try {
+                const { error } = await supabase
+                  .from('tasks')
+                  .update({
+                    task_name: editedTask.task_name,
+                    notes: editedTask.notes,
+                    hashtags: editedTask.hashtags
+                  })
+                  .eq('id', task.id);
+
+                if (error) throw error;
+
+                toast({
+                  title: "Success",
+                  description: "Task updated successfully",
+                });
+                setShowDetails(false);
+              } catch (error: any) {
+                toast({
+                  title: "Error",
+                  description: "Failed to update task",
+                  variant: "destructive",
+                });
+              }
+            }}
             onDelete={handleDelete}
             isDeleting={isDeleting}
             onStatusChange={onStatusChange}
           />
+
           <div className="mt-4 pt-4 border-t">
             <Button
               variant="destructive"
@@ -130,12 +139,8 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
               disabled={isDeleting}
               className="w-full"
             >
-              {isDeleting ? (
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-              ) : (
-                <Trash2 className="h-4 w-4 mr-2" />
-              )}
-              {isDeleting ? 'Deleting...' : 'Delete Task'}
+              <Trash2 className="h-4 w-4 mr-2" />
+              Delete Task
             </Button>
           </div>
         </DialogContent>
