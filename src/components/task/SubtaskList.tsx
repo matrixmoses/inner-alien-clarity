@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -26,6 +26,33 @@ export const SubtaskList = ({
   const [subtasks, setSubtasks] = useState<Subtask[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+
+  const fetchSubtasks = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("No user found");
+
+      const { data, error } = await supabase
+        .from('subtasks')
+        .select('*')
+        .eq('task_id', taskId)
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+      setSubtasks(data || []);
+    } catch (error: any) {
+      console.error("Error fetching subtasks:", error);
+      toast({
+        title: "Error",
+        description: "Failed to fetch subtasks",
+        variant: "destructive",
+      });
+    }
+  };
+
+  useEffect(() => {
+    fetchSubtasks();
+  }, [taskId]);
 
   const handleAddSubtask = async () => {
     if (!newSubtaskTitle.trim()) return;
