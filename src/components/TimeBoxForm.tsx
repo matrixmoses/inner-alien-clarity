@@ -15,7 +15,11 @@ interface TimeBoxFormProps {
 
 export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
   const [taskName, setTaskName] = useState("");
-  const [date, setDate] = useState<Date>(new Date());
+  const [date, setDate] = useState<Date>(() => {
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    return now;
+  });
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -45,7 +49,7 @@ export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
       if (!user) throw new Error("No user found");
 
       const formattedDate = formatDateForStorage(date);
-      console.log('Formatted date for storage:', formattedDate);
+      console.log('Task date being stored:', formattedDate);
       
       const { error: taskError } = await supabase
         .from("tasks")

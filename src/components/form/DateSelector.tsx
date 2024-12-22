@@ -12,27 +12,22 @@ interface DateSelectorProps {
 export const DateSelector = ({ date, onDateChange }: DateSelectorProps) => {
   const handleSetToday = () => {
     const today = new Date();
+    today.setHours(0, 0, 0, 0);
     onDateChange(today);
   };
 
   const handleSetTomorrow = () => {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0, 0, 0, 0);
     onDateChange(tomorrow);
   };
 
   const handleDateSelect = (newDate: Date | undefined) => {
     if (newDate) {
-      // Create a new date using local timezone components
-      const localDate = new Date(
-        newDate.getFullYear(),
-        newDate.getMonth(),
-        newDate.getDate(),
-        12, // Set to noon to avoid timezone issues
-        0,
-        0,
-        0
-      );
+      // Ensure the date is set to midnight in the local timezone
+      const localDate = new Date(newDate);
+      localDate.setHours(0, 0, 0, 0);
       onDateChange(localDate);
     }
   };

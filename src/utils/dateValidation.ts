@@ -12,12 +12,15 @@ export const validateTimeRange = (start: string, end: string): boolean => {
 };
 
 export const formatDateForStorage = (date: Date): string => {
-  // Get year, month, and day in local timezone
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
+  // Create a new Date object at the start of the day in the local timezone
+  const localDate = new Date(date);
+  localDate.setHours(0, 0, 0, 0);
   
-  // Format as YYYY-MM-DD
+  // Extract date components
+  const year = localDate.getFullYear();
+  const month = String(localDate.getMonth() + 1).padStart(2, '0');
+  const day = String(localDate.getDate()).padStart(2, '0');
+  
   return `${year}-${month}-${day}`;
 };
 
