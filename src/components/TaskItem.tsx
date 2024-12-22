@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Check, X, Trash2 } from "lucide-react";
@@ -32,6 +32,11 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
   const [showProcrastinationDialog, setShowProcrastinationDialog] = useState(false);
   const [editedTask, setEditedTask] = useState(task);
   const { toast } = useToast();
+
+  // Reset edited task when the dialog opens or task changes
+  useEffect(() => {
+    setEditedTask(task);
+  }, [task, showDetails]);
 
   const handleDelete = async () => {
     try {
@@ -128,11 +133,11 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
       </div>
 
       <Dialog open={showDetails} onOpenChange={setShowDetails}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-md max-h-[90vh] overflow-hidden flex flex-col">
           <DialogHeader>
             <DialogTitle>Task Details</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4 max-h-[80vh] overflow-y-auto">
+          <div className="flex-1 overflow-y-auto space-y-4 pr-4">
             <div>
               <label className="text-sm font-medium mb-1 block">Title</label>
               <Input 
