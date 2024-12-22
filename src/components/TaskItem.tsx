@@ -33,7 +33,6 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
   const [editedTask, setEditedTask] = useState(task);
   const { toast } = useToast();
 
-  // Reset edited task when the dialog opens or task changes
   useEffect(() => {
     setEditedTask(task);
   }, [task, showDetails]);
@@ -73,7 +72,7 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
         description: "Task updated successfully",
       });
       setShowDetails(false);
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Error",
         description: "Failed to update task",
@@ -127,11 +126,11 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
       </div>
 
       <Dialog open={showDetails} onOpenChange={setShowDetails}>
-        <DialogContent className="max-w-md max-h-[90vh] overflow-hidden flex flex-col">
+        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Task Details</DialogTitle>
           </DialogHeader>
-          <div className="flex-1 overflow-y-auto space-y-4 pr-4">
+          <div className="space-y-4">
             <div>
               <label className="text-sm font-medium mb-1 block">Title</label>
               <Input 
