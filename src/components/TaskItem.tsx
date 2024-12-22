@@ -37,9 +37,6 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
   }, [task, showDetails]);
 
   const handleDelete = async () => {
-    const confirmation = window.confirm("Are you sure you want to delete this task?");
-    if (!confirmation) return;
-
     try {
       setIsDeleting(true);
       
@@ -49,25 +46,37 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
         .delete()
         .eq('task_id', task.id);
 
-      if (subtasksError) throw subtasksError;
+      if (subtasksError) {
+        console.error('Error deleting subtasks:', subtasksError);
+        throw subtasksError;
+      }
 
       // Then delete the task
       await onDelete(task.id);
-      setShowDetails(false);
       
       toast({
         title: "Success",
         description: "Task deleted successfully",
       });
+
+      // Close the details dialog if it's open
+      setShowDetails(false);
     } catch (error: any) {
       console.error('Error deleting task:', error);
       toast({
         title: "Error",
-        description: "Failed to delete task",
+        description: "Failed to delete task. Please try again.",
         variant: "destructive",
       });
     } finally {
       setIsDeleting(false);
+    }
+  };
+
+  const confirmAndDelete = () => {
+    const confirmation = window.confirm("Are you sure you want to delete this task?");
+    if (confirmation) {
+      handleDelete();
     }
   };
 
@@ -81,7 +90,7 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
         onDetails={() => setShowDetails(true)}
         onComplete={() => onStatusChange(task.id, 'completed')}
         onMissed={() => setShowProcrastinationDialog(true)}
-        onDelete={handleDelete}
+        onDelete={confirmAndDelete}
       />
 
       <Dialog open={showDetails} onOpenChange={setShowDetails}>
@@ -128,7 +137,7 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
                 });
               }
             }}
-            onDelete={handleDelete}
+            onDelete={confirmAndDelete}
             isDeleting={isDeleting}
             onStatusChange={onStatusChange}
           />
@@ -136,12 +145,12 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
           <div className="mt-4 pt-4 border-t">
             <Button
               variant="destructive"
-              onClick={handleDelete}
+              onClick={confirmAndDelete}
               disabled={isDeleting}
               className="w-full"
             >
               <Trash2 className="h-4 w-4 mr-2" />
-              Delete Task
+              {isDeleting ? 'Deleting...' : 'Delete Task'}
             </Button>
           </div>
         </DialogContent>
