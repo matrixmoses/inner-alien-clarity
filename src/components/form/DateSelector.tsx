@@ -12,6 +12,7 @@ interface DateSelectorProps {
 export const DateSelector = ({ date, onDateChange }: DateSelectorProps) => {
   const handleSetToday = () => {
     const today = new Date();
+    // Ensure we're at the start of the day
     today.setHours(0, 0, 0, 0);
     onDateChange(today);
   };
@@ -19,16 +20,17 @@ export const DateSelector = ({ date, onDateChange }: DateSelectorProps) => {
   const handleSetTomorrow = () => {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
+    // Ensure we're at the start of the day
     tomorrow.setHours(0, 0, 0, 0);
     onDateChange(tomorrow);
   };
 
   const handleDateSelect = (newDate: Date | undefined) => {
     if (newDate) {
-      // Ensure the date is set to midnight in the local timezone
-      const localDate = new Date(newDate);
-      localDate.setHours(0, 0, 0, 0);
-      onDateChange(localDate);
+      // Create a new date object and set it to the start of the day
+      const selectedDate = new Date(newDate);
+      selectedDate.setHours(0, 0, 0, 0);
+      onDateChange(selectedDate);
     }
   };
 
