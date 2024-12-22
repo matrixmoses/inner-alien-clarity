@@ -1,6 +1,6 @@
 import { Task } from "../TaskItem";
 import { format } from "date-fns";
-import { Check, X } from "lucide-react";
+import { Check, Trash2, X } from "lucide-react";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import { SubtaskList } from "./SubtaskList";
@@ -19,6 +19,19 @@ export const TaskRow = ({ task, onStatusChange, onDelete }: TaskRowProps) => {
   const [showDetails, setShowDetails] = useState(false);
   const [editedTask, setEditedTask] = useState(task);
   const [showProcrastinationDialog, setShowProcrastinationDialog] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDelete = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (window.confirm("Are you sure you want to delete this task?")) {
+      setIsDeleting(true);
+      try {
+        await onDelete(task.id);
+      } finally {
+        setIsDeleting(false);
+      }
+    }
+  };
 
   const handleMissed = () => {
     setShowProcrastinationDialog(true);
@@ -36,7 +49,7 @@ export const TaskRow = ({ task, onStatusChange, onDelete }: TaskRowProps) => {
             {format(new Date(task.task_date), "MMM d, yyyy")}
           </span>
         </div>
-        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="flex items-center gap-2">
           <Button
             variant="ghost"
             size="sm"
@@ -58,6 +71,15 @@ export const TaskRow = ({ task, onStatusChange, onDelete }: TaskRowProps) => {
             }}
           >
             <X className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-red-500 hover:text-red-600 hover:bg-red-50"
+            onClick={handleDelete}
+            disabled={isDeleting}
+          >
+            <Trash2 className="h-4 w-4" />
           </Button>
         </div>
       </div>
