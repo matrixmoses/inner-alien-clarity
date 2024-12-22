@@ -31,6 +31,7 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
   const [showDetails, setShowDetails] = useState(false);
   const [showProcrastinationDialog, setShowProcrastinationDialog] = useState(false);
   const [editedTask, setEditedTask] = useState(task);
+  const [isDeleting, setIsDeleting] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -39,18 +40,33 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
 
   const handleDelete = async () => {
     try {
+      setIsDeleting(true);
+      
+      // First delete all subtasks
+      const { error: subtasksError } = await supabase
+        .from('subtasks')
+        .delete()
+        .eq('task_id', task.id);
+
+      if (subtasksError) throw subtasksError;
+
+      // Then delete the task
       await onDelete(task.id);
       setShowDetails(false);
+      
       toast({
         title: "Success",
-        description: "Task deleted successfully",
+        description: "Task and all subtasks deleted successfully",
       });
-    } catch (error) {
+    } catch (error: any) {
+      console.error('Error deleting task:', error);
       toast({
         title: "Error",
         description: "Failed to delete task",
         variant: "destructive",
       });
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -166,17 +182,16 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
               <label className="text-sm font-medium mb-1 block">Subtasks</label>
               <SubtaskList taskId={task.id} onStatusChange={onStatusChange} />
             </div>
-            <div className="flex justify-between items-center pt-4 border-t">
+            <div className="flex flex-col gap-4 pt-4 border-t">
               <Button
                 variant="destructive"
                 onClick={handleDelete}
+                disabled={isDeleting}
                 className="w-full"
               >
                 <Trash2 className="h-4 w-4 mr-2" />
-                Delete Task
+                {isDeleting ? 'Deleting...' : 'Delete Task'}
               </Button>
-            </div>
-            <div className="flex justify-end pt-4">
               <Button onClick={handleSave}>Save Changes</Button>
             </div>
           </div>
