@@ -81,6 +81,7 @@ export const TaskItem = ({ task, onStatusChange, onDelete }: TaskItemProps) => {
         onDetails={() => setShowDetails(true)}
         onComplete={() => onStatusChange(task.id, 'completed')}
         onMissed={() => setShowProcrastinationDialog(true)}
+        onDelete={handleDelete}
       />
 
       <Dialog open={showDetails} onOpenChange={setShowDetails}>

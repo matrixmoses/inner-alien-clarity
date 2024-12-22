@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
-import { Check, X } from "lucide-react";
+import { Check, X, Trash2 } from "lucide-react";
 
 interface TaskHeaderProps {
   taskName: string;
@@ -10,6 +10,7 @@ interface TaskHeaderProps {
   onDetails: () => void;
   onComplete: () => void;
   onMissed: () => void;
+  onDelete: () => void;
 }
 
 export const TaskHeader = ({
@@ -20,6 +21,7 @@ export const TaskHeader = ({
   onDetails,
   onComplete,
   onMissed,
+  onDelete,
 }: TaskHeaderProps) => {
   return (
     <div className="grid grid-cols-[1fr,auto] gap-4">
@@ -54,6 +56,14 @@ export const TaskHeader = ({
           className="text-red-600 hover:text-red-700"
         >
           <X className="h-4 w-4" />
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={onDelete}
+          className="text-red-600 hover:text-red-700"
+        >
+          <Trash2 className="h-4 w-4" />
         </Button>
       </div>
     </div>
