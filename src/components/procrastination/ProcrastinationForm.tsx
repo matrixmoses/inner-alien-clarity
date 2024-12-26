@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ActionButtons } from "./ActionButtons";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { ProcrastinationAnalysisDisplay } from "./ProcrastinationAnalysisDisplay";
 
 interface ProcrastinationFormProps {
   taskId: string;
@@ -23,7 +24,46 @@ export const ProcrastinationForm = ({
   const [customReason, setCustomReason] = useState("");
   const [reflection, setReflection] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysis, setAnalysis] = useState(null);
   const { toast } = useToast();
+
+  const handleAnalyze = async () => {
+    try {
+      setIsAnalyzing(true);
+      
+      const { data: taskData } = await supabase
+        .from('tasks')
+        .select('task_name')
+        .eq('id', taskId)
+        .single();
+
+      if (!taskData) {
+        throw new Error('Task not found');
+      }
+
+      const response = await supabase.functions.invoke('analyze-task', {
+        body: {
+          taskName: taskData.task_name,
+          reason: reason,
+          customReason: reason === 'custom' ? customReason : null
+        }
+      });
+
+      if (response.error) throw response.error;
+      setAnalysis(response.data);
+
+    } catch (error: any) {
+      console.error('Analysis error:', error);
+      toast({
+        title: "Analysis Failed",
+        description: error.message || "Failed to analyze task",
+        variant: "destructive",
+      });
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
 
   const handleSubmit = async () => {
     try {
@@ -42,6 +82,7 @@ export const ProcrastinationForm = ({
           reason: reason,
           custom_reason: reason === 'custom' ? customReason : null,
           reflection: reflection,
+          ai_feedback: analysis
         });
 
       if (error) throw error;
@@ -51,7 +92,7 @@ export const ProcrastinationForm = ({
         description: "Your procrastination entry has been saved",
       });
       onSuccess();
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Error",
         description: "Failed to save procrastination entry",
@@ -97,11 +138,22 @@ export const ProcrastinationForm = ({
         onChange={(e) => setReflection(e.target.value)}
       />
 
-      <ActionButtons
-        isLoading={isLoading}
-        onMarkAsDone={handleSubmit}
-        onSaveForLater={onSaveForLater}
-      />
+      <div className="space-y-4">
+        <ActionButtons
+          isLoading={isLoading}
+          onMarkAsDone={handleSubmit}
+          onSaveForLater={onSaveForLater}
+          onAnalyze={handleAnalyze}
+          isAnalyzing={isAnalyzing}
+        />
+
+        {(isAnalyzing || analysis) && (
+          <ProcrastinationAnalysisDisplay
+            isAnalyzing={isAnalyzing}
+            analysis={analysis}
+          />
+        )}
+      </div>
     </div>
   );
 };

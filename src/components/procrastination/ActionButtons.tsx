@@ -3,13 +3,21 @@ import { Loader2 } from "lucide-react";
 
 interface ActionButtonsProps {
   isLoading: boolean;
+  isAnalyzing: boolean;
   onMarkAsDone: () => void;
   onSaveForLater: () => void;
+  onAnalyze: () => void;
 }
 
-export const ActionButtons = ({ isLoading, onMarkAsDone, onSaveForLater }: ActionButtonsProps) => {
+export const ActionButtons = ({ 
+  isLoading, 
+  isAnalyzing,
+  onMarkAsDone, 
+  onSaveForLater,
+  onAnalyze 
+}: ActionButtonsProps) => {
   return (
-    <div className="flex gap-2 pt-2">
+    <div className="flex flex-wrap gap-2">
       <Button 
         onClick={onMarkAsDone} 
         disabled={isLoading}
@@ -17,6 +25,15 @@ export const ActionButtons = ({ isLoading, onMarkAsDone, onSaveForLater }: Actio
       >
         {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
         Mark as Done
+      </Button>
+      <Button 
+        onClick={onAnalyze}
+        variant="secondary"
+        disabled={isAnalyzing}
+        className="flex-1"
+      >
+        {isAnalyzing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+        Analyze
       </Button>
       <Button 
         onClick={onSaveForLater} 
