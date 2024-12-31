@@ -3,13 +3,15 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
 import { isBeforeToday } from "@/utils/dateValidation";
+import { format } from "date-fns";
 
 interface DateSelectorProps {
   date: Date;
   onDateChange: (date: Date) => void;
+  error?: string;
 }
 
-export const DateSelector = ({ date, onDateChange }: DateSelectorProps) => {
+export const DateSelector = ({ date, onDateChange, error }: DateSelectorProps) => {
   const handleSetToday = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -24,8 +26,7 @@ export const DateSelector = ({ date, onDateChange }: DateSelectorProps) => {
   };
 
   const handleDateSelect = (newDate: Date | undefined) => {
-    if (newDate) {
-      // Create a new date object at midnight in local timezone
+    if (newDate && !isBeforeToday(newDate)) {
       const selectedDate = new Date(newDate);
       selectedDate.setHours(0, 0, 0, 0);
       console.log('Selected date before change:', selectedDate.toLocaleString());
@@ -58,10 +59,10 @@ export const DateSelector = ({ date, onDateChange }: DateSelectorProps) => {
         <PopoverTrigger asChild>
           <Button
             variant="outline"
-            className="w-full justify-start text-left font-normal"
+            className={`w-full justify-start text-left font-normal ${error ? 'border-red-500' : ''}`}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
-            {date.toLocaleDateString()}
+            {format(date, 'PPP')}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
@@ -70,9 +71,13 @@ export const DateSelector = ({ date, onDateChange }: DateSelectorProps) => {
             selected={date}
             onSelect={handleDateSelect}
             disabled={isBeforeToday}
+            initialFocus
           />
         </PopoverContent>
       </Popover>
+      {error && (
+        <p className="text-sm text-red-500 mt-1">{error}</p>
+      )}
     </div>
   );
 };

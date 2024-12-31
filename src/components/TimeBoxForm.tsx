@@ -16,7 +16,6 @@ interface TimeBoxFormProps {
 export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
   const [taskName, setTaskName] = useState("");
   const [date, setDate] = useState<Date>(() => {
-    // Initialize with today's date at midnight in local timezone
     const now = new Date();
     now.setHours(0, 0, 0, 0);
     return now;
@@ -24,24 +23,40 @@ export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [dateError, setDateError] = useState<string | null>(null);
   const { toast } = useToast();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const validateForm = () => {
     setError(null);
+    setDateError(null);
 
     if (!taskName.trim()) {
       setError("Task name is required");
-      return;
+      return false;
+    }
+
+    if (!date || isNaN(date.getTime())) {
+      setDateError("Valid date is required");
+      return false;
     }
 
     if (!startTime || !endTime) {
       setError("Start and end times are required");
-      return;
+      return false;
     }
 
     if (!validateTimeRange(startTime, endTime)) {
       setError("End time must be after start time");
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!validateForm()) {
       return;
     }
 
@@ -117,7 +132,11 @@ export const TimeBoxForm = ({ onSuccess }: TimeBoxFormProps) => {
         />
       </div>
 
-      <DateSelector date={date} onDateChange={setDate} />
+      <DateSelector 
+        date={date} 
+        onDateChange={setDate}
+        error={dateError}
+      />
 
       <TimeInputs
         startTime={startTime}
