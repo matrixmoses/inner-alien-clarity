@@ -4,7 +4,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { CalendarIcon } from "lucide-react";
 import { isBeforeToday } from "@/utils/dateValidation";
 import { format } from "date-fns";
-import { utcToZonedTime } from "date-fns-tz";
+import { toZonedTime } from "date-fns-tz";
 
 interface DateSelectorProps {
   date: Date;
@@ -15,7 +15,7 @@ interface DateSelectorProps {
 export const DateSelector = ({ date, onDateChange, error }: DateSelectorProps) => {
   const handleSetToday = () => {
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const today = utcToZonedTime(new Date(), timeZone);
+    const today = toZonedTime(new Date(), timeZone);
     today.setHours(0, 0, 0, 0);
     console.log('Setting today:', today.toLocaleString());
     onDateChange(today);
@@ -23,7 +23,7 @@ export const DateSelector = ({ date, onDateChange, error }: DateSelectorProps) =
 
   const handleSetTomorrow = () => {
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const tomorrow = utcToZonedTime(new Date(), timeZone);
+    const tomorrow = toZonedTime(new Date(), timeZone);
     tomorrow.setDate(tomorrow.getDate() + 1);
     tomorrow.setHours(0, 0, 0, 0);
     console.log('Setting tomorrow:', tomorrow.toLocaleString());
@@ -33,7 +33,7 @@ export const DateSelector = ({ date, onDateChange, error }: DateSelectorProps) =
   const handleDateSelect = (newDate: Date | undefined) => {
     if (newDate && !isBeforeToday(newDate)) {
       const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      const selectedDate = utcToZonedTime(newDate, timeZone);
+      const selectedDate = toZonedTime(newDate, timeZone);
       selectedDate.setHours(0, 0, 0, 0);
       console.log('Selected date before change:', selectedDate.toLocaleString());
       onDateChange(selectedDate);

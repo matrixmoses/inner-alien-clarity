@@ -1,5 +1,5 @@
 import { startOfDay, isValid, parseISO } from "date-fns";
-import { zonedTimeToUtc, utcToZonedTime } from "date-fns-tz";
+import { fromZonedTime, toZonedTime } from "date-fns-tz";
 
 export const validateTimeRange = (start: string, end: string): boolean => {
   if (!start || !end) return false;
@@ -21,7 +21,7 @@ export const formatDateForStorage = (date: Date): string => {
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   
   // Convert the local date to UTC, preserving the date in the user's timezone
-  const utcDate = zonedTimeToUtc(date, timeZone);
+  const utcDate = fromZonedTime(date, timeZone);
   
   // Format the date components
   const year = utcDate.getUTCFullYear();
@@ -38,8 +38,8 @@ export const formatDateForStorage = (date: Date): string => {
 
 export const isBeforeToday = (date: Date): boolean => {
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const today = startOfDay(utcToZonedTime(new Date(), timeZone));
-  const compareDate = startOfDay(utcToZonedTime(date, timeZone));
+  const today = startOfDay(toZonedTime(new Date(), timeZone));
+  const compareDate = startOfDay(toZonedTime(date, timeZone));
   return compareDate < today;
 };
 
@@ -50,7 +50,7 @@ export const parseDateString = (dateString: string): Date | null => {
     
     // Convert to user's timezone
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    return utcToZonedTime(date, timeZone);
+    return toZonedTime(date, timeZone);
   } catch {
     return null;
   }
